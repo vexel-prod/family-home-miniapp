@@ -1,0 +1,43 @@
+{
+  "name": "family-home-miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build --webpack",
+    "lint": "eslint .",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@prisma/adapter-neon": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "next": "16.1.1",
+    "@neondatabase/serverless": "^1.0.2",
+    "framer-motion": "^12.23.12",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "daisyui": "^5.1.14",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.23.0",
+    "eslint-config-next": "16.1.1",
+    "prisma": "^7.5.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "ignoreScripts": [
+    "sharp",
+    "unrs-resolver"
+  ],
+  "trustedDependencies": [
+    "sharp",
+    "unrs-resolver"
+  ]
+}
