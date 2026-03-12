@@ -1,3 +1,4 @@
+import { authorizeRequest } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import {
   formatElapsedLabel,
@@ -21,10 +22,18 @@ export async function PATCH(
   context: { params: Promise<{ taskId: string }> },
 ) {
   const prisma = getPrisma();
+  const auth = await authorizeRequest(request, prisma);
+
+  if (!auth) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   const { taskId } = await context.params;
   const body = (await request.json()) as UpdateTaskPayload;
 
-  if (!body.action || !body.actorName?.trim()) {
+  const actorName = [auth.user.first_name, auth.user.last_name].filter(Boolean).join(" ").trim() || auth.user.username || auth.member.firstName;
+
+  if (!body.action) {
     return NextResponse.json({ ok: false, error: "Missing update data" }, { status: 400 });
   }
 
@@ -34,6 +43,10 @@ export async function PATCH(
 
   if (!task) {
     return NextResponse.json({ ok: false, error: "Task not found" }, { status: 404 });
+  }
+
+  if (task.householdId !== auth.member.householdId) {
+    return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
 
   if (body.action === "replace") {
@@ -51,9 +64,9 @@ export async function PATCH(
     });
 
     await notifyPartner({
-      actorName: body.actorName.trim(),
-      actorTelegramId: body.actorTelegramId ?? null,
-      actorUsername: body.actorUsername ?? null,
+      actorName,
+      actorTelegramId: String(auth.user.id),
+      actorUsername: auth.user.username ?? null,
       text:
         `Раздел: БЫТ\n` +
         `Задача обновлена: ${updatedTask.title}\n` +
@@ -71,7 +84,7 @@ export async function PATCH(
         ? {
             status: "done",
             completedAt: new Date(),
-            completedByName: body.actorName.trim(),
+            completedByName: actorName,
           }
         : {
             status: "open",
@@ -82,13 +95,13 @@ export async function PATCH(
 
   if (body.action === "complete" && updatedTask.completedAt) {
     await notifyPartner({
-      actorName: body.actorName.trim(),
-      actorTelegramId: body.actorTelegramId ?? null,
-      actorUsername: body.actorUsername ?? null,
+      actorName,
+      actorTelegramId: String(auth.user.id),
+      actorUsername: auth.user.username ?? null,
       text:
         `Раздел: БЫТ\n` +
         `Задача выполнена: ${updatedTask.title}\n` +
-        `Кто выполнил: ${body.actorName.trim()}\n` +
+        `Кто выполнил: ${actorName}\n` +
         `Когда: ${formatMoscowDateTime(updatedTask.completedAt)}\n` +
         `Прошло с момента создания: ${formatElapsedLabel(task.createdAt, updatedTask.completedAt)}`,
     });
@@ -98,10 +111,16 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ taskId: string }> },
 ) {
   const prisma = getPrisma();
+  const auth = await authorizeRequest(request, prisma);
+
+  if (!auth) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   const { taskId } = await context.params;
 
   const task = await prisma.householdTask.findUnique({
@@ -110,6 +129,10 @@ export async function DELETE(
 
   if (!task) {
     return NextResponse.json({ ok: false, error: "Task not found" }, { status: 404 });
+  }
+
+  if (task.householdId !== auth.member.householdId) {
+    return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
 
   await prisma.householdTask.delete({

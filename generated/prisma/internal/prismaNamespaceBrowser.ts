@@ -51,6 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Household: 'Household',
+  Member: 'Member',
   HouseholdTask: 'HouseholdTask',
   ShoppingItem: 'ShoppingItem'
 } as const
@@ -71,8 +73,34 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const HouseholdScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HouseholdScalarFieldEnum = (typeof HouseholdScalarFieldEnum)[keyof typeof HouseholdScalarFieldEnum]
+
+
+export const MemberScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  telegramUserId: 'telegramUserId',
+  chatId: 'chatId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  username: 'username',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
+
+
 export const HouseholdTaskScalarFieldEnum = {
   id: 'id',
+  householdId: 'householdId',
   title: 'title',
   note: 'note',
   status: 'status',
@@ -91,6 +119,7 @@ export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)
 
 export const ShoppingItemScalarFieldEnum = {
   id: 'id',
+  householdId: 'householdId',
   title: 'title',
   status: 'status',
   urgency: 'urgency',

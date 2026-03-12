@@ -1,3 +1,4 @@
+import { authorizeRequest } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { notifyPartner } from "@/lib/partner-notify";
 import { NextResponse } from "next/server";
@@ -7,35 +8,40 @@ type CreateShoppingPayload = {
   urgency?: "soon" | "out";
   quantityLabel?: string | null;
   note?: string | null;
-  addedByName?: string;
-  addedByUsername?: string | null;
-  addedByTelegramId?: string | null;
 };
 
 export async function POST(request: Request) {
   const prisma = getPrisma();
-  const body = (await request.json()) as CreateShoppingPayload;
+  const auth = await authorizeRequest(request, prisma);
 
-  if (!body.title?.trim() || !body.addedByName?.trim()) {
+  if (!auth) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = (await request.json()) as CreateShoppingPayload;
+  const actorName = [auth.user.first_name, auth.user.last_name].filter(Boolean).join(" ").trim() || auth.user.username || auth.member.firstName;
+
+  if (!body.title?.trim()) {
     return NextResponse.json({ ok: false, error: "Missing shopping item data" }, { status: 400 });
   }
 
   const shoppingItem = await prisma.shoppingItem.create({
     data: {
+      householdId: auth.member.householdId,
       title: body.title.trim(),
       urgency: body.urgency === "out" ? "out" : "soon",
       quantityLabel: body.quantityLabel?.trim() || null,
       note: body.note?.trim() || null,
-      addedByName: body.addedByName.trim(),
-      addedByUsername: body.addedByUsername ?? null,
-      addedByTelegramId: body.addedByTelegramId ?? null,
+      addedByName: actorName,
+      addedByUsername: auth.user.username ?? null,
+      addedByTelegramId: String(auth.user.id),
     },
   });
 
   await notifyPartner({
-    actorName: body.addedByName.trim(),
-    actorTelegramId: body.addedByTelegramId ?? null,
-    actorUsername: body.addedByUsername ?? null,
+    actorName,
+    actorTelegramId: String(auth.user.id),
+    actorUsername: auth.user.username ?? null,
     text:
       `Раздел: ПОКУПКИ\n` +
       `Позиция: ${shoppingItem.title}\n` +

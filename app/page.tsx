@@ -25,6 +25,10 @@ type TelegramWindow = Window & {
   }
 }
 
+type FetchOptions = RequestInit & {
+  headers?: HeadersInit
+}
+
 type HouseholdTask = {
   id: string
   title: string
@@ -98,6 +102,11 @@ function getTelegramUser() {
   return parseUserFromTelegramParams(hash)
 }
 
+function getTelegramInitData() {
+  const telegram = (window as TelegramWindow).Telegram?.WebApp
+  return telegram?.initData ?? ''
+}
+
 function getActorName(user?: TelegramUser) {
   if (!user) return 'Домашний диспетчер'
   const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ').trim()
@@ -153,8 +162,9 @@ const reveal = {
 
 export default function Page() {
   const [buyer, setBuyer] = useState<TelegramUser | undefined>()
+  const [telegramInitData, setTelegramInitData] = useState('')
   const [modal, setModal] = useState<ModalKey>(null)
-  const [modalCooldownUntil, setModalCooldownUntil] = useState(0)
+  const [modalGuardUntil, setModalGuardUntil] = useState(0)
   const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
@@ -186,18 +196,51 @@ export default function Page() {
     telegram?.ready?.()
     telegram?.expand?.()
     setBuyer(getTelegramUser())
-  }, [])
+    const nextInitData = getTelegramInitData()
+    setTelegramInitData(nextInitData)
 
-  useEffect(() => {
-    void loadData()
+    if (nextInitData) {
+      void (async () => {
+        setLoading(true)
+        setError('')
+
+        try {
+          const response = await fetch('/api/bootstrap', {
+            cache: 'no-store',
+            headers: {
+              'x-telegram-init-data': nextInitData,
+            },
+          })
+
+          if (!response.ok) {
+            throw new Error('bootstrap failed')
+          }
+
+          const payload = (await response.json()) as BootstrapResponse
+          setOpenTasks(payload.openTasks)
+          setShoppingItems(payload.activeShoppingItems)
+        } catch {
+          setError(
+            'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
+          )
+        } finally {
+          setLoading(false)
+        }
+      })()
+    } else {
+      setLoading(false)
+      setError(
+        'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
+      )
+    }
   }, [])
 
   function canOpenModal() {
-    return Date.now() >= modalCooldownUntil
+    return Date.now() >= modalGuardUntil
   }
 
   function closeModalWithGuard() {
-    setModalCooldownUntil(Date.now() + 300)
+    setModalGuardUntil(Date.now() + 300)
     setModal(null)
   }
 
@@ -207,6 +250,20 @@ export default function Page() {
     }
 
     setModal(nextModal)
+  }
+
+  async function telegramFetch(input: string, init?: FetchOptions, initDataOverride?: string) {
+    const headers = new Headers(init?.headers)
+    const resolvedInitData = initDataOverride || telegramInitData || getTelegramInitData()
+
+    if (resolvedInitData) {
+      headers.set('x-telegram-init-data', resolvedInitData)
+    }
+
+    return fetch(input, {
+      ...init,
+      headers,
+    })
   }
 
   function openTaskActions(task: HouseholdTask) {
@@ -230,7 +287,7 @@ export default function Page() {
   }
 
   function closeTaskModals() {
-    setModalCooldownUntil(Date.now() + 300)
+    setModalGuardUntil(Date.now() + 300)
     setModal(null)
     setSelectedTask(null)
     setReplaceTaskTitle('')
@@ -238,12 +295,12 @@ export default function Page() {
     setReplaceTaskPriority('normal')
   }
 
-  async function loadData() {
+  async function loadData(initDataOverride?: string) {
     setLoading(true)
     setError('')
 
     try {
-      const response = await fetch('/api/bootstrap', { cache: 'no-store' })
+      const response = await telegramFetch('/api/bootstrap', { cache: 'no-store' }, initDataOverride)
 
       if (!response.ok) {
         throw new Error('bootstrap failed')
@@ -253,7 +310,9 @@ export default function Page() {
       setOpenTasks(payload.openTasks)
       setShoppingItems(payload.activeShoppingItems)
     } catch {
-      setError('Не получилось загрузить текущие списки. Проверь DATABASE_URL и Prisma.')
+      setError(
+        'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
+      )
     } finally {
       setLoading(false)
     }
@@ -281,7 +340,7 @@ export default function Page() {
   }
 
   function closeShoppingModals() {
-    setModalCooldownUntil(Date.now() + 300)
+    setModalGuardUntil(Date.now() + 300)
     setModal(null)
     setSelectedShoppingItem(null)
     setReplaceTitle('')
@@ -302,16 +361,13 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch('/api/tasks', {
+      const response = await telegramFetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
           note: taskNote,
           priority: taskPriority,
-          addedByName: getActorName(buyer),
-          addedByUsername: buyer?.username ?? null,
-          addedByTelegramId: buyer?.id ? String(buyer.id) : null,
         }),
       })
 
@@ -345,7 +401,7 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch('/api/shopping-items', {
+      const response = await telegramFetch('/api/shopping-items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -353,9 +409,6 @@ export default function Page() {
           urgency: productUrgency,
           quantityLabel: productQuantity,
           note: productNote,
-          addedByName: getActorName(buyer),
-          addedByUsername: buyer?.username ?? null,
-          addedByTelegramId: buyer?.id ? String(buyer.id) : null,
         }),
       })
 
@@ -383,14 +436,11 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch(`/api/tasks/${task.id}`, {
+      const response = await telegramFetch(`/api/tasks/${task.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'complete',
-          actorName: getActorName(buyer),
-          actorUsername: buyer?.username ?? null,
-          actorTelegramId: buyer?.id ? String(buyer.id) : null,
         }),
       })
 
@@ -415,7 +465,7 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch(`/api/tasks/${task.id}`, {
+      const response = await telegramFetch(`/api/tasks/${task.id}`, {
         method: 'DELETE',
       })
 
@@ -451,14 +501,11 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch(`/api/tasks/${selectedTask.id}`, {
+      const response = await telegramFetch(`/api/tasks/${selectedTask.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'replace',
-          actorName: getActorName(buyer),
-          actorUsername: buyer?.username ?? null,
-          actorTelegramId: buyer?.id ? String(buyer.id) : null,
           title,
           note: replaceTaskNote,
           priority: replaceTaskPriority,
@@ -486,14 +533,11 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch(`/api/shopping-items/${item.id}`, {
+      const response = await telegramFetch(`/api/shopping-items/${item.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'purchase',
-          actorName: getActorName(buyer),
-          actorUsername: buyer?.username ?? null,
-          actorTelegramId: buyer?.id ? String(buyer.id) : null,
         }),
       })
 
@@ -518,7 +562,7 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch(`/api/shopping-items/${item.id}`, {
+      const response = await telegramFetch(`/api/shopping-items/${item.id}`, {
         method: 'DELETE',
       })
 
@@ -554,14 +598,11 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await fetch(`/api/shopping-items/${selectedShoppingItem.id}`, {
+      const response = await telegramFetch(`/api/shopping-items/${selectedShoppingItem.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'replace',
-          actorName: getActorName(buyer),
-          actorUsername: buyer?.username ?? null,
-          actorTelegramId: buyer?.id ? String(buyer.id) : null,
           title,
           urgency: replaceUrgency,
           quantityLabel: replaceQuantity,
@@ -586,7 +627,7 @@ export default function Page() {
   }
 
   return (
-    <main className='min-h-screen bg-[radial-gradient(circle_at_top,_rgba(250,204,21,0.12),_transparent_20%),linear-gradient(180deg,_#f3efe3_0%,_#ebe7d8_45%,_#dde7df_100%)] text-slate-950'>
+    <main className='min-h-screen bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.12),transparent_20%),linear-gradient(180deg,#f3efe3_0%,#ebe7d8_45%,#dde7df_100%)] text-slate-950'>
       {modal ? (
         <div className='fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-3 backdrop-blur-md sm:items-center sm:p-6'>
           {modal === 'household' ? (
@@ -594,7 +635,7 @@ export default function Page() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className='flex h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#13202f] text-white shadow-2xl'
+              className='flex h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-4xl border border-white/10 bg-[#13202f] text-white shadow-2xl'
             >
               <div className='border-b border-white/10 px-5 py-5 sm:px-6'>
                 <div className='flex items-center justify-between gap-4'>
@@ -667,7 +708,7 @@ export default function Page() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className='w-full max-w-md rounded-[2rem] border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
+              className='w-full max-w-md rounded-4xl border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
             >
               <div className='space-y-2'>
                 <div className='text-xs uppercase tracking-[0.3em] text-white/50'>БЫТ</div>
@@ -730,7 +771,7 @@ export default function Page() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className='w-full max-w-md rounded-[2rem] border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
+              className='w-full max-w-md rounded-4xl border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
             >
               <div className='space-y-2'>
                 <div className='text-xs uppercase tracking-[0.3em] text-white/50'>
@@ -792,7 +833,7 @@ export default function Page() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className='flex h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#13202f] text-white shadow-2xl'
+              className='flex h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-4xl border border-white/10 bg-[#13202f] text-white shadow-2xl'
             >
               <div className='border-b border-white/10 px-5 py-5 sm:px-6'>
                 <div className='flex items-center justify-between gap-4'>
@@ -870,7 +911,7 @@ export default function Page() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className='w-full max-w-md rounded-[2rem] border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
+              className='w-full max-w-md rounded-4xl border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
             >
               <div className='space-y-2'>
                 <div className='text-xs uppercase tracking-[0.3em] text-white/50'>ПОКУПКИ</div>
@@ -931,7 +972,7 @@ export default function Page() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className='w-full max-w-md rounded-[2rem] border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
+              className='w-full max-w-md rounded-4xl border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
             >
               <div className='space-y-2'>
                 <div className='text-xs uppercase tracking-[0.3em] text-white/50'>
@@ -1003,7 +1044,7 @@ export default function Page() {
           initial='hidden'
           animate='visible'
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className='overflow-hidden rounded-[2rem] border border-black/8 bg-[#13202f] text-white shadow-[0_30px_80px_rgba(17,24,39,0.22)]'
+          className='overflow-hidden rounded-4xl border border-black/8 bg-[#13202f] text-white shadow-[0_30px_80px_rgba(17,24,39,0.22)]'
         >
           <div className='space-y-6 px-5 py-6 sm:px-8 sm:py-8'>
             <div className='flex flex-wrap items-center justify-between gap-4'>
@@ -1016,7 +1057,7 @@ export default function Page() {
                 </h1>
               </div>
 
-              <div className='rounded-[1.5rem] border border-white/10 bg-white/8 px-4 py-4'>
+              <div className='rounded-3xl border border-white/10 bg-white/8 px-4 py-4'>
                 <div className='text-xs uppercase tracking-[0.24em] text-white/50'>
                   Сейчас в Mini App
                 </div>
@@ -1027,7 +1068,7 @@ export default function Page() {
             <div className='grid grid-cols-2 gap-3'>
               <button
                 type='button'
-                className='rounded-[1.5rem] bg-[#f3c54b] px-4 py-4 text-left text-slate-950 transition hover:scale-[0.99]'
+                className='rounded-3xl bg-[#f3c54b] px-4 py-4 text-left text-slate-950 transition hover:scale-[0.99]'
                 onClick={() => openMainModal('household')}
               >
                 <div className='text-xs uppercase tracking-[0.28em]'>БЫТ</div>
@@ -1037,7 +1078,7 @@ export default function Page() {
 
               <button
                 type='button'
-                className='rounded-[1.5rem] bg-[#8fd4b0] px-4 py-4 text-left text-slate-950 transition hover:scale-[0.99]'
+                className='rounded-3xl bg-[#8fd4b0] px-4 py-4 text-left text-slate-950 transition hover:scale-[0.99]'
                 onClick={() => openMainModal('shopping-list')}
               >
                 <div className='text-xs uppercase tracking-[0.28em]'>ПОКУПКИ</div>
@@ -1066,7 +1107,7 @@ export default function Page() {
             initial='hidden'
             animate='visible'
             transition={{ delay: 0.06, duration: 0.35, ease: 'easeOut' }}
-            className='flex flex-col rounded-[2rem] border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
+            className='flex flex-col rounded-4xl border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
           >
             <div className='space-y-2'>
               <div className='text-xs uppercase tracking-[0.28em] text-slate-500'>
@@ -1116,7 +1157,7 @@ export default function Page() {
             initial='hidden'
             animate='visible'
             transition={{ delay: 0.12, duration: 0.35, ease: 'easeOut' }}
-            className='rounded-[2rem] border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
+            className='rounded-4xl border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
           >
             <div className='space-y-2'>
               <div className='text-xs uppercase tracking-[0.28em] text-slate-500'>

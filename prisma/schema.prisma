@@ -8,28 +8,56 @@ datasource db {
   provider = "postgresql"
 }
 
+model Household {
+  id            String          @id
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  members       Member[]
+  tasks         HouseholdTask[]
+  shoppingItems ShoppingItem[]
+}
+
+model Member {
+  id             String    @id @default(cuid())
+  householdId    String
+  telegramUserId String    @unique
+  chatId         String    @unique
+  firstName      String
+  lastName       String?
+  username       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+}
+
 model HouseholdTask {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
+  householdId       String    @default("default-household")
   title             String
   note              String?
-  status            String   @default("open")
-  priority          String   @default("normal")
+  status            String    @default("open")
+  priority          String    @default("normal")
   addedByName       String
   addedByUsername   String?
   addedByTelegramId String?
   completedAt       DateTime?
   completedByName   String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
 
-  @@index([status, createdAt])
+  @@index([householdId, status, createdAt])
 }
 
 model ShoppingItem {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
+  householdId       String    @default("default-household")
   title             String
-  status            String   @default("active")
-  urgency           String   @default("soon")
+  status            String    @default("active")
+  urgency           String    @default("soon")
   quantityLabel     String?
   note              String?
   addedByName       String
@@ -37,8 +65,9 @@ model ShoppingItem {
   addedByTelegramId String?
   purchasedAt       DateTime?
   purchasedByName   String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
 
-  @@index([status, createdAt])
+  @@index([householdId, status, createdAt])
 }

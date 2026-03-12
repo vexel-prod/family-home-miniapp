@@ -1,3 +1,4 @@
+import { authorizeRequest } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { notifyPartner } from "@/lib/partner-notify";
 import { NextResponse } from "next/server";
@@ -18,10 +19,18 @@ export async function PATCH(
   context: { params: Promise<{ itemId: string }> },
 ) {
   const prisma = getPrisma();
+  const auth = await authorizeRequest(request, prisma);
+
+  if (!auth) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   const { itemId } = await context.params;
   const body = (await request.json()) as UpdateShoppingPayload;
 
-  if (!body.action || !body.actorName?.trim()) {
+  const actorName = [auth.user.first_name, auth.user.last_name].filter(Boolean).join(" ").trim() || auth.user.username || auth.member.firstName;
+
+  if (!body.action) {
     return NextResponse.json({ ok: false, error: "Missing update data" }, { status: 400 });
   }
 
@@ -31,6 +40,10 @@ export async function PATCH(
 
   if (!item) {
     return NextResponse.json({ ok: false, error: "Shopping item not found" }, { status: 404 });
+  }
+
+  if (item.householdId !== auth.member.householdId) {
+    return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
 
   if (body.action === "replace") {
@@ -49,9 +62,9 @@ export async function PATCH(
     });
 
     await notifyPartner({
-      actorName: body.actorName.trim(),
-      actorTelegramId: body.actorTelegramId ?? null,
-      actorUsername: body.actorUsername ?? null,
+      actorName,
+      actorTelegramId: String(auth.user.id),
+      actorUsername: auth.user.username ?? null,
       text:
         `Раздел: ПОКУПКИ\n` +
         `Позиция обновлена: ${updatedItem.title}\n` +
@@ -70,7 +83,7 @@ export async function PATCH(
         ? {
             status: "purchased",
             purchasedAt: new Date(),
-            purchasedByName: body.actorName.trim(),
+            purchasedByName: actorName,
           }
         : {
             status: "active",
@@ -81,9 +94,9 @@ export async function PATCH(
 
   if (body.action === "purchase") {
     await notifyPartner({
-      actorName: body.actorName.trim(),
-      actorTelegramId: body.actorTelegramId ?? null,
-      actorUsername: body.actorUsername ?? null,
+      actorName,
+      actorTelegramId: String(auth.user.id),
+      actorUsername: auth.user.username ?? null,
       text:
         `Раздел: ПОКУПКИ\n` +
         `Позиция закрыта: ${updatedItem.title}\n` +
@@ -95,10 +108,16 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ itemId: string }> },
 ) {
   const prisma = getPrisma();
+  const auth = await authorizeRequest(request, prisma);
+
+  if (!auth) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   const { itemId } = await context.params;
 
   const item = await prisma.shoppingItem.findUnique({
@@ -107,6 +126,10 @@ export async function DELETE(
 
   if (!item) {
     return NextResponse.json({ ok: false, error: "Shopping item not found" }, { status: 404 });
+  }
+
+  if (item.householdId !== auth.member.householdId) {
+    return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
 
   await prisma.shoppingItem.delete({
