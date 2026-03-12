@@ -1,9 +1,12 @@
 import { getPrisma } from "@/lib/prisma";
+import { notifyPartner } from "@/lib/partner-notify";
 import { NextResponse } from "next/server";
 
 type UpdateShoppingPayload = {
   action?: "purchase" | "restore" | "replace";
   actorName?: string;
+  actorUsername?: string | null;
+  actorTelegramId?: string | null;
   title?: string;
   urgency?: "soon" | "out";
   quantityLabel?: string | null;
@@ -45,6 +48,18 @@ export async function PATCH(
       },
     });
 
+    await notifyPartner({
+      actorName: body.actorName.trim(),
+      actorTelegramId: body.actorTelegramId ?? null,
+      actorUsername: body.actorUsername ?? null,
+      text:
+        `Раздел: ПОКУПКИ\n` +
+        `Позиция обновлена: ${updatedItem.title}\n` +
+        `Статус: ${updatedItem.urgency === "out" ? "закончилось" : "заканчивается"}` +
+        `${updatedItem.quantityLabel ? `\nКоличество: ${updatedItem.quantityLabel}` : ""}` +
+        `${updatedItem.note ? `\nКомментарий: ${updatedItem.note}` : ""}`,
+    });
+
     return NextResponse.json({ ok: true, shoppingItem: updatedItem });
   }
 
@@ -63,6 +78,18 @@ export async function PATCH(
             purchasedByName: null,
           },
   });
+
+  if (body.action === "purchase") {
+    await notifyPartner({
+      actorName: body.actorName.trim(),
+      actorTelegramId: body.actorTelegramId ?? null,
+      actorUsername: body.actorUsername ?? null,
+      text:
+        `Раздел: ПОКУПКИ\n` +
+        `Позиция закрыта: ${updatedItem.title}\n` +
+        `Статус: куплено`,
+    });
+  }
 
   return NextResponse.json({ ok: true, shoppingItem: updatedItem });
 }

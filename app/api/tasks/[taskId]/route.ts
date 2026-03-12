@@ -1,9 +1,16 @@
 import { getPrisma } from "@/lib/prisma";
+import {
+  formatElapsedLabel,
+  formatMoscowDateTime,
+  notifyPartner,
+} from "@/lib/partner-notify";
 import { NextResponse } from "next/server";
 
 type UpdateTaskPayload = {
   action?: "complete" | "reopen";
   actorName?: string;
+  actorUsername?: string | null;
+  actorTelegramId?: string | null;
 };
 
 export async function PATCH(
@@ -41,6 +48,20 @@ export async function PATCH(
             completedByName: null,
           },
   });
+
+  if (body.action === "complete" && updatedTask.completedAt) {
+    await notifyPartner({
+      actorName: body.actorName.trim(),
+      actorTelegramId: body.actorTelegramId ?? null,
+      actorUsername: body.actorUsername ?? null,
+      text:
+        `Раздел: БЫТ\n` +
+        `Задача выполнена: ${updatedTask.title}\n` +
+        `Кто выполнил: ${body.actorName.trim()}\n` +
+        `Когда: ${formatMoscowDateTime(updatedTask.completedAt)}\n` +
+        `Прошло с момента создания: ${formatElapsedLabel(task.createdAt, updatedTask.completedAt)}`,
+    });
+  }
 
   return NextResponse.json({ ok: true, task: updatedTask });
 }

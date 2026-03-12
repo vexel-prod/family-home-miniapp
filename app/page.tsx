@@ -148,6 +148,7 @@ const reveal = {
 export default function Page() {
   const [buyer, setBuyer] = useState<TelegramUser | undefined>()
   const [modal, setModal] = useState<ModalKey>(null)
+  const [modalCooldownUntil, setModalCooldownUntil] = useState(0)
   const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
@@ -181,6 +182,23 @@ export default function Page() {
     void loadData()
   }, [])
 
+  function canOpenModal() {
+    return Date.now() >= modalCooldownUntil
+  }
+
+  function closeModalWithGuard() {
+    setModalCooldownUntil(Date.now() + 300)
+    setModal(null)
+  }
+
+  function openMainModal(nextModal: Extract<ModalKey, 'household' | 'shopping-list'>) {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setModal(nextModal)
+  }
+
   async function loadData() {
     setLoading(true)
     setError('')
@@ -203,6 +221,10 @@ export default function Page() {
   }
 
   function openShoppingActions(item: ShoppingItem) {
+    if (!canOpenModal()) {
+      return
+    }
+
     setSelectedShoppingItem(item)
     setModal('shopping-actions')
   }
@@ -220,6 +242,7 @@ export default function Page() {
   }
 
   function closeShoppingModals() {
+    setModalCooldownUntil(Date.now() + 300)
     setModal(null)
     setSelectedShoppingItem(null)
     setReplaceTitle('')
@@ -327,6 +350,8 @@ export default function Page() {
         body: JSON.stringify({
           action: 'complete',
           actorName: getActorName(buyer),
+          actorUsername: buyer?.username ?? null,
+          actorTelegramId: buyer?.id ? String(buyer.id) : null,
         }),
       })
 
@@ -356,6 +381,8 @@ export default function Page() {
         body: JSON.stringify({
           action: 'purchase',
           actorName: getActorName(buyer),
+          actorUsername: buyer?.username ?? null,
+          actorTelegramId: buyer?.id ? String(buyer.id) : null,
         }),
       })
 
@@ -422,6 +449,8 @@ export default function Page() {
         body: JSON.stringify({
           action: 'replace',
           actorName: getActorName(buyer),
+          actorUsername: buyer?.username ?? null,
+          actorTelegramId: buyer?.id ? String(buyer.id) : null,
           title,
           urgency: replaceUrgency,
           quantityLabel: replaceQuantity,
@@ -465,7 +494,7 @@ export default function Page() {
                   <button
                     type="button"
                     className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10"
-                    onClick={() => setModal(null)}
+                    onClick={closeModalWithGuard}
                   >
                     Закрыть
                   </button>
@@ -510,7 +539,7 @@ export default function Page() {
                 <button
                   type="button"
                   className="w-full rounded-[1.2rem] bg-white px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-white/90"
-                  onClick={() => setModal(null)}
+                  onClick={closeModalWithGuard}
                 >
                   Ознакомлен
                 </button>
@@ -534,7 +563,7 @@ export default function Page() {
                   <button
                     type="button"
                     className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10"
-                    onClick={() => setModal(null)}
+                    onClick={closeModalWithGuard}
                   >
                     Закрыть
                   </button>
@@ -584,7 +613,7 @@ export default function Page() {
                 <button
                   type="button"
                   className="w-full rounded-[1.2rem] bg-white px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-white/90"
-                  onClick={() => setModal(null)}
+                  onClick={closeModalWithGuard}
                 >
                   Ознакомлен
                 </button>
@@ -602,6 +631,14 @@ export default function Page() {
               <div className="space-y-2">
                 <div className="text-xs uppercase tracking-[0.3em] text-white/50">ПОКУПКИ</div>
                 <h2 className="text-3xl font-black">{selectedShoppingItem.title}</h2>
+                {selectedShoppingItem.quantityLabel ? (
+                  <div className="text-sm text-white/80">
+                    Количество: {selectedShoppingItem.quantityLabel}
+                  </div>
+                ) : null}
+                {selectedShoppingItem.note ? (
+                  <div className="text-sm leading-6 text-white/65">{selectedShoppingItem.note}</div>
+                ) : null}
                 <div className="text-sm text-white/60">
                   Выбери действие для этой позиции.
                 </div>
@@ -637,9 +674,9 @@ export default function Page() {
                 <button
                   type="button"
                   className="w-full rounded-[1.2rem] border border-white/10 bg-white/5 px-4 py-4 text-base font-semibold text-white transition hover:bg-white/10"
-                  onClick={() => setModal('shopping-list')}
+                  onClick={closeShoppingModals}
                 >
-                  Назад
+                  Закрыть
                 </button>
               </div>
             </motion.div>
@@ -741,7 +778,7 @@ export default function Page() {
               <button
                 type="button"
                 className="rounded-[1.5rem] bg-[#f3c54b] px-4 py-4 text-left text-slate-950 transition hover:scale-[0.99]"
-                onClick={() => setModal('household')}
+                onClick={() => openMainModal('household')}
               >
                 <div className="text-xs uppercase tracking-[0.28em]">БЫТ</div>
                 <div className="mt-3 text-3xl font-black">{openTasks.length}</div>
@@ -751,7 +788,7 @@ export default function Page() {
               <button
                 type="button"
                 className="rounded-[1.5rem] bg-[#8fd4b0] px-4 py-4 text-left text-slate-950 transition hover:scale-[0.99]"
-                onClick={() => setModal('shopping-list')}
+                onClick={() => openMainModal('shopping-list')}
               >
                 <div className="text-xs uppercase tracking-[0.28em]">ПОКУПКИ</div>
                 <div className="mt-3 text-3xl font-black">{shoppingItems.length}</div>
@@ -889,8 +926,7 @@ export default function Page() {
             className="rounded-[2rem] border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]"
           >
             <div className="space-y-2">
-              <div className="text-xs uppercase tracking-[0.28em] text-slate-500">Быстрый обзор БЫТ</div>
-              <h2 className="text-3xl font-black">Срочные сверху</h2>
+              <div className="text-xs uppercase tracking-[0.28em] text-slate-500">Список задач</div>
             </div>
 
             {loading ? (
@@ -948,8 +984,7 @@ export default function Page() {
             className="rounded-[2rem] border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]"
           >
             <div className="space-y-2">
-              <div className="text-xs uppercase tracking-[0.28em] text-slate-500">Быстрый обзор ПОКУПКИ</div>
-              <h2 className="text-3xl font-black">Нажми на позицию</h2>
+              <div className="text-xs uppercase tracking-[0.28em] text-slate-500">Список покупок</div>
             </div>
 
             {loading ? (
@@ -976,6 +1011,12 @@ export default function Page() {
                         {item.urgency === 'out' ? 'Закончилось' : 'Заканчивается'}
                       </span>
                       <h3 className="text-lg font-bold">{item.title}</h3>
+                      {item.quantityLabel ? (
+                        <div className="text-sm text-slate-700">Количество: {item.quantityLabel}</div>
+                      ) : null}
+                      {item.note ? (
+                        <div className="text-sm leading-6 text-slate-600">{item.note}</div>
+                      ) : null}
                       <div className="text-xs text-slate-500">
                         Добавил(а) {item.addedByName} • {formatRelativeDate(item.createdAt)}
                       </div>
