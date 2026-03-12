@@ -2,12 +2,22 @@ import type { PrismaClient } from "@/generated/prisma/client";
 
 const DEFAULT_HOUSEHOLD_ID = "default-household";
 
-export async function ensureDefaultHousehold(prisma: PrismaClient) {
-  const primaryChatId = process.env.TELEGRAM_PRIMARY_CHAT_ID;
-  const secondaryChatId = process.env.TELEGRAM_SECONDARY_CHAT_ID;
+function getConfiguredUserIds() {
+  const primaryUserId =
+    process.env.TELEGRAM_PRIMARY_USER_ID ?? process.env.TELEGRAM_PRIMARY_CHAT_ID;
+  const secondaryUserId =
+    process.env.TELEGRAM_SECONDARY_USER_ID ?? process.env.TELEGRAM_SECONDARY_CHAT_ID;
 
-  if (!primaryChatId || !secondaryChatId) {
-    throw new Error("Missing TELEGRAM_PRIMARY_CHAT_ID or TELEGRAM_SECONDARY_CHAT_ID");
+  return { primaryUserId, secondaryUserId };
+}
+
+export async function ensureDefaultHousehold(prisma: PrismaClient) {
+  const { primaryUserId, secondaryUserId } = getConfiguredUserIds();
+
+  if (!primaryUserId || !secondaryUserId) {
+    throw new Error(
+      "Missing TELEGRAM_PRIMARY_USER_ID/TELEGRAM_PRIMARY_CHAT_ID or TELEGRAM_SECONDARY_USER_ID/TELEGRAM_SECONDARY_CHAT_ID",
+    );
   }
 
   await prisma.household.upsert({
@@ -20,26 +30,26 @@ export async function ensureDefaultHousehold(prisma: PrismaClient) {
   });
 
   await prisma.member.upsert({
-    where: { telegramUserId: primaryChatId },
+    where: { telegramUserId: primaryUserId },
     update: {},
     create: {
       householdId: DEFAULT_HOUSEHOLD_ID,
-      telegramUserId: primaryChatId,
-      chatId: primaryChatId,
+      telegramUserId: primaryUserId,
+      chatId: primaryUserId,
       firstName: "Primary",
     },
   });
 
   await prisma.member.upsert({
-    where: { telegramUserId: secondaryChatId },
+    where: { telegramUserId: secondaryUserId },
     update: {},
     create: {
       householdId: DEFAULT_HOUSEHOLD_ID,
-      telegramUserId: secondaryChatId,
-      chatId: secondaryChatId,
+      telegramUserId: secondaryUserId,
+      chatId: secondaryUserId,
       firstName: "Secondary",
     },
   });
 }
 
-export { DEFAULT_HOUSEHOLD_ID };
+export { DEFAULT_HOUSEHOLD_ID, getConfiguredUserIds };

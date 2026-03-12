@@ -1,4 +1,5 @@
 import { sendTelegramMessage } from "@/lib/telegram";
+import { getConfiguredUserIds } from "@/lib/household";
 
 type PartnerNotificationInput = {
   actorName: string;
@@ -8,19 +9,18 @@ type PartnerNotificationInput = {
 };
 
 function getPartnerChatId(actorTelegramId?: string | null) {
-  const firstChatId = process.env.TELEGRAM_PRIMARY_CHAT_ID;
-  const secondChatId = process.env.TELEGRAM_SECONDARY_CHAT_ID;
+  const { primaryUserId, secondaryUserId } = getConfiguredUserIds();
 
-  if (!firstChatId || !secondChatId || !actorTelegramId) {
+  if (!primaryUserId || !secondaryUserId || !actorTelegramId) {
     return null;
   }
 
-  if (actorTelegramId === firstChatId) {
-    return secondChatId;
+  if (actorTelegramId === primaryUserId) {
+    return secondaryUserId;
   }
 
-  if (actorTelegramId === secondChatId) {
-    return firstChatId;
+  if (actorTelegramId === secondaryUserId) {
+    return primaryUserId;
   }
 
   return null;
