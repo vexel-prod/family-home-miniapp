@@ -7,10 +7,13 @@ import {
 import { NextResponse } from "next/server";
 
 type UpdateTaskPayload = {
-  action?: "complete" | "reopen";
+  action?: "complete" | "reopen" | "replace";
   actorName?: string;
   actorUsername?: string | null;
   actorTelegramId?: string | null;
+  title?: string;
+  note?: string | null;
+  priority?: "normal" | "urgent";
 };
 
 export async function PATCH(
@@ -31,6 +34,34 @@ export async function PATCH(
 
   if (!task) {
     return NextResponse.json({ ok: false, error: "Task not found" }, { status: 404 });
+  }
+
+  if (body.action === "replace") {
+    if (!body.title?.trim()) {
+      return NextResponse.json({ ok: false, error: "Missing replacement title" }, { status: 400 });
+    }
+
+    const updatedTask = await prisma.householdTask.update({
+      where: { id: taskId },
+      data: {
+        title: body.title.trim(),
+        note: body.note?.trim() || null,
+        priority: body.priority === "urgent" ? "urgent" : "normal",
+      },
+    });
+
+    await notifyPartner({
+      actorName: body.actorName.trim(),
+      actorTelegramId: body.actorTelegramId ?? null,
+      actorUsername: body.actorUsername ?? null,
+      text:
+        `Раздел: БЫТ\n` +
+        `Задача обновлена: ${updatedTask.title}\n` +
+        `Приоритет: ${updatedTask.priority === "urgent" ? "срочно" : "обычно"}` +
+        `${updatedTask.note ? `\nКомментарий: ${updatedTask.note}` : ""}`,
+    });
+
+    return NextResponse.json({ ok: true, task: updatedTask });
   }
 
   const updatedTask = await prisma.householdTask.update({
@@ -64,4 +95,26 @@ export async function PATCH(
   }
 
   return NextResponse.json({ ok: true, task: updatedTask });
+}
+
+export async function DELETE(
+  _request: Request,
+  context: { params: Promise<{ taskId: string }> },
+) {
+  const prisma = getPrisma();
+  const { taskId } = await context.params;
+
+  const task = await prisma.householdTask.findUnique({
+    where: { id: taskId },
+  });
+
+  if (!task) {
+    return NextResponse.json({ ok: false, error: "Task not found" }, { status: 404 });
+  }
+
+  await prisma.householdTask.delete({
+    where: { id: taskId },
+  });
+
+  return NextResponse.json({ ok: true });
 }
