@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more TaskCatalogItems
- * const taskCatalogItems = await prisma.taskCatalogItem.findMany()
+ * // Fetch zero or more HouseholdTasks
+ * const householdTasks = await prisma.householdTask.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,20 +42,10 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model TaskCatalogItem
- * 
- */
-export type TaskCatalogItem = Prisma.TaskCatalogItemModel
-/**
  * Model HouseholdTask
  * 
  */
 export type HouseholdTask = Prisma.HouseholdTaskModel
-/**
- * Model ProductCatalogItem
- * 
- */
-export type ProductCatalogItem = Prisma.ProductCatalogItemModel
 /**
  * Model ShoppingItem
  * 

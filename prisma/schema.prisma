@@ -8,54 +8,28 @@ datasource db {
   provider = "postgresql"
 }
 
-model TaskCatalogItem {
-  id          String          @id
-  title       String
-  description String?
-  category    String
-  room        String?
-  sortOrder   Int             @default(0)
-  isActive    Boolean         @default(true)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  tasks       HouseholdTask[]
-}
-
 model HouseholdTask {
-  id               String          @id @default(cuid())
-  catalogItemId    String
-  status           String          @default("open")
-  note             String?
-  addedByName      String
-  addedByUsername  String?
+  id                String   @id @default(cuid())
+  title             String
+  note              String?
+  status            String   @default("open")
+  priority          String   @default("normal")
+  addedByName       String
+  addedByUsername   String?
   addedByTelegramId String?
-  completedAt      DateTime?
-  completedByName  String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  catalogItem      TaskCatalogItem @relation(fields: [catalogItemId], references: [id], onDelete: Restrict)
+  completedAt       DateTime?
+  completedByName   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@index([status, createdAt])
 }
 
-model ProductCatalogItem {
-  id          String         @id
-  title       String
-  description String?
-  category    String
-  unitLabel   String?
-  sortOrder   Int            @default(0)
-  isActive    Boolean        @default(true)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  items       ShoppingItem[]
-}
-
 model ShoppingItem {
-  id                String             @id @default(cuid())
-  catalogItemId     String
-  status            String             @default("active")
-  urgency           String             @default("soon")
+  id                String   @id @default(cuid())
+  title             String
+  status            String   @default("active")
+  urgency           String   @default("soon")
   quantityLabel     String?
   note              String?
   addedByName       String
@@ -63,9 +37,8 @@ model ShoppingItem {
   addedByTelegramId String?
   purchasedAt       DateTime?
   purchasedByName   String?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  catalogItem       ProductCatalogItem @relation(fields: [catalogItemId], references: [id], onDelete: Restrict)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@index([status, createdAt])
 }

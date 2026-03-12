@@ -26,7 +26,7 @@ export type AggregateShoppingItem = {
 
 export type ShoppingItemMinAggregateOutputType = {
   id: string | null
-  catalogItemId: string | null
+  title: string | null
   status: string | null
   urgency: string | null
   quantityLabel: string | null
@@ -42,7 +42,7 @@ export type ShoppingItemMinAggregateOutputType = {
 
 export type ShoppingItemMaxAggregateOutputType = {
   id: string | null
-  catalogItemId: string | null
+  title: string | null
   status: string | null
   urgency: string | null
   quantityLabel: string | null
@@ -58,7 +58,7 @@ export type ShoppingItemMaxAggregateOutputType = {
 
 export type ShoppingItemCountAggregateOutputType = {
   id: number
-  catalogItemId: number
+  title: number
   status: number
   urgency: number
   quantityLabel: number
@@ -76,7 +76,7 @@ export type ShoppingItemCountAggregateOutputType = {
 
 export type ShoppingItemMinAggregateInputType = {
   id?: true
-  catalogItemId?: true
+  title?: true
   status?: true
   urgency?: true
   quantityLabel?: true
@@ -92,7 +92,7 @@ export type ShoppingItemMinAggregateInputType = {
 
 export type ShoppingItemMaxAggregateInputType = {
   id?: true
-  catalogItemId?: true
+  title?: true
   status?: true
   urgency?: true
   quantityLabel?: true
@@ -108,7 +108,7 @@ export type ShoppingItemMaxAggregateInputType = {
 
 export type ShoppingItemCountAggregateInputType = {
   id?: true
-  catalogItemId?: true
+  title?: true
   status?: true
   urgency?: true
   quantityLabel?: true
@@ -197,7 +197,7 @@ export type ShoppingItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type ShoppingItemGroupByOutputType = {
   id: string
-  catalogItemId: string
+  title: string
   status: string
   urgency: string
   quantityLabel: string | null
@@ -234,7 +234,7 @@ export type ShoppingItemWhereInput = {
   OR?: Prisma.ShoppingItemWhereInput[]
   NOT?: Prisma.ShoppingItemWhereInput | Prisma.ShoppingItemWhereInput[]
   id?: Prisma.StringFilter<"ShoppingItem"> | string
-  catalogItemId?: Prisma.StringFilter<"ShoppingItem"> | string
+  title?: Prisma.StringFilter<"ShoppingItem"> | string
   status?: Prisma.StringFilter<"ShoppingItem"> | string
   urgency?: Prisma.StringFilter<"ShoppingItem"> | string
   quantityLabel?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
@@ -246,12 +246,11 @@ export type ShoppingItemWhereInput = {
   purchasedByName?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ShoppingItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShoppingItem"> | Date | string
-  catalogItem?: Prisma.XOR<Prisma.ProductCatalogItemScalarRelationFilter, Prisma.ProductCatalogItemWhereInput>
 }
 
 export type ShoppingItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  catalogItemId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urgency?: Prisma.SortOrder
   quantityLabel?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -263,7 +262,6 @@ export type ShoppingItemOrderByWithRelationInput = {
   purchasedByName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  catalogItem?: Prisma.ProductCatalogItemOrderByWithRelationInput
 }
 
 export type ShoppingItemWhereUniqueInput = Prisma.AtLeast<{
@@ -271,7 +269,7 @@ export type ShoppingItemWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ShoppingItemWhereInput | Prisma.ShoppingItemWhereInput[]
   OR?: Prisma.ShoppingItemWhereInput[]
   NOT?: Prisma.ShoppingItemWhereInput | Prisma.ShoppingItemWhereInput[]
-  catalogItemId?: Prisma.StringFilter<"ShoppingItem"> | string
+  title?: Prisma.StringFilter<"ShoppingItem"> | string
   status?: Prisma.StringFilter<"ShoppingItem"> | string
   urgency?: Prisma.StringFilter<"ShoppingItem"> | string
   quantityLabel?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
@@ -283,12 +281,11 @@ export type ShoppingItemWhereUniqueInput = Prisma.AtLeast<{
   purchasedByName?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ShoppingItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShoppingItem"> | Date | string
-  catalogItem?: Prisma.XOR<Prisma.ProductCatalogItemScalarRelationFilter, Prisma.ProductCatalogItemWhereInput>
 }, "id">
 
 export type ShoppingItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  catalogItemId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urgency?: Prisma.SortOrder
   quantityLabel?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -310,7 +307,7 @@ export type ShoppingItemScalarWhereWithAggregatesInput = {
   OR?: Prisma.ShoppingItemScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ShoppingItemScalarWhereWithAggregatesInput | Prisma.ShoppingItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ShoppingItem"> | string
-  catalogItemId?: Prisma.StringWithAggregatesFilter<"ShoppingItem"> | string
+  title?: Prisma.StringWithAggregatesFilter<"ShoppingItem"> | string
   status?: Prisma.StringWithAggregatesFilter<"ShoppingItem"> | string
   urgency?: Prisma.StringWithAggregatesFilter<"ShoppingItem"> | string
   quantityLabel?: Prisma.StringNullableWithAggregatesFilter<"ShoppingItem"> | string | null
@@ -326,6 +323,7 @@ export type ShoppingItemScalarWhereWithAggregatesInput = {
 
 export type ShoppingItemCreateInput = {
   id?: string
+  title: string
   status?: string
   urgency?: string
   quantityLabel?: string | null
@@ -337,12 +335,11 @@ export type ShoppingItemCreateInput = {
   purchasedByName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  catalogItem: Prisma.ProductCatalogItemCreateNestedOneWithoutItemsInput
 }
 
 export type ShoppingItemUncheckedCreateInput = {
   id?: string
-  catalogItemId: string
+  title: string
   status?: string
   urgency?: string
   quantityLabel?: string | null
@@ -358,6 +355,7 @@ export type ShoppingItemUncheckedCreateInput = {
 
 export type ShoppingItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   urgency?: Prisma.StringFieldUpdateOperationsInput | string
   quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -369,12 +367,11 @@ export type ShoppingItemUpdateInput = {
   purchasedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  catalogItem?: Prisma.ProductCatalogItemUpdateOneRequiredWithoutItemsNestedInput
 }
 
 export type ShoppingItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  catalogItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   urgency?: Prisma.StringFieldUpdateOperationsInput | string
   quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -390,7 +387,7 @@ export type ShoppingItemUncheckedUpdateInput = {
 
 export type ShoppingItemCreateManyInput = {
   id?: string
-  catalogItemId: string
+  title: string
   status?: string
   urgency?: string
   quantityLabel?: string | null
@@ -406,6 +403,7 @@ export type ShoppingItemCreateManyInput = {
 
 export type ShoppingItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   urgency?: Prisma.StringFieldUpdateOperationsInput | string
   quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -421,7 +419,7 @@ export type ShoppingItemUpdateManyMutationInput = {
 
 export type ShoppingItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  catalogItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   urgency?: Prisma.StringFieldUpdateOperationsInput | string
   quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -435,19 +433,9 @@ export type ShoppingItemUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ShoppingItemListRelationFilter = {
-  every?: Prisma.ShoppingItemWhereInput
-  some?: Prisma.ShoppingItemWhereInput
-  none?: Prisma.ShoppingItemWhereInput
-}
-
-export type ShoppingItemOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type ShoppingItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  catalogItemId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urgency?: Prisma.SortOrder
   quantityLabel?: Prisma.SortOrder
@@ -463,7 +451,7 @@ export type ShoppingItemCountOrderByAggregateInput = {
 
 export type ShoppingItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  catalogItemId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urgency?: Prisma.SortOrder
   quantityLabel?: Prisma.SortOrder
@@ -479,7 +467,7 @@ export type ShoppingItemMaxOrderByAggregateInput = {
 
 export type ShoppingItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  catalogItemId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urgency?: Prisma.SortOrder
   quantityLabel?: Prisma.SortOrder
@@ -493,188 +481,11 @@ export type ShoppingItemMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type ShoppingItemCreateNestedManyWithoutCatalogItemInput = {
-  create?: Prisma.XOR<Prisma.ShoppingItemCreateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput> | Prisma.ShoppingItemCreateWithoutCatalogItemInput[] | Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput[]
-  connectOrCreate?: Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput | Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput[]
-  createMany?: Prisma.ShoppingItemCreateManyCatalogItemInputEnvelope
-  connect?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-}
-
-export type ShoppingItemUncheckedCreateNestedManyWithoutCatalogItemInput = {
-  create?: Prisma.XOR<Prisma.ShoppingItemCreateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput> | Prisma.ShoppingItemCreateWithoutCatalogItemInput[] | Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput[]
-  connectOrCreate?: Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput | Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput[]
-  createMany?: Prisma.ShoppingItemCreateManyCatalogItemInputEnvelope
-  connect?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-}
-
-export type ShoppingItemUpdateManyWithoutCatalogItemNestedInput = {
-  create?: Prisma.XOR<Prisma.ShoppingItemCreateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput> | Prisma.ShoppingItemCreateWithoutCatalogItemInput[] | Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput[]
-  connectOrCreate?: Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput | Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput[]
-  upsert?: Prisma.ShoppingItemUpsertWithWhereUniqueWithoutCatalogItemInput | Prisma.ShoppingItemUpsertWithWhereUniqueWithoutCatalogItemInput[]
-  createMany?: Prisma.ShoppingItemCreateManyCatalogItemInputEnvelope
-  set?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  disconnect?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  delete?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  connect?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  update?: Prisma.ShoppingItemUpdateWithWhereUniqueWithoutCatalogItemInput | Prisma.ShoppingItemUpdateWithWhereUniqueWithoutCatalogItemInput[]
-  updateMany?: Prisma.ShoppingItemUpdateManyWithWhereWithoutCatalogItemInput | Prisma.ShoppingItemUpdateManyWithWhereWithoutCatalogItemInput[]
-  deleteMany?: Prisma.ShoppingItemScalarWhereInput | Prisma.ShoppingItemScalarWhereInput[]
-}
-
-export type ShoppingItemUncheckedUpdateManyWithoutCatalogItemNestedInput = {
-  create?: Prisma.XOR<Prisma.ShoppingItemCreateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput> | Prisma.ShoppingItemCreateWithoutCatalogItemInput[] | Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput[]
-  connectOrCreate?: Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput | Prisma.ShoppingItemCreateOrConnectWithoutCatalogItemInput[]
-  upsert?: Prisma.ShoppingItemUpsertWithWhereUniqueWithoutCatalogItemInput | Prisma.ShoppingItemUpsertWithWhereUniqueWithoutCatalogItemInput[]
-  createMany?: Prisma.ShoppingItemCreateManyCatalogItemInputEnvelope
-  set?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  disconnect?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  delete?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  connect?: Prisma.ShoppingItemWhereUniqueInput | Prisma.ShoppingItemWhereUniqueInput[]
-  update?: Prisma.ShoppingItemUpdateWithWhereUniqueWithoutCatalogItemInput | Prisma.ShoppingItemUpdateWithWhereUniqueWithoutCatalogItemInput[]
-  updateMany?: Prisma.ShoppingItemUpdateManyWithWhereWithoutCatalogItemInput | Prisma.ShoppingItemUpdateManyWithWhereWithoutCatalogItemInput[]
-  deleteMany?: Prisma.ShoppingItemScalarWhereInput | Prisma.ShoppingItemScalarWhereInput[]
-}
-
-export type ShoppingItemCreateWithoutCatalogItemInput = {
-  id?: string
-  status?: string
-  urgency?: string
-  quantityLabel?: string | null
-  note?: string | null
-  addedByName: string
-  addedByUsername?: string | null
-  addedByTelegramId?: string | null
-  purchasedAt?: Date | string | null
-  purchasedByName?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ShoppingItemUncheckedCreateWithoutCatalogItemInput = {
-  id?: string
-  status?: string
-  urgency?: string
-  quantityLabel?: string | null
-  note?: string | null
-  addedByName: string
-  addedByUsername?: string | null
-  addedByTelegramId?: string | null
-  purchasedAt?: Date | string | null
-  purchasedByName?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ShoppingItemCreateOrConnectWithoutCatalogItemInput = {
-  where: Prisma.ShoppingItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.ShoppingItemCreateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput>
-}
-
-export type ShoppingItemCreateManyCatalogItemInputEnvelope = {
-  data: Prisma.ShoppingItemCreateManyCatalogItemInput | Prisma.ShoppingItemCreateManyCatalogItemInput[]
-  skipDuplicates?: boolean
-}
-
-export type ShoppingItemUpsertWithWhereUniqueWithoutCatalogItemInput = {
-  where: Prisma.ShoppingItemWhereUniqueInput
-  update: Prisma.XOR<Prisma.ShoppingItemUpdateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedUpdateWithoutCatalogItemInput>
-  create: Prisma.XOR<Prisma.ShoppingItemCreateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedCreateWithoutCatalogItemInput>
-}
-
-export type ShoppingItemUpdateWithWhereUniqueWithoutCatalogItemInput = {
-  where: Prisma.ShoppingItemWhereUniqueInput
-  data: Prisma.XOR<Prisma.ShoppingItemUpdateWithoutCatalogItemInput, Prisma.ShoppingItemUncheckedUpdateWithoutCatalogItemInput>
-}
-
-export type ShoppingItemUpdateManyWithWhereWithoutCatalogItemInput = {
-  where: Prisma.ShoppingItemScalarWhereInput
-  data: Prisma.XOR<Prisma.ShoppingItemUpdateManyMutationInput, Prisma.ShoppingItemUncheckedUpdateManyWithoutCatalogItemInput>
-}
-
-export type ShoppingItemScalarWhereInput = {
-  AND?: Prisma.ShoppingItemScalarWhereInput | Prisma.ShoppingItemScalarWhereInput[]
-  OR?: Prisma.ShoppingItemScalarWhereInput[]
-  NOT?: Prisma.ShoppingItemScalarWhereInput | Prisma.ShoppingItemScalarWhereInput[]
-  id?: Prisma.StringFilter<"ShoppingItem"> | string
-  catalogItemId?: Prisma.StringFilter<"ShoppingItem"> | string
-  status?: Prisma.StringFilter<"ShoppingItem"> | string
-  urgency?: Prisma.StringFilter<"ShoppingItem"> | string
-  quantityLabel?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
-  note?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
-  addedByName?: Prisma.StringFilter<"ShoppingItem"> | string
-  addedByUsername?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
-  addedByTelegramId?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
-  purchasedAt?: Prisma.DateTimeNullableFilter<"ShoppingItem"> | Date | string | null
-  purchasedByName?: Prisma.StringNullableFilter<"ShoppingItem"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"ShoppingItem"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ShoppingItem"> | Date | string
-}
-
-export type ShoppingItemCreateManyCatalogItemInput = {
-  id?: string
-  status?: string
-  urgency?: string
-  quantityLabel?: string | null
-  note?: string | null
-  addedByName: string
-  addedByUsername?: string | null
-  addedByTelegramId?: string | null
-  purchasedAt?: Date | string | null
-  purchasedByName?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ShoppingItemUpdateWithoutCatalogItemInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  urgency?: Prisma.StringFieldUpdateOperationsInput | string
-  quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
-  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  purchasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ShoppingItemUncheckedUpdateWithoutCatalogItemInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  urgency?: Prisma.StringFieldUpdateOperationsInput | string
-  quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
-  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  purchasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ShoppingItemUncheckedUpdateManyWithoutCatalogItemInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  urgency?: Prisma.StringFieldUpdateOperationsInput | string
-  quantityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
-  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  purchasedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchasedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
 
 
 export type ShoppingItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  catalogItemId?: boolean
+  title?: boolean
   status?: boolean
   urgency?: boolean
   quantityLabel?: boolean
@@ -686,12 +497,11 @@ export type ShoppingItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   purchasedByName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  catalogItem?: boolean | Prisma.ProductCatalogItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shoppingItem"]>
 
 export type ShoppingItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  catalogItemId?: boolean
+  title?: boolean
   status?: boolean
   urgency?: boolean
   quantityLabel?: boolean
@@ -703,12 +513,11 @@ export type ShoppingItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   purchasedByName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  catalogItem?: boolean | Prisma.ProductCatalogItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shoppingItem"]>
 
 export type ShoppingItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  catalogItemId?: boolean
+  title?: boolean
   status?: boolean
   urgency?: boolean
   quantityLabel?: boolean
@@ -720,12 +529,11 @@ export type ShoppingItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   purchasedByName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  catalogItem?: boolean | Prisma.ProductCatalogItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shoppingItem"]>
 
 export type ShoppingItemSelectScalar = {
   id?: boolean
-  catalogItemId?: boolean
+  title?: boolean
   status?: boolean
   urgency?: boolean
   quantityLabel?: boolean
@@ -739,25 +547,14 @@ export type ShoppingItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ShoppingItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "catalogItemId" | "status" | "urgency" | "quantityLabel" | "note" | "addedByName" | "addedByUsername" | "addedByTelegramId" | "purchasedAt" | "purchasedByName" | "createdAt" | "updatedAt", ExtArgs["result"]["shoppingItem"]>
-export type ShoppingItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  catalogItem?: boolean | Prisma.ProductCatalogItemDefaultArgs<ExtArgs>
-}
-export type ShoppingItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  catalogItem?: boolean | Prisma.ProductCatalogItemDefaultArgs<ExtArgs>
-}
-export type ShoppingItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  catalogItem?: boolean | Prisma.ProductCatalogItemDefaultArgs<ExtArgs>
-}
+export type ShoppingItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "status" | "urgency" | "quantityLabel" | "note" | "addedByName" | "addedByUsername" | "addedByTelegramId" | "purchasedAt" | "purchasedByName" | "createdAt" | "updatedAt", ExtArgs["result"]["shoppingItem"]>
 
 export type $ShoppingItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ShoppingItem"
-  objects: {
-    catalogItem: Prisma.$ProductCatalogItemPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    catalogItemId: string
+    title: string
     status: string
     urgency: string
     quantityLabel: string | null
@@ -1163,7 +960,6 @@ readonly fields: ShoppingItemFieldRefs;
  */
 export interface Prisma__ShoppingItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  catalogItem<T extends Prisma.ProductCatalogItemDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductCatalogItemDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductCatalogItemClient<runtime.Types.Result.GetResult<Prisma.$ProductCatalogItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1194,7 +990,7 @@ export interface Prisma__ShoppingItemClient<T, Null = never, ExtArgs extends run
  */
 export interface ShoppingItemFieldRefs {
   readonly id: Prisma.FieldRef<"ShoppingItem", 'String'>
-  readonly catalogItemId: Prisma.FieldRef<"ShoppingItem", 'String'>
+  readonly title: Prisma.FieldRef<"ShoppingItem", 'String'>
   readonly status: Prisma.FieldRef<"ShoppingItem", 'String'>
   readonly urgency: Prisma.FieldRef<"ShoppingItem", 'String'>
   readonly quantityLabel: Prisma.FieldRef<"ShoppingItem", 'String'>
@@ -1223,10 +1019,6 @@ export type ShoppingItemFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
-  /**
    * Filter, which ShoppingItem to fetch.
    */
   where: Prisma.ShoppingItemWhereUniqueInput
@@ -1245,10 +1037,6 @@ export type ShoppingItemFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
-  /**
    * Filter, which ShoppingItem to fetch.
    */
   where: Prisma.ShoppingItemWhereUniqueInput
@@ -1266,10 +1054,6 @@ export type ShoppingItemFindFirstArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the ShoppingItem
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
   /**
    * Filter, which ShoppingItem to fetch.
    */
@@ -1319,10 +1103,6 @@ export type ShoppingItemFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
-  /**
    * Filter, which ShoppingItem to fetch.
    */
   where?: Prisma.ShoppingItemWhereInput
@@ -1370,10 +1150,6 @@ export type ShoppingItemFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the ShoppingItem
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
   /**
    * Filter, which ShoppingItems to fetch.
    */
@@ -1423,10 +1199,6 @@ export type ShoppingItemCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
-  /**
    * The data needed to create a ShoppingItem.
    */
   data: Prisma.XOR<Prisma.ShoppingItemCreateInput, Prisma.ShoppingItemUncheckedCreateInput>
@@ -1460,10 +1232,6 @@ export type ShoppingItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    */
   data: Prisma.ShoppingItemCreateManyInput | Prisma.ShoppingItemCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1478,10 +1246,6 @@ export type ShoppingItemUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the ShoppingItem
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
   /**
    * The data needed to update a ShoppingItem.
    */
@@ -1534,10 +1298,6 @@ export type ShoppingItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many ShoppingItems to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1552,10 +1312,6 @@ export type ShoppingItemUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the ShoppingItem
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
   /**
    * The filter to search for the ShoppingItem to update in case it exists.
    */
@@ -1582,10 +1338,6 @@ export type ShoppingItemDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the ShoppingItem
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
   /**
    * Filter which ShoppingItem to delete.
    */
@@ -1618,8 +1370,4 @@ export type ShoppingItemDefaultArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the ShoppingItem
    */
   omit?: Prisma.ShoppingItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShoppingItemInclude<ExtArgs> | null
 }

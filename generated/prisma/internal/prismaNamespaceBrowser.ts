@@ -51,9 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  TaskCatalogItem: 'TaskCatalogItem',
   HouseholdTask: 'HouseholdTask',
-  ProductCatalogItem: 'ProductCatalogItem',
   ShoppingItem: 'ShoppingItem'
 } as const
 
@@ -73,26 +71,12 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TaskCatalogItemScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  category: 'category',
-  room: 'room',
-  sortOrder: 'sortOrder',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TaskCatalogItemScalarFieldEnum = (typeof TaskCatalogItemScalarFieldEnum)[keyof typeof TaskCatalogItemScalarFieldEnum]
-
-
 export const HouseholdTaskScalarFieldEnum = {
   id: 'id',
-  catalogItemId: 'catalogItemId',
-  status: 'status',
+  title: 'title',
   note: 'note',
+  status: 'status',
+  priority: 'priority',
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
@@ -105,24 +89,9 @@ export const HouseholdTaskScalarFieldEnum = {
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
 
 
-export const ProductCatalogItemScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  category: 'category',
-  unitLabel: 'unitLabel',
-  sortOrder: 'sortOrder',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProductCatalogItemScalarFieldEnum = (typeof ProductCatalogItemScalarFieldEnum)[keyof typeof ProductCatalogItemScalarFieldEnum]
-
-
 export const ShoppingItemScalarFieldEnum = {
   id: 'id',
-  catalogItemId: 'catalogItemId',
+  title: 'title',
   status: 'status',
   urgency: 'urgency',
   quantityLabel: 'quantityLabel',

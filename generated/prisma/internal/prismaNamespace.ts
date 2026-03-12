@@ -384,9 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  TaskCatalogItem: 'TaskCatalogItem',
   HouseholdTask: 'HouseholdTask',
-  ProductCatalogItem: 'ProductCatalogItem',
   ShoppingItem: 'ShoppingItem'
 } as const
 
@@ -403,84 +401,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "taskCatalogItem" | "householdTask" | "productCatalogItem" | "shoppingItem"
+    modelProps: "householdTask" | "shoppingItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    TaskCatalogItem: {
-      payload: Prisma.$TaskCatalogItemPayload<ExtArgs>
-      fields: Prisma.TaskCatalogItemFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TaskCatalogItemFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TaskCatalogItemFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>
-        }
-        findFirst: {
-          args: Prisma.TaskCatalogItemFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TaskCatalogItemFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>
-        }
-        findMany: {
-          args: Prisma.TaskCatalogItemFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>[]
-        }
-        create: {
-          args: Prisma.TaskCatalogItemCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>
-        }
-        createMany: {
-          args: Prisma.TaskCatalogItemCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TaskCatalogItemCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>[]
-        }
-        delete: {
-          args: Prisma.TaskCatalogItemDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>
-        }
-        update: {
-          args: Prisma.TaskCatalogItemUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>
-        }
-        deleteMany: {
-          args: Prisma.TaskCatalogItemDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TaskCatalogItemUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TaskCatalogItemUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>[]
-        }
-        upsert: {
-          args: Prisma.TaskCatalogItemUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCatalogItemPayload>
-        }
-        aggregate: {
-          args: Prisma.TaskCatalogItemAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTaskCatalogItem>
-        }
-        groupBy: {
-          args: Prisma.TaskCatalogItemGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TaskCatalogItemGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TaskCatalogItemCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TaskCatalogItemCountAggregateOutputType> | number
-        }
-      }
-    }
     HouseholdTask: {
       payload: Prisma.$HouseholdTaskPayload<ExtArgs>
       fields: Prisma.HouseholdTaskFieldRefs
@@ -552,80 +476,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HouseholdTaskCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HouseholdTaskCountAggregateOutputType> | number
-        }
-      }
-    }
-    ProductCatalogItem: {
-      payload: Prisma.$ProductCatalogItemPayload<ExtArgs>
-      fields: Prisma.ProductCatalogItemFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ProductCatalogItemFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ProductCatalogItemFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>
-        }
-        findFirst: {
-          args: Prisma.ProductCatalogItemFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ProductCatalogItemFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>
-        }
-        findMany: {
-          args: Prisma.ProductCatalogItemFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>[]
-        }
-        create: {
-          args: Prisma.ProductCatalogItemCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>
-        }
-        createMany: {
-          args: Prisma.ProductCatalogItemCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ProductCatalogItemCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>[]
-        }
-        delete: {
-          args: Prisma.ProductCatalogItemDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>
-        }
-        update: {
-          args: Prisma.ProductCatalogItemUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>
-        }
-        deleteMany: {
-          args: Prisma.ProductCatalogItemDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ProductCatalogItemUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ProductCatalogItemUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>[]
-        }
-        upsert: {
-          args: Prisma.ProductCatalogItemUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCatalogItemPayload>
-        }
-        aggregate: {
-          args: Prisma.ProductCatalogItemAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateProductCatalogItem>
-        }
-        groupBy: {
-          args: Prisma.ProductCatalogItemGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProductCatalogItemGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ProductCatalogItemCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProductCatalogItemCountAggregateOutputType> | number
         }
       }
     }
@@ -742,26 +592,12 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TaskCatalogItemScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  category: 'category',
-  room: 'room',
-  sortOrder: 'sortOrder',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TaskCatalogItemScalarFieldEnum = (typeof TaskCatalogItemScalarFieldEnum)[keyof typeof TaskCatalogItemScalarFieldEnum]
-
-
 export const HouseholdTaskScalarFieldEnum = {
   id: 'id',
-  catalogItemId: 'catalogItemId',
-  status: 'status',
+  title: 'title',
   note: 'note',
+  status: 'status',
+  priority: 'priority',
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
@@ -774,24 +610,9 @@ export const HouseholdTaskScalarFieldEnum = {
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
 
 
-export const ProductCatalogItemScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  category: 'category',
-  unitLabel: 'unitLabel',
-  sortOrder: 'sortOrder',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProductCatalogItemScalarFieldEnum = (typeof ProductCatalogItemScalarFieldEnum)[keyof typeof ProductCatalogItemScalarFieldEnum]
-
-
 export const ShoppingItemScalarFieldEnum = {
   id: 'id',
-  catalogItemId: 'catalogItemId',
+  title: 'title',
   status: 'status',
   urgency: 'urgency',
   quantityLabel: 'quantityLabel',
@@ -853,27 +674,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -888,16 +688,16 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'Int'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'Float[]'
+ * Reference to a field of type 'Int[]'
  */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 /**
@@ -995,9 +795,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
-  taskCatalogItem?: Prisma.TaskCatalogItemOmit
   householdTask?: Prisma.HouseholdTaskOmit
-  productCatalogItem?: Prisma.ProductCatalogItemOmit
   shoppingItem?: Prisma.ShoppingItemOmit
 }
 

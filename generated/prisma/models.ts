@@ -8,8 +8,6 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/TaskCatalogItem'
 export type * from './models/HouseholdTask'
-export type * from './models/ProductCatalogItem'
 export type * from './models/ShoppingItem'
 export type * from './commonInputTypes'

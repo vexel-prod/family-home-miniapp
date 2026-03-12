@@ -1,9 +1,9 @@
 import { getPrisma } from "@/lib/prisma";
-import { ensureCatalogSeed } from "@/lib/catalog";
+import { notifyPartner } from "@/lib/partner-notify";
 import { NextResponse } from "next/server";
 
 type CreateShoppingPayload = {
-  catalogItemId?: string;
+  title?: string;
   urgency?: "soon" | "out";
   quantityLabel?: string | null;
   note?: string | null;
@@ -14,25 +14,15 @@ type CreateShoppingPayload = {
 
 export async function POST(request: Request) {
   const prisma = getPrisma();
-  await ensureCatalogSeed(prisma);
-
   const body = (await request.json()) as CreateShoppingPayload;
 
-  if (!body.catalogItemId || !body.addedByName?.trim()) {
+  if (!body.title?.trim() || !body.addedByName?.trim()) {
     return NextResponse.json({ ok: false, error: "Missing shopping item data" }, { status: 400 });
-  }
-
-  const catalogItem = await prisma.productCatalogItem.findUnique({
-    where: { id: body.catalogItemId },
-  });
-
-  if (!catalogItem || !catalogItem.isActive) {
-    return NextResponse.json({ ok: false, error: "Product catalog item not found" }, { status: 404 });
   }
 
   const shoppingItem = await prisma.shoppingItem.create({
     data: {
-      catalogItemId: catalogItem.id,
+      title: body.title.trim(),
       urgency: body.urgency === "out" ? "out" : "soon",
       quantityLabel: body.quantityLabel?.trim() || null,
       note: body.note?.trim() || null,
@@ -40,9 +30,18 @@ export async function POST(request: Request) {
       addedByUsername: body.addedByUsername ?? null,
       addedByTelegramId: body.addedByTelegramId ?? null,
     },
-    include: {
-      catalogItem: true,
-    },
+  });
+
+  await notifyPartner({
+    actorName: body.addedByName.trim(),
+    actorTelegramId: body.addedByTelegramId ?? null,
+    actorUsername: body.addedByUsername ?? null,
+    text:
+      `Раздел: ПОКУПКИ\n` +
+      `Позиция: ${shoppingItem.title}\n` +
+      `Статус: ${shoppingItem.urgency === "out" ? "закончилось" : "заканчивается"}` +
+      `${shoppingItem.quantityLabel ? `\nКоличество: ${shoppingItem.quantityLabel}` : ""}` +
+      `${shoppingItem.note ? `\nКомментарий: ${shoppingItem.note}` : ""}`,
   });
 
   return NextResponse.json({ ok: true, shoppingItem });

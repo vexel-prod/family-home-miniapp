@@ -40,9 +40,6 @@ export async function PATCH(
             completedAt: null,
             completedByName: null,
           },
-    include: {
-      catalogItem: true,
-    },
   });
 
   return NextResponse.json({ ok: true, task: updatedTask });
