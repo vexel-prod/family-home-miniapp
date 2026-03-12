@@ -10,10 +10,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  const [openTasks, activeShoppingItems] = await Promise.all([
+  const [openTasks, completedTasks, activeShoppingItems] = await Promise.all([
     prisma.householdTask.findMany({
       where: { householdId: auth.member.householdId, status: "open" },
       orderBy: [{ createdAt: "desc" }],
+    }),
+    prisma.householdTask.findMany({
+      where: { householdId: auth.member.householdId, status: "done" },
+      orderBy: [{ completedAt: "desc" }, { updatedAt: "desc" }],
+      take: 30,
     }),
     prisma.shoppingItem.findMany({
       where: { householdId: auth.member.householdId, status: "active" },
@@ -24,6 +29,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     ok: true,
     openTasks,
+    completedTasks,
     activeShoppingItems,
   });
 }

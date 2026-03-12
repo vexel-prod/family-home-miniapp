@@ -36,6 +36,8 @@ type HouseholdTask = {
   priority: 'normal' | 'urgent'
   addedByName: string
   createdAt: string
+  completedAt?: string | null
+  completedByName?: string | null
 }
 
 type ShoppingItem = {
@@ -51,6 +53,7 @@ type ShoppingItem = {
 type BootstrapResponse = {
   ok: boolean
   openTasks: HouseholdTask[]
+  completedTasks: HouseholdTask[]
   activeShoppingItems: ShoppingItem[]
 }
 
@@ -58,6 +61,7 @@ type ModalKey =
   | 'household'
   | 'task-actions'
   | 'task-replace'
+  | 'task-journal'
   | 'shopping-list'
   | 'shopping-actions'
   | 'shopping-replace'
@@ -143,6 +147,15 @@ function sortTasks(tasks: HouseholdTask[]) {
   })
 }
 
+function sortCompletedTasks(tasks: HouseholdTask[]) {
+  return [...tasks].sort((left, right) => {
+    const rightCompletedAt = right.completedAt ? new Date(right.completedAt).getTime() : 0
+    const leftCompletedAt = left.completedAt ? new Date(left.completedAt).getTime() : 0
+
+    return rightCompletedAt - leftCompletedAt
+  })
+}
+
 function sortShoppingItems(items: ShoppingItem[]) {
   return [...items].sort((left, right) => {
     const urgencyDiff = Number(right.urgency === 'out') - Number(left.urgency === 'out')
@@ -166,6 +179,7 @@ export default function Page() {
   const [modal, setModal] = useState<ModalKey>(null)
   const [modalGuardUntil, setModalGuardUntil] = useState(0)
   const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
+  const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
@@ -189,6 +203,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true)
 
   const sortedTasks = sortTasks(openTasks)
+  const sortedCompletedTasks = sortCompletedTasks(completedTasks)
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
 
   useEffect(() => {
@@ -218,6 +233,7 @@ export default function Page() {
 
           const payload = (await response.json()) as BootstrapResponse
           setOpenTasks(payload.openTasks)
+          setCompletedTasks(payload.completedTasks)
           setShoppingItems(payload.activeShoppingItems)
         } catch {
           setError(
@@ -244,7 +260,7 @@ export default function Page() {
     setModal(null)
   }
 
-  function openMainModal(nextModal: Extract<ModalKey, 'household' | 'shopping-list'>) {
+  function openMainModal(nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal'>) {
     if (!canOpenModal()) {
       return
     }
@@ -308,6 +324,7 @@ export default function Page() {
 
       const payload = (await response.json()) as BootstrapResponse
       setOpenTasks(payload.openTasks)
+      setCompletedTasks(payload.completedTasks)
       setShoppingItems(payload.activeShoppingItems)
     } catch {
       setError(
@@ -828,6 +845,77 @@ export default function Page() {
             </motion.div>
           ) : null}
 
+          {modal === 'task-journal' ? (
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className='flex h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-4xl border border-white/10 bg-[#13202f] text-white shadow-2xl'
+            >
+              <div className='border-b border-white/10 px-5 py-5 sm:px-6'>
+                <div className='flex items-center justify-between gap-4'>
+                  <div>
+                    <div className='text-xs uppercase tracking-[0.3em] text-white/50'>
+                      ЖУРНАЛ БЫТ
+                    </div>
+                    <h2 className='mt-2 text-3xl font-black'>Выполненные задачи</h2>
+                  </div>
+                  <button
+                    type='button'
+                    className='rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10'
+                    onClick={closeModalWithGuard}
+                  >
+                    Закрыть
+                  </button>
+                </div>
+              </div>
+
+              <div className='flex-1 overflow-y-auto px-5 py-5 sm:px-6'>
+                {sortedCompletedTasks.length ? (
+                  <div className='space-y-3'>
+                    {sortedCompletedTasks.map(task => (
+                      <div
+                        key={task.id}
+                        className='rounded-[1.4rem] border border-white/10 bg-white/6 p-4'
+                      >
+                        <div className='space-y-2'>
+                          <span className='rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-800'>
+                            Выполнено
+                          </span>
+                          <h3 className='text-xl font-bold'>{task.title}</h3>
+                          {task.note ? (
+                            <p className='text-sm leading-6 text-white/70'>{task.note}</p>
+                          ) : null}
+                          <div className='text-xs text-white/45'>
+                            Закрыл(а) {task.completedByName ?? 'неизвестно'} •{' '}
+                            {task.completedAt ? formatRelativeDate(task.completedAt) : 'без даты'}
+                          </div>
+                          <div className='text-xs text-white/35'>
+                            Создано: {formatRelativeDate(task.createdAt)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className='rounded-[1.4rem] border border-dashed border-white/12 bg-white/6 px-4 py-10 text-center text-white/60'>
+                    Пока нет выполненных задач.
+                  </div>
+                )}
+              </div>
+
+              <div className='border-t border-white/10 px-5 py-5 sm:px-6'>
+                <button
+                  type='button'
+                  className='w-full rounded-[1.2rem] bg-white px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-white/90'
+                  onClick={closeModalWithGuard}
+                >
+                  Ознакомлен
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+
           {modal === 'shopping-list' ? (
             <motion.div
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
@@ -1208,6 +1296,60 @@ export default function Page() {
             </div>
           </motion.section>
         </div>
+
+        <motion.section
+          variants={reveal}
+          initial='hidden'
+          animate='visible'
+          transition={{ delay: 0.18, duration: 0.35, ease: 'easeOut' }}
+          className='rounded-4xl border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
+        >
+          <div className='flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
+            <div className='space-y-2'>
+              <div className='text-xs uppercase tracking-[0.28em] text-slate-500'>Журнал задач</div>
+              <h2 className='text-3xl font-black'>Что уже закрыто</h2>
+              <p className='max-w-2xl text-sm leading-6 text-slate-600'>
+                История выполненных задач хранится отдельно, чтобы можно было быстро вспомнить,
+                кто и когда закрыл бытовой вопрос.
+              </p>
+            </div>
+
+            <button
+              type='button'
+              className='rounded-[1.2rem] bg-[#13202f] px-5 py-4 text-base font-semibold text-white transition hover:bg-black'
+              onClick={() => openMainModal('task-journal')}
+            >
+              Открыть журнал
+            </button>
+          </div>
+
+          <div className='mt-5 grid gap-3 sm:grid-cols-3'>
+            <div className='rounded-[1.4rem] border border-black/8 bg-[#f8f5ec] p-4'>
+              <div className='text-xs uppercase tracking-[0.24em] text-slate-500'>Закрыто всего</div>
+              <div className='mt-3 text-3xl font-black'>{completedTasks.length}</div>
+            </div>
+
+            <div className='rounded-[1.4rem] border border-black/8 bg-[#eef7f0] p-4'>
+              <div className='text-xs uppercase tracking-[0.24em] text-slate-500'>
+                Последний исполнитель
+              </div>
+              <div className='mt-3 text-lg font-bold'>
+                {sortedCompletedTasks[0]?.completedByName ?? 'Пока пусто'}
+              </div>
+            </div>
+
+            <div className='rounded-[1.4rem] border border-black/8 bg-[#f5f0ff] p-4'>
+              <div className='text-xs uppercase tracking-[0.24em] text-slate-500'>
+                Последнее закрытие
+              </div>
+              <div className='mt-3 text-lg font-bold'>
+                {sortedCompletedTasks[0]?.completedAt
+                  ? formatRelativeDate(sortedCompletedTasks[0].completedAt)
+                  : 'Пока пусто'}
+              </div>
+            </div>
+          </div>
+        </motion.section>
       </div>
     </main>
   )
