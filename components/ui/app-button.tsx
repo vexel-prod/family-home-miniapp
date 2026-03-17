@@ -31,7 +31,7 @@ const toneClassName: Record<ButtonTone, string> = {
   secondary: 'border-white/10 bg-white/5 text-white hover:bg-white/10',
   light: 'bg-white text-[var(--color-page-text)] hover:bg-white/90',
   ghost:
-    'w-auto rounded-full border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80 hover:bg-white/10',
+    'w-auto border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80 hover:bg-white/10',
 }
 
 export function AppButton({

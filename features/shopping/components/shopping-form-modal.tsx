@@ -42,11 +42,8 @@ export function ShoppingFormModal({
     <ModalPanel>
       <div className='p-4 sm:p-6'>
         <div className='space-y-2'>
-          <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
-            {mode === 'create' ? 'Добавить покупку' : 'Заменить позицию'}
-          </div>
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
-            {mode === 'create' ? 'Новая позиция' : 'Новая форма'}
+            {mode === 'create' ? 'Новая позиция' : 'Внести изменения'}
           </h2>
         </div>
 
@@ -59,13 +56,31 @@ export function ShoppingFormModal({
             onChange={event => onTitleChange(event.target.value)}
           />
 
-          <SelectField
-            value={urgency}
-            onChange={event => onUrgencyChange(event.target.value === 'out' ? 'out' : 'soon')}
-          >
-            <option value='soon'>Заканчивается</option>
-            <option value='out'>Закончилось</option>
-          </SelectField>
+          <div className='grid grid-cols-2 rounded-md border border-white/10 bg-white/5 p-1'>
+            <button
+              type='button'
+              onClick={() => onUrgencyChange('soon')}
+              className={`rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                urgency === 'soon'
+                  ? 'bg-(--color-success-soft) text-(--color-page-text) shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  : 'text-white/70'
+              }`}
+            >
+              заканчивается
+            </button>
+
+            <button
+              type='button'
+              onClick={() => onUrgencyChange('out')}
+              className={`rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                urgency === 'out'
+                  ? 'bg-rose-100 text-rose-900 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  : 'text-white/70'
+              }`}
+            >
+              закончилось
+            </button>
+          </div>
 
           <TextInput
             placeholder='Количество или упаковка'
@@ -74,16 +89,25 @@ export function ShoppingFormModal({
           />
 
           <TextAreaField
-            placeholder={mode === 'create' ? 'Комментарий: бренд, магазин, пожелание' : 'Комментарий'}
+            placeholder={
+              mode === 'create' ? 'Комментарий: бренд, магазин, пожелание' : 'Комментарий'
+            }
             value={note}
             onChange={event => onNoteChange(event.target.value)}
           />
 
-          <AppButton tone='shopping' onClick={onSubmit} disabled={loading}>
+          <AppButton
+            tone='shopping'
+            onClick={onSubmit}
+            disabled={loading}
+          >
             {loading ? busyLabel : submitLabel}
           </AppButton>
 
-          <AppButton tone='secondary' onClick={onBack}>
+          <AppButton
+            tone='secondary'
+            onClick={onBack}
+          >
             Назад
           </AppButton>
         </div>

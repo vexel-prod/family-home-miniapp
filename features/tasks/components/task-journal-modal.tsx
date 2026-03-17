@@ -11,20 +11,17 @@ type TaskJournalModalProps = {
 
 export function TaskJournalModal({ tasks, onClose }: TaskJournalModalProps) {
   return (
-    <ModalPanel wide tall>
+    <ModalPanel
+      wide
+      tall
+    >
       <div className='border-b border-white/10 p-4 sm:p-6'>
         <div className='flex items-center justify-between gap-4'>
           <div>
-            <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
-              ЖУРНАЛ БЫТ
-            </div>
             <h2 className='mt-2 font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
               Выполненные задачи
             </h2>
           </div>
-          <AppButton tone='ghost' onClick={onClose}>
-            Закрыть
-          </AppButton>
         </div>
       </div>
 
@@ -63,7 +60,10 @@ export function TaskJournalModal({ tasks, onClose }: TaskJournalModalProps) {
       </div>
 
       <div className='border-t border-white/10 p-4 sm:p-6'>
-        <AppButton tone='light' onClick={onClose}>
+        <AppButton
+          tone='ghost'
+          onClick={onClose}
+        >
           Закрыть журнал
         </AppButton>
       </div>

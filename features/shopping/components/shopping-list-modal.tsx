@@ -18,20 +18,17 @@ export function ShoppingListModal({
   onSelectItem,
 }: ShoppingListModalProps) {
   return (
-    <ModalPanel wide tall>
+    <ModalPanel
+      wide
+      tall
+    >
       <div className='border-b border-white/10 p-4 sm:p-6'>
-        <div className='flex items-center justify-between gap-4'>
-          <div>
-            <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
-              ПОКУПКИ
-            </div>
-            <h2 className='mt-2 font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
-              Все текущие покупки
-            </h2>
-          </div>
-          <AppButton tone='ghost' onClick={onClose}>
-            Закрыть
-          </AppButton>
+        <div className='flex flex-col items-center justify-center gap-4'>
+          {items.length > 0 && (
+            <p className='uppercase font-(--font-family-heading) text-xs leading-(--line-height-snug)'>
+              Всего покупок: {items.length}
+            </p>
+          )}
         </div>
       </div>
 
@@ -73,11 +70,17 @@ export function ShoppingListModal({
       </div>
 
       <div className='space-y-4 border-t border-white/10 p-4 sm:p-6'>
-        <AppButton tone='shopping' onClick={onAdd}>
+        <AppButton
+          tone='shopping'
+          onClick={onAdd}
+        >
           Добавить
         </AppButton>
-        <AppButton tone='light' onClick={onClose}>
-          Ознакомлен
+        <AppButton
+          tone='ghost'
+          onClick={onClose}
+        >
+          Закрыть
         </AppButton>
       </div>
     </ModalPanel>

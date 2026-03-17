@@ -38,11 +38,11 @@ export function TaskFormModal({
     <ModalPanel>
       <div className='p-4 sm:p-6'>
         <div className='space-y-2'>
-          <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
+          {/* <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
             {mode === 'create' ? 'Добавить задачу' : 'Изменить задачу'}
-          </div>
+          </div> */}
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
-            {mode === 'create' ? 'Новая задача' : 'Новая форма'}
+            {mode === 'create' ? 'Новая задача' : 'Вносим изменения'}
           </h2>
         </div>
 
@@ -55,15 +55,31 @@ export function TaskFormModal({
             onChange={event => onTitleChange(event.target.value)}
           />
 
-          <SelectField
-            value={priority}
-            onChange={event =>
-              onPriorityChange(event.target.value === 'urgent' ? 'urgent' : 'normal')
-            }
-          >
-            <option value='normal'>Обычный приоритет</option>
-            <option value='urgent'>Срочно</option>
-          </SelectField>
+          <div className='grid grid-cols-2 rounded-md border border-white/10 bg-white/5 p-1'>
+            <button
+              type='button'
+              onClick={() => onPriorityChange('normal')}
+              className={`rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                priority === 'normal'
+                  ? 'bg-(--color-success-soft) text-(--color-page-text) shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  : 'text-white/70'
+              } `}
+            >
+              когда удобно
+            </button>
+
+            <button
+              type='button'
+              onClick={() => onPriorityChange('urgent')}
+              className={`rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                priority === 'urgent'
+                  ? 'bg-rose-100 text-rose-900 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  : 'text-white/70'
+              } `}
+            >
+              срочно
+            </button>
+          </div>
 
           <TextAreaField
             placeholder={mode === 'create' ? 'Комментарий или детали' : 'Комментарий'}
@@ -71,11 +87,18 @@ export function TaskFormModal({
             onChange={event => onNoteChange(event.target.value)}
           />
 
-          <AppButton tone={mode === 'create' ? 'home' : 'success'} onClick={onSubmit} disabled={loading}>
+          <AppButton
+            tone={mode === 'create' ? 'home' : 'success'}
+            onClick={onSubmit}
+            disabled={loading}
+          >
             {loading ? busyLabel : submitLabel}
           </AppButton>
 
-          <AppButton tone='secondary' onClick={onBack}>
+          <AppButton
+            tone='secondary'
+            onClick={onBack}
+          >
             Назад
           </AppButton>
         </div>

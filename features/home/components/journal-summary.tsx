@@ -26,7 +26,7 @@ export function JournalSummary({
       <div className='grid gap-4 sm:grid-cols-3'>
         <button
           type='button'
-          className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-brand-shopping) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+          className='rounded-lg bg-(--color-success-soft) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
           onClick={onOpenJournal}
         >
           <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
