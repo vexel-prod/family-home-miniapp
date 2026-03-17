@@ -1,6 +1,6 @@
 'use client'
 
-import { startTransition, useEffect, useState } from 'react'
+import { startTransition, useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 import { ModalOverlay } from '@/components/ui/app-modal'
@@ -86,19 +86,22 @@ export default function Page() {
     setModal(nextModal)
   }
 
-  async function telegramFetch(input: string, init?: FetchOptions, initDataOverride?: string) {
-    const headers = new Headers(init?.headers)
-    const resolvedInitData = initDataOverride || telegramInitData || getTelegramInitData()
+  const telegramFetch = useCallback(
+    async (input: string, init?: FetchOptions, initDataOverride?: string) => {
+      const headers = new Headers(init?.headers)
+      const resolvedInitData = initDataOverride || telegramInitData || getTelegramInitData()
 
-    if (resolvedInitData) {
-      headers.set('x-telegram-init-data', resolvedInitData)
-    }
+      if (resolvedInitData) {
+        headers.set('x-telegram-init-data', resolvedInitData)
+      }
 
-    return fetch(input, {
-      ...init,
-      headers,
-    })
-  }
+      return fetch(input, {
+        ...init,
+        headers,
+      })
+    },
+    [telegramInitData],
+  )
 
   function openTaskActions(task: HouseholdTask) {
     if (!canOpenModal()) {
@@ -139,33 +142,36 @@ export default function Page() {
     setTaskCreateStatus('')
   }
 
-  async function loadData(initDataOverride?: string) {
-    setLoading(true)
-    setError('')
+  const loadData = useCallback(
+    async (initDataOverride?: string) => {
+      setLoading(true)
+      setError('')
 
-    try {
-      const response = await telegramFetch(
-        '/api/bootstrap',
-        { cache: 'no-store' },
-        initDataOverride,
-      )
+      try {
+        const response = await telegramFetch(
+          '/api/bootstrap',
+          { cache: 'no-store' },
+          initDataOverride,
+        )
 
-      if (!response.ok) {
-        throw new Error('bootstrap failed')
+        if (!response.ok) {
+          throw new Error('bootstrap failed')
+        }
+
+        const payload = (await response.json()) as BootstrapResponse
+        setOpenTasks(payload.openTasks)
+        setCompletedTasks(payload.completedTasks)
+        setShoppingItems(payload.activeShoppingItems)
+      } catch {
+        setError(
+          'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
+        )
+      } finally {
+        setLoading(false)
       }
-
-      const payload = (await response.json()) as BootstrapResponse
-      setOpenTasks(payload.openTasks)
-      setCompletedTasks(payload.completedTasks)
-      setShoppingItems(payload.activeShoppingItems)
-    } catch {
-      setError(
-        'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
-      )
-    } finally {
-      setLoading(false)
-    }
-  }
+    },
+    [telegramFetch],
+  )
 
   useEffect(() => {
     const telegram = (window as TelegramWindow).Telegram?.WebApp
@@ -183,7 +189,7 @@ export default function Page() {
         'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
       )
     }
-  }, [])
+  }, [loadData])
 
   useEffect(() => {
     if (!toast) {
@@ -536,8 +542,8 @@ export default function Page() {
   }
 
   return (
-    <main className='page-shell'>
-      <div className='toast-layer'>
+    <main className='min-h-screen bg-(--color-page-bg) text-(--color-page-text)'>
+      <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
         {toast ? (
           <NoticeToast
             tone='success'
@@ -684,7 +690,7 @@ export default function Page() {
         </ModalOverlay>
       ) : null}
 
-      <div className='app-shell'>
+      <div className='mx-auto flex min-h-screen w-full max-w-(--page-max-width) flex-col justify-center gap-4 p-4 sm:p-6'>
         <DashboardHero
           actorName={getActorName(buyer)}
           openTasksCount={openTasks.length}
@@ -710,7 +716,7 @@ export default function Page() {
             initial='hidden'
             animate='visible'
             transition={{ delay: 0.24, duration: 0.35, ease: 'easeOut' }}
-            className='surface-panel p-5 text-sm text-slate-600'
+            className='rounded-2xl border border-[rgba(15,23,42,0.08)] bg-(--color-surface) p-4 text-sm text-slate-600 shadow-(--shadow-card) sm:p-6'
           >
             Обновляю данные...
           </motion.section>

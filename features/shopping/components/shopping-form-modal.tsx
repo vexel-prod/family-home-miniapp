@@ -40,15 +40,17 @@ export function ShoppingFormModal({
 }: ShoppingFormModalProps) {
   return (
     <ModalPanel>
-      <div className='modal-body'>
+      <div className='p-4 sm:p-6'>
         <div className='space-y-2'>
-          <div className='eyebrow eyebrow--inverse'>
+          <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
             {mode === 'create' ? 'Добавить покупку' : 'Заменить позицию'}
           </div>
-          <h2 className='heading-modal'>{mode === 'create' ? 'Новая позиция' : 'Новая форма'}</h2>
+          <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+            {mode === 'create' ? 'Новая позиция' : 'Новая форма'}
+          </h2>
         </div>
 
-        <div className='mt-5 stack-sm'>
+        <div className='mt-4 space-y-4'>
           {status ? <StatusMessage text={status} /> : null}
 
           <TextInput
@@ -72,25 +74,16 @@ export function ShoppingFormModal({
           />
 
           <TextAreaField
-            placeholder={
-              mode === 'create' ? 'Комментарий: бренд, магазин, пожелание' : 'Комментарий'
-            }
+            placeholder={mode === 'create' ? 'Комментарий: бренд, магазин, пожелание' : 'Комментарий'}
             value={note}
             onChange={event => onNoteChange(event.target.value)}
           />
 
-          <AppButton
-            tone='shopping'
-            onClick={onSubmit}
-            disabled={loading}
-          >
+          <AppButton tone='shopping' onClick={onSubmit} disabled={loading}>
             {loading ? busyLabel : submitLabel}
           </AppButton>
 
-          <AppButton
-            tone='secondary'
-            onClick={onBack}
-          >
+          <AppButton tone='secondary' onClick={onBack}>
             Назад
           </AppButton>
         </div>

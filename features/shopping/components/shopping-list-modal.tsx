@@ -11,42 +11,47 @@ type ShoppingListModalProps = {
   onSelectItem: (item: ShoppingItem) => void
 }
 
-export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: ShoppingListModalProps) {
+export function ShoppingListModal({
+  items,
+  onClose,
+  onAdd,
+  onSelectItem,
+}: ShoppingListModalProps) {
   return (
-    <ModalPanel
-      wide
-      tall
-    >
-      <div className='modal-header'>
+    <ModalPanel wide tall>
+      <div className='border-b border-white/10 p-4 sm:p-6'>
         <div className='flex items-center justify-between gap-4'>
           <div>
-            <div className='eyebrow eyebrow--inverse'>ПОКУПКИ</div>
-            <h2 className='mt-2 heading-modal'>Все текущие покупки</h2>
+            <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
+              ПОКУПКИ
+            </div>
+            <h2 className='mt-2 font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+              Все текущие покупки
+            </h2>
           </div>
-          <AppButton
-            tone='ghost'
-            onClick={onClose}
-          >
+          <AppButton tone='ghost' onClick={onClose}>
             Закрыть
           </AppButton>
         </div>
       </div>
 
-      <div className='modal-scroll'>
+      <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {items.length ? (
-          <div className='stack-sm'>
+          <div className='space-y-4'>
             {items.map(item => (
               <button
                 key={item.id}
                 type='button'
-                className='list-card'
+                className='w-full rounded-lg border border-white/10 bg-(--color-panel-muted) p-4 text-left transition-colors duration-150 hover:bg-white/10'
                 onClick={() => onSelectItem(item)}
               >
                 <div className='space-y-2'>
                   <StatusPill tone={item.urgency}>
                     {item.urgency === 'out' ? 'Закончилось' : 'Заканчивается'}
                   </StatusPill>
-                  <h3 className='text-xl font-bold'>{item.title}</h3>
+                  <h3 className='font-(--font-family-heading) text-2xl leading-tight'>
+                    {item.title}
+                  </h3>
                   {item.quantityLabel ? (
                     <div className='text-sm text-white/80'>Количество: {item.quantityLabel}</div>
                   ) : null}
@@ -61,21 +66,17 @@ export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: Shopp
             ))}
           </div>
         ) : (
-          <div className='empty-state'>Сейчас список пуст</div>
+          <div className='rounded-lg border border-dashed border-white/12 bg-(--color-panel-muted) px-4 py-10 text-center text-white/60'>
+            Список пуст
+          </div>
         )}
       </div>
 
-      <div className='modal-footer stack-sm'>
-        <AppButton
-          tone='shopping'
-          onClick={onAdd}
-        >
+      <div className='space-y-4 border-t border-white/10 p-4 sm:p-6'>
+        <AppButton tone='shopping' onClick={onAdd}>
           Добавить
         </AppButton>
-        <AppButton
-          tone='light'
-          onClick={onClose}
-        >
+        <AppButton tone='light' onClick={onClose}>
           Ознакомлен
         </AppButton>
       </div>

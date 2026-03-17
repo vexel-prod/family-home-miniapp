@@ -5,10 +5,6 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Family Home Mini App',
   description: 'Telegram Mini App для семейных задач по дому и общего списка покупок',
-  icons: {
-    icon: '/dog-walker.png',
-    apple: '/dog-walker.png',
-  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,6 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang='ru'
       data-theme='night'
+      suppressHydrationWarning
     >
       <body>
         <Script

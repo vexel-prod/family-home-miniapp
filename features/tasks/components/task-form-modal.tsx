@@ -36,15 +36,17 @@ export function TaskFormModal({
 }: TaskFormModalProps) {
   return (
     <ModalPanel>
-      <div className='modal-body'>
+      <div className='p-4 sm:p-6'>
         <div className='space-y-2'>
-          <div className='eyebrow eyebrow--inverse'>
+          <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
             {mode === 'create' ? 'Добавить задачу' : 'Изменить задачу'}
           </div>
-          <h2 className='heading-modal'>{mode === 'create' ? 'Новая задача' : 'Новая форма'}</h2>
+          <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+            {mode === 'create' ? 'Новая задача' : 'Новая форма'}
+          </h2>
         </div>
 
-        <div className='mt-5 stack-sm'>
+        <div className='mt-4 space-y-4'>
           {status ? <StatusMessage text={status} /> : null}
 
           <TextInput
@@ -69,18 +71,11 @@ export function TaskFormModal({
             onChange={event => onNoteChange(event.target.value)}
           />
 
-          <AppButton
-            tone={mode === 'create' ? 'home' : 'success'}
-            onClick={onSubmit}
-            disabled={loading}
-          >
+          <AppButton tone={mode === 'create' ? 'home' : 'success'} onClick={onSubmit} disabled={loading}>
             {loading ? busyLabel : submitLabel}
           </AppButton>
 
-          <AppButton
-            tone='secondary'
-            onClick={onBack}
-          >
+          <AppButton tone='secondary' onClick={onBack}>
             Назад
           </AppButton>
         </div>

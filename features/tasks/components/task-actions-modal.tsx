@@ -24,10 +24,14 @@ export function TaskActionsModal({
 }: TaskActionsModalProps) {
   return (
     <ModalPanel>
-      <div className='modal-body'>
+      <div className='p-4 sm:p-6'>
         <div className='space-y-2'>
-          <div className='eyebrow eyebrow--inverse'>БЫТ</div>
-          <h2 className='heading-modal'>{task.title}</h2>
+          <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
+            БЫТ
+          </div>
+          <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+            {task.title}
+          </h2>
           <StatusPill tone={task.priority}>
             {task.priority === 'urgent' ? 'Срочно' : 'Обычно'}
           </StatusPill>
@@ -35,12 +39,8 @@ export function TaskActionsModal({
           <div className='text-sm text-white/60'>Выбери действие для этой задачи.</div>
         </div>
 
-        <div className='mt-5 stack-sm'>
-          <AppButton
-            tone='home'
-            onClick={onComplete}
-            disabled={busyKey === `task-${task.id}`}
-          >
+        <div className='mt-4 space-y-4'>
+          <AppButton tone='home' onClick={onComplete} disabled={busyKey === `task-${task.id}`}>
             {busyKey === `task-${task.id}` ? 'Обновляю...' : 'Отметить выполненной'}
           </AppButton>
 
@@ -52,10 +52,7 @@ export function TaskActionsModal({
             {busyKey === `task-together-${task.id}` ? 'Отмечаю...' : 'Сделано вместе'}
           </AppButton>
 
-          <AppButton
-            tone='success'
-            onClick={onReplace}
-          >
+          <AppButton tone='success' onClick={onReplace}>
             Изменить
           </AppButton>
 
@@ -67,10 +64,7 @@ export function TaskActionsModal({
             {busyKey === `delete-task-${task.id}` ? 'Удаляю...' : 'Удалить'}
           </AppButton>
 
-          <AppButton
-            tone='secondary'
-            onClick={onClose}
-          >
+          <AppButton tone='secondary' onClick={onClose}>
             Закрыть
           </AppButton>
         </div>

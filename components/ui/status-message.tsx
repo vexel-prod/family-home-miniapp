@@ -14,6 +14,20 @@ function resolveTone(text: string) {
   return 'idle'
 }
 
+const toneClassName = {
+  idle: 'border-white/10 bg-white/5 text-white/80',
+  success: 'border-emerald-300/30 bg-[var(--color-surface-success)] text-emerald-100',
+  error: 'border-rose-300/30 bg-[var(--color-surface-danger)] text-rose-100',
+}
+
 export function StatusMessage({ text }: StatusMessageProps) {
-  return <div className={`status-message status-message--${resolveTone(text)}`}>{text}</div>
+  const tone = resolveTone(text)
+
+  return (
+    <div
+      className={`rounded-md border px-4 py-3.5 text-sm font-medium ${toneClassName[tone]}`}
+    >
+      {text}
+    </div>
+  )
 }

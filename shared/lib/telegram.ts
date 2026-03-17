@@ -1,8 +1,8 @@
-import type { TelegramUser, TelegramWindow } from "@/shared/types/family"
+import type { TelegramUser, TelegramWindow } from '@/shared/types/family'
 
 function parseUserFromTelegramParams(rawParams: string) {
   const params = new URLSearchParams(rawParams)
-  const rawUser = params.get("user")
+  const rawUser = params.get('user')
 
   if (!rawUser) {
     return undefined
@@ -35,20 +35,29 @@ export function getTelegramUser() {
     return searchUser
   }
 
-  const hash = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : ""
+  const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : ''
   return parseUserFromTelegramParams(hash)
 }
 
 export function getTelegramInitData() {
   const telegram = (window as TelegramWindow).Telegram?.WebApp
-  return telegram?.initData ?? ""
+  return telegram?.initData ?? ''
 }
 
 export function getActorName(user?: TelegramUser) {
-  if (!user) return "Домашний диспетчер"
-  const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ").trim()
+  if (!user) return 'Таинственный незнакомец'
+
+  if (user.id === 706355445) {
+    return 'Малышка 😘'
+  }
+
+  if (user.id === 5133992697) {
+    return 'Vexel'
+  }
+
+  const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ').trim()
   if (fullName) return fullName
   if (user.username) return `@${user.username}`
   if (user.id) return `id:${user.id}`
-  return "Домашний диспетчер"
+  return 'Таинственный незнакомец'
 }

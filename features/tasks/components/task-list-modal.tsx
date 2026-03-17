@@ -1,8 +1,8 @@
-import type { HouseholdTask } from '@/shared/types/family'
-import { formatRelativeDate } from '@/shared/lib/format'
 import { AppButton } from '@/components/ui/app-button'
 import { ModalPanel } from '@/components/ui/app-modal'
 import { StatusPill } from '@/components/ui/status-pill'
+import { formatRelativeDate } from '@/shared/lib/format'
+import type { HouseholdTask } from '@/shared/types/family'
 
 type TaskListModalProps = {
   tasks: HouseholdTask[]
@@ -13,40 +13,40 @@ type TaskListModalProps = {
 
 export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListModalProps) {
   return (
-    <ModalPanel
-      wide
-      tall
-    >
-      <div className='modal-header'>
+    <ModalPanel wide tall>
+      <div className='border-b border-white/10 p-4 sm:p-6'>
         <div className='flex items-center justify-between gap-4'>
           <div>
-            <div className='eyebrow eyebrow--inverse'>БЫТ</div>
-            <h2 className='mt-2 heading-modal'>Все текущие задачи</h2>
+            <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
+              БЫТ
+            </div>
+            <h2 className='mt-2 font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+              Все текущие задачи
+            </h2>
           </div>
-          <AppButton
-            tone='ghost'
-            onClick={onClose}
-          >
+          <AppButton tone='ghost' onClick={onClose}>
             Закрыть
           </AppButton>
         </div>
       </div>
 
-      <div className='modal-scroll'>
+      <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {tasks.length ? (
-          <div className='stack-sm'>
+          <div className='space-y-4'>
             {tasks.map(task => (
               <button
                 key={task.id}
                 type='button'
-                className='list-card'
+                className='w-full rounded-lg border border-white/10 bg-(--color-panel-muted) p-4 text-left transition-colors duration-150 hover:bg-white/10'
                 onClick={() => onSelectTask(task)}
               >
                 <div className='space-y-2'>
                   <StatusPill tone={task.priority}>
                     {task.priority === 'urgent' ? 'Срочно' : 'Обычно'}
                   </StatusPill>
-                  <h3 className='text-xl font-bold'>{task.title}</h3>
+                  <h3 className='font-(--font-family-heading) text-2xl leading-tight'>
+                    {task.title}
+                  </h3>
                   {task.note ? (
                     <p className='text-sm leading-6 text-white/70'>{task.note}</p>
                   ) : null}
@@ -58,21 +58,17 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
             ))}
           </div>
         ) : (
-          <div className='empty-state'>Нет активных задач</div>
+          <div className='rounded-lg border border-dashed border-white/12 bg-(--color-panel-muted) px-4 py-10 text-center text-white/60'>
+            Нет активных задач
+          </div>
         )}
       </div>
 
-      <div className='modal-footer stack-sm'>
-        <AppButton
-          tone='home'
-          onClick={onAdd}
-        >
+      <div className='space-y-4 border-t border-white/10 p-4 sm:p-6'>
+        <AppButton tone='home' onClick={onAdd}>
           Добавить
         </AppButton>
-        <AppButton
-          tone='light'
-          onClick={onClose}
-        >
+        <AppButton tone='light' onClick={onClose}>
           Ознакомлен
         </AppButton>
       </div>
