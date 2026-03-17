@@ -8,7 +8,7 @@ import {
 import { NextResponse } from "next/server";
 
 type UpdateTaskPayload = {
-  action?: "complete" | "reopen" | "replace";
+  action?: "complete" | "complete-together" | "reopen" | "replace";
   actorName?: string;
   actorUsername?: string | null;
   actorTelegramId?: string | null;
@@ -80,11 +80,12 @@ export async function PATCH(
   const updatedTask = await prisma.householdTask.update({
     where: { id: taskId },
     data:
-      body.action === "complete"
+      body.action === "complete" || body.action === "complete-together"
         ? {
             status: "done",
             completedAt: new Date(),
-            completedByName: actorName,
+            completedByName:
+              body.action === "complete-together" ? "Сделано вместе" : actorName,
           }
         : {
             status: "open",
@@ -93,7 +94,10 @@ export async function PATCH(
           },
   });
 
-  if (body.action === "complete" && updatedTask.completedAt) {
+  if (
+    (body.action === "complete" || body.action === "complete-together") &&
+    updatedTask.completedAt
+  ) {
     await notifyPartner({
       actorName,
       actorTelegramId: String(auth.user.id),
@@ -101,7 +105,7 @@ export async function PATCH(
       text:
         `Раздел: БЫТ\n` +
         `Задача выполнена: ${updatedTask.title}\n` +
-        `Кто выполнил: ${actorName}\n` +
+        `Кто выполнил: ${body.action === "complete-together" ? "вместе" : actorName}\n` +
         `Когда: ${formatMoscowDateTime(updatedTask.completedAt)}\n` +
         `Прошло с момента создания: ${formatElapsedLabel(task.createdAt, updatedTask.completedAt)}`,
     });

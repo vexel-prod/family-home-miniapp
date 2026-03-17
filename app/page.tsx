@@ -59,10 +59,12 @@ type BootstrapResponse = {
 
 type ModalKey =
   | 'household'
+  | 'task-create'
   | 'task-actions'
   | 'task-replace'
   | 'task-journal'
   | 'shopping-list'
+  | 'shopping-create'
   | 'shopping-actions'
   | 'shopping-replace'
   | null
@@ -198,8 +200,10 @@ export default function Page() {
   const [replaceNote, setReplaceNote] = useState('')
   const [replaceUrgency, setReplaceUrgency] = useState<'soon' | 'out'>('soon')
   const [busyKey, setBusyKey] = useState<string | null>(null)
+  const [taskCreateStatus, setTaskCreateStatus] = useState('')
   const [toast, setToast] = useState('')
   const [error, setError] = useState('')
+  const [shoppingCreateStatus, setShoppingCreateStatus] = useState('')
   const [loading, setLoading] = useState(true)
 
   const sortedTasks = sortTasks(openTasks)
@@ -251,6 +255,24 @@ export default function Page() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!toast) {
+      return
+    }
+
+    const timeout = window.setTimeout(() => setToast(''), 2800)
+    return () => window.clearTimeout(timeout)
+  }, [toast])
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+
+    const timeout = window.setTimeout(() => setError(''), 3200)
+    return () => window.clearTimeout(timeout)
+  }, [error])
+
   function canOpenModal() {
     return Date.now() >= modalGuardUntil
   }
@@ -260,7 +282,9 @@ export default function Page() {
     setModal(null)
   }
 
-  function openMainModal(nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal'>) {
+  function openMainModal(
+    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal'>,
+  ) {
     if (!canOpenModal()) {
       return
     }
@@ -291,6 +315,15 @@ export default function Page() {
     setModal('task-actions')
   }
 
+  function openTaskCreateModal() {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setTaskCreateStatus('')
+    setModal('task-create')
+  }
+
   function openTaskReplaceModal() {
     if (!selectedTask) {
       return
@@ -309,6 +342,7 @@ export default function Page() {
     setReplaceTaskTitle('')
     setReplaceTaskNote('')
     setReplaceTaskPriority('normal')
+    setTaskCreateStatus('')
   }
 
   async function loadData(initDataOverride?: string) {
@@ -316,7 +350,11 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await telegramFetch('/api/bootstrap', { cache: 'no-store' }, initDataOverride)
+      const response = await telegramFetch(
+        '/api/bootstrap',
+        { cache: 'no-store' },
+        initDataOverride,
+      )
 
       if (!response.ok) {
         throw new Error('bootstrap failed')
@@ -356,6 +394,15 @@ export default function Page() {
     setModal('shopping-replace')
   }
 
+  function openShoppingCreateModal() {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setShoppingCreateStatus('')
+    setModal('shopping-create')
+  }
+
   function closeShoppingModals() {
     setModalGuardUntil(Date.now() + 300)
     setModal(null)
@@ -364,6 +411,7 @@ export default function Page() {
     setReplaceQuantity('')
     setReplaceNote('')
     setReplaceUrgency('soon')
+    setShoppingCreateStatus('')
   }
 
   async function addTask() {
@@ -371,11 +419,13 @@ export default function Page() {
 
     if (!title) {
       setError('Впиши, какое действие нужно сделать по дому.')
+      setTaskCreateStatus('Ошибка: впиши задачу.')
       return
     }
 
     setBusyKey('create-task')
     setError('')
+    setTaskCreateStatus(`Добавляю: ${title}`)
 
     try {
       const response = await telegramFetch('/api/tasks', {
@@ -395,12 +445,15 @@ export default function Page() {
       setTaskTitle('')
       setTaskNote('')
       setTaskPriority('normal')
-      setToast(`Добавили в быт: "${title}"`)
+      setTaskCreateStatus(`Добавлено: ${title}`)
+      setModal('household')
+      setToast(`Задача добавлена: ${title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось добавить бытовую задачу.')
+      setError(`Ошибка добавления задачи: ${title}`)
+      setTaskCreateStatus(`Ошибка: не удалось добавить "${title}"`)
     } finally {
       setBusyKey(null)
     }
@@ -411,11 +464,13 @@ export default function Page() {
 
     if (!title) {
       setError('Впиши название продукта или товара.')
+      setShoppingCreateStatus('Ошибка: впиши название продукта или товара.')
       return
     }
 
     setBusyKey('create-product')
     setError('')
+    setShoppingCreateStatus(`Добавляю: ${title}`)
 
     try {
       const response = await telegramFetch('/api/shopping-items', {
@@ -437,19 +492,22 @@ export default function Page() {
       setProductQuantity('')
       setProductNote('')
       setProductUrgency('soon')
-      setToast(`Добавили в покупки: "${title}"`)
+      setShoppingCreateStatus(`Добавлено: ${title}`)
+      setModal('shopping-list')
+      setToast(`Покупка добавлена: ${title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось добавить покупку.')
+      setError(`Ошибка добавления покупки: ${title}`)
+      setShoppingCreateStatus(`Ошибка: не удалось добавить "${title}"`)
     } finally {
       setBusyKey(null)
     }
   }
 
-  async function completeTask(task: HouseholdTask) {
-    setBusyKey(`task-${task.id}`)
+  async function completeTask(task: HouseholdTask, together = false) {
+    setBusyKey(`${together ? 'task-together' : 'task'}-${task.id}`)
     setError('')
 
     try {
@@ -457,7 +515,7 @@ export default function Page() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'complete',
+          action: together ? 'complete-together' : 'complete',
         }),
       })
 
@@ -466,12 +524,16 @@ export default function Page() {
       }
 
       closeTaskModals()
-      setToast(`Закрыли задачу "${task.title}"`)
+      setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось отметить задачу выполненной.')
+      setError(
+        together
+          ? `Ошибка: не удалось отметить как сделано вместе "${task.title}"`
+          : `Ошибка закрытия задачи: ${task.title}`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -491,12 +553,12 @@ export default function Page() {
       }
 
       closeTaskModals()
-      setToast(`Удалили задачу "${task.title}"`)
+      setToast(`Задача удалена: ${task.title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось удалить задачу.')
+      setError(`Ошибка удаления задачи: ${task.title}`)
     } finally {
       setBusyKey(null)
     }
@@ -534,12 +596,12 @@ export default function Page() {
       }
 
       closeTaskModals()
-      setToast(`Обновили задачу: "${title}"`)
+      setToast(`Задача обновлена: ${title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось изменить задачу.')
+      setError(`Ошибка обновления задачи: ${title}`)
     } finally {
       setBusyKey(null)
     }
@@ -563,12 +625,12 @@ export default function Page() {
       }
 
       closeShoppingModals()
-      setToast(`Отметили купленным "${item.title}"`)
+      setToast(`Покупка отмечена: ${item.title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось отметить покупку.')
+      setError(`Ошибка обновления покупки: ${item.title}`)
     } finally {
       setBusyKey(null)
     }
@@ -588,12 +650,12 @@ export default function Page() {
       }
 
       closeShoppingModals()
-      setToast(`Удалили "${item.title}" из покупок`)
+      setToast(`Покупка удалена: ${item.title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось удалить покупку.')
+      setError(`Ошибка удаления покупки: ${item.title}`)
     } finally {
       setBusyKey(null)
     }
@@ -632,12 +694,12 @@ export default function Page() {
       }
 
       closeShoppingModals()
-      setToast(`Обновили покупку: "${title}"`)
+      setToast(`Покупка обновлена: ${title}`)
       startTransition(() => {
         void loadData()
       })
     } catch {
-      setError('Не удалось заменить покупку.')
+      setError(`Ошибка обновления покупки: ${title}`)
     } finally {
       setBusyKey(null)
     }
@@ -645,6 +707,50 @@ export default function Page() {
 
   return (
     <main className='min-h-screen bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.12),transparent_20%),linear-gradient(180deg,#f3efe3_0%,#ebe7d8_45%,#dde7df_100%)] text-slate-950'>
+      <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
+        {toast ? (
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.96 }}
+            className='pointer-events-auto w-full max-w-sm rounded-[1.8rem] border border-emerald-300/35 bg-[#f3fff7]/96 p-5 text-emerald-950 shadow-[0_28px_80px_rgba(16,185,129,0.22)] backdrop-blur-xl'
+          >
+            <div className='flex items-start gap-4'>
+              <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-xl text-white shadow-[0_10px_30px_rgba(16,185,129,0.28)]'>
+                ✓
+              </div>
+              <div className='space-y-1'>
+                <div className='text-xs font-semibold uppercase tracking-[0.26em] text-emerald-700/80'>
+                  Готово
+                </div>
+                <div className='text-base font-semibold leading-6'>{toast}</div>
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+
+        {error ? (
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.96 }}
+            className='pointer-events-auto w-full max-w-sm rounded-[1.8rem] border border-rose-300/35 bg-[#fff4f5]/96 p-5 text-rose-950 shadow-[0_28px_80px_rgba(244,63,94,0.18)] backdrop-blur-xl'
+          >
+            <div className='flex items-start gap-4'>
+              <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-rose-500 text-xl text-white shadow-[0_10px_30px_rgba(244,63,94,0.24)]'>
+                !
+              </div>
+              <div className='space-y-1'>
+                <div className='text-xs font-semibold uppercase tracking-[0.26em] text-rose-700/80'>
+                  Внимание
+                </div>
+                <div className='text-base font-semibold leading-6'>{error}</div>
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </div>
+
       {modal ? (
         <div className='fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-3 backdrop-blur-md sm:items-center sm:p-6'>
           {modal === 'household' ? (
@@ -711,10 +817,91 @@ export default function Page() {
               <div className='border-t border-white/10 px-5 py-5 sm:px-6'>
                 <button
                   type='button'
+                  className='mb-3 w-full rounded-[1.2rem] bg-[#f3c54b] px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-[#eabf36]'
+                  onClick={openTaskCreateModal}
+                >
+                  Добавить
+                </button>
+                <button
+                  type='button'
                   className='w-full rounded-[1.2rem] bg-white px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-white/90'
                   onClick={closeModalWithGuard}
                 >
                   Ознакомлен
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+
+          {modal === 'task-create' ? (
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className='w-full max-w-md rounded-4xl border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
+            >
+              <div className='space-y-2'>
+                <div className='text-xs uppercase tracking-[0.3em] text-white/50'>
+                  Добавить задачу
+                </div>
+                <h2 className='text-3xl font-black'>Новая задача</h2>
+              </div>
+
+              <div className='mt-5 space-y-3'>
+                {taskCreateStatus ? (
+                  <div
+                    className={`rounded-[1.2rem] border px-4 py-3 text-sm font-medium ${
+                      taskCreateStatus.startsWith('Ошибка')
+                        ? 'border-rose-300/30 bg-rose-400/10 text-rose-100'
+                        : taskCreateStatus.startsWith('Добавлено')
+                          ? 'border-emerald-300/30 bg-emerald-400/10 text-emerald-100'
+                          : 'border-white/10 bg-white/5 text-white/80'
+                    }`}
+                  >
+                    {taskCreateStatus}
+                  </div>
+                ) : null}
+
+                <input
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  placeholder='Например: разобрать сушилку'
+                  value={taskTitle}
+                  onChange={event => setTaskTitle(event.target.value)}
+                />
+
+                <select
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  value={taskPriority}
+                  onChange={event =>
+                    setTaskPriority(event.target.value === 'urgent' ? 'urgent' : 'normal')
+                  }
+                >
+                  <option value='normal'>Обычный приоритет</option>
+                  <option value='urgent'>Срочно</option>
+                </select>
+
+                <textarea
+                  className='h-28 w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  placeholder='Комментарий или детали'
+                  value={taskNote}
+                  onChange={event => setTaskNote(event.target.value)}
+                />
+
+                <button
+                  type='button'
+                  className='w-full rounded-[1.2rem] bg-[#f3c54b] px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-[#eabf36] disabled:opacity-60'
+                  onClick={() => void addTask()}
+                  disabled={busyKey === 'create-task' || loading}
+                >
+                  {busyKey === 'create-task' ? 'Добавляю...' : 'Добавить в БЫТ'}
+                </button>
+
+                <button
+                  type='button'
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/5 px-4 py-4 text-base font-semibold text-white transition hover:bg-white/10'
+                  onClick={() => setModal('household')}
+                >
+                  Назад
                 </button>
               </div>
             </motion.div>
@@ -753,6 +940,17 @@ export default function Page() {
                   disabled={busyKey === `task-${selectedTask.id}`}
                 >
                   {busyKey === `task-${selectedTask.id}` ? 'Обновляю...' : 'Отметить выполненной'}
+                </button>
+
+                <button
+                  type='button'
+                  className='w-full rounded-[1.2rem] bg-[#ffdca8] px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-[#ffd08b] disabled:opacity-60'
+                  onClick={() => void completeTask(selectedTask, true)}
+                  disabled={busyKey === `task-together-${selectedTask.id}`}
+                >
+                  {busyKey === `task-together-${selectedTask.id}`
+                    ? 'Отмечаю...'
+                    : '🤝 Сделано вместе'}
                 </button>
 
                 <button
@@ -985,10 +1183,98 @@ export default function Page() {
               <div className='border-t border-white/10 px-5 py-5 sm:px-6'>
                 <button
                   type='button'
+                  className='mb-3 w-full rounded-[1.2rem] bg-[#8fd4b0] px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-[#7bc8a0]'
+                  onClick={openShoppingCreateModal}
+                >
+                  Добавить
+                </button>
+                <button
+                  type='button'
                   className='w-full rounded-[1.2rem] bg-white px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-white/90'
                   onClick={closeModalWithGuard}
                 >
                   Ознакомлен
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+
+          {modal === 'shopping-create' ? (
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className='w-full max-w-md rounded-4xl border border-white/10 bg-[#13202f] p-5 text-white shadow-2xl'
+            >
+              <div className='space-y-2'>
+                <div className='text-xs uppercase tracking-[0.3em] text-white/50'>
+                  Добавить покупку
+                </div>
+                <h2 className='text-3xl font-black'>Новая позиция</h2>
+              </div>
+
+              <div className='mt-5 space-y-3'>
+                {shoppingCreateStatus ? (
+                  <div
+                    className={`rounded-[1.2rem] border px-4 py-3 text-sm font-medium ${
+                      shoppingCreateStatus.startsWith('Ошибка')
+                        ? 'border-rose-300/30 bg-rose-400/10 text-rose-100'
+                        : shoppingCreateStatus.startsWith('Добавлено')
+                          ? 'border-emerald-300/30 bg-emerald-400/10 text-emerald-100'
+                          : 'border-white/10 bg-white/5 text-white/80'
+                    }`}
+                  >
+                    {shoppingCreateStatus}
+                  </div>
+                ) : null}
+
+                <input
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  placeholder='Например: овсяное молоко'
+                  value={productTitle}
+                  onChange={event => setProductTitle(event.target.value)}
+                />
+
+                <select
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  value={productUrgency}
+                  onChange={event =>
+                    setProductUrgency(event.target.value === 'out' ? 'out' : 'soon')
+                  }
+                >
+                  <option value='soon'>Заканчивается</option>
+                  <option value='out'>Закончилось</option>
+                </select>
+
+                <input
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  placeholder='Количество или упаковка'
+                  value={productQuantity}
+                  onChange={event => setProductQuantity(event.target.value)}
+                />
+
+                <textarea
+                  className='h-28 w-full rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4 text-base text-white outline-none transition focus:border-white/30'
+                  placeholder='Комментарий: бренд, магазин, пожелание'
+                  value={productNote}
+                  onChange={event => setProductNote(event.target.value)}
+                />
+
+                <button
+                  type='button'
+                  className='w-full rounded-[1.2rem] bg-[#8fd4b0] px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-[#7bc8a0] disabled:opacity-60'
+                  onClick={() => void addShoppingItem()}
+                  disabled={busyKey === 'create-product' || loading}
+                >
+                  {busyKey === 'create-product' ? 'Добавляю...' : 'Добавить в ПОКУПКИ'}
+                </button>
+
+                <button
+                  type='button'
+                  className='w-full rounded-[1.2rem] border border-white/10 bg-white/5 px-4 py-4 text-base font-semibold text-white transition hover:bg-white/10'
+                  onClick={() => setModal('shopping-list')}
+                >
+                  Назад
                 </button>
               </div>
             </motion.div>
@@ -1141,15 +1427,8 @@ export default function Page() {
                   Family Plane
                 </div>
                 <h1 className='max-w-[13ch] text-4xl font-black leading-[0.92] sm:text-5xl'>
-                  Домашние дела без лишних экранов
+                  Привет, {getActorName(buyer)}!
                 </h1>
-              </div>
-
-              <div className='rounded-3xl border border-white/10 bg-white/8 px-4 py-4'>
-                <div className='text-xs uppercase tracking-[0.24em] text-white/50'>
-                  Сейчас в Mini App
-                </div>
-                <div className='mt-2 text-2xl font-bold'>{getActorName(buyer)}</div>
               </div>
             </div>
 
@@ -1177,126 +1456,6 @@ export default function Page() {
           </div>
         </motion.section>
 
-        {toast ? (
-          <div className='rounded-[1.25rem] border border-emerald-900/10 bg-emerald-100/80 px-4 py-3 text-sm font-medium text-emerald-950'>
-            {toast}
-          </div>
-        ) : null}
-
-        {error ? (
-          <div className='rounded-[1.25rem] border border-rose-900/10 bg-rose-100/90 px-4 py-3 text-sm font-medium text-rose-950'>
-            {error}
-          </div>
-        ) : null}
-
-        <div className='grid gap-4 lg:grid-cols-2'>
-          <motion.section
-            variants={reveal}
-            initial='hidden'
-            animate='visible'
-            transition={{ delay: 0.06, duration: 0.35, ease: 'easeOut' }}
-            className='flex flex-col rounded-4xl border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
-          >
-            <div className='space-y-2'>
-              <div className='text-xs uppercase tracking-[0.28em] text-slate-500'>
-                Новая бытовая задача
-              </div>
-              <h2 className='text-3xl font-black'>Что нужно сделать</h2>
-            </div>
-
-            <div className='mt-5 space-y-3'>
-              <input
-                className='w-full rounded-[1.2rem] border border-black/10 bg-[#f8f5ec] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                placeholder='Например: разобрать сушилку'
-                value={taskTitle}
-                onChange={event => setTaskTitle(event.target.value)}
-              />
-
-              <select
-                className='w-full rounded-[1.2rem] border border-black/10 bg-[#f8f5ec] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                value={taskPriority}
-                onChange={event =>
-                  setTaskPriority(event.target.value === 'urgent' ? 'urgent' : 'normal')
-                }
-              >
-                <option value='normal'>Обычный приоритет</option>
-                <option value='urgent'>Срочно</option>
-              </select>
-
-              <textarea
-                className='h-28 w-full rounded-[1.2rem] border border-black/10 bg-[#f8f5ec] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                placeholder='Комментарий или детали'
-                value={taskNote}
-                onChange={event => setTaskNote(event.target.value)}
-              />
-            </div>
-            <button
-              type='button'
-              className='mt-auto w-full rounded-[1.2rem] bg-[#13202f] px-4 py-4 text-base font-semibold text-white transition hover:bg-black disabled:opacity-60'
-              onClick={() => void addTask()}
-              disabled={busyKey === 'create-task' || loading}
-            >
-              {busyKey === 'create-task' ? 'Добавляю...' : 'Добавить в БЫТ'}
-            </button>
-          </motion.section>
-
-          <motion.section
-            variants={reveal}
-            initial='hidden'
-            animate='visible'
-            transition={{ delay: 0.12, duration: 0.35, ease: 'easeOut' }}
-            className='rounded-4xl border border-black/8 bg-white/80 p-5 shadow-[0_22px_70px_rgba(52,72,60,0.1)]'
-          >
-            <div className='space-y-2'>
-              <div className='text-xs uppercase tracking-[0.28em] text-slate-500'>
-                Новая покупка
-              </div>
-              <h2 className='text-3xl font-black'>Что купить</h2>
-            </div>
-
-            <div className='mt-5 space-y-3'>
-              <input
-                className='w-full rounded-[1.2rem] border border-black/10 bg-[#eef7f0] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                placeholder='Например: овсяное молоко'
-                value={productTitle}
-                onChange={event => setProductTitle(event.target.value)}
-              />
-
-              <select
-                className='w-full rounded-[1.2rem] border border-black/10 bg-[#eef7f0] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                value={productUrgency}
-                onChange={event => setProductUrgency(event.target.value === 'out' ? 'out' : 'soon')}
-              >
-                <option value='soon'>Заканчивается</option>
-                <option value='out'>Закончилось</option>
-              </select>
-
-              <input
-                className='w-full rounded-[1.2rem] border border-black/10 bg-[#eef7f0] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                placeholder='Количество или упаковка'
-                value={productQuantity}
-                onChange={event => setProductQuantity(event.target.value)}
-              />
-
-              <textarea
-                className='h-28 w-full rounded-[1.2rem] border border-black/10 bg-[#eef7f0] px-4 py-4 text-base outline-none transition focus:border-slate-950'
-                placeholder='Комментарий: бренд, магазин, пожелание'
-                value={productNote}
-                onChange={event => setProductNote(event.target.value)}
-              />
-
-              <button
-                type='button'
-                className='w-full rounded-[1.2rem] bg-[#13202f] px-4 py-4 text-base font-semibold text-white transition hover:bg-black disabled:opacity-60'
-                onClick={() => void addShoppingItem()}
-                disabled={busyKey === 'create-product' || loading}
-              >
-                {busyKey === 'create-product' ? 'Добавляю...' : 'Добавить в ПОКУПКИ'}
-              </button>
-            </div>
-          </motion.section>
-        </div>
-
         <motion.section
           variants={reveal}
           initial='hidden'
@@ -1307,27 +1466,22 @@ export default function Page() {
           <div className='flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
             <div className='space-y-2'>
               <div className='text-xs uppercase tracking-[0.28em] text-slate-500'>Журнал задач</div>
-              <h2 className='text-3xl font-black'>Что уже закрыто</h2>
-              <p className='max-w-2xl text-sm leading-6 text-slate-600'>
-                История выполненных задач хранится отдельно, чтобы можно было быстро вспомнить,
-                кто и когда закрыл бытовой вопрос.
-              </p>
             </div>
-
-            <button
-              type='button'
-              className='rounded-[1.2rem] bg-[#13202f] px-5 py-4 text-base font-semibold text-white transition hover:bg-black'
-              onClick={() => openMainModal('task-journal')}
-            >
-              Открыть журнал
-            </button>
           </div>
 
           <div className='mt-5 grid gap-3 sm:grid-cols-3'>
-            <div className='rounded-[1.4rem] border border-black/8 bg-[#f8f5ec] p-4'>
-              <div className='text-xs uppercase tracking-[0.24em] text-slate-500'>Закрыто всего</div>
-              <div className='mt-3 text-3xl font-black'>{completedTasks.length}</div>
-            </div>
+            <button
+              type='button'
+              className='rounded-[1.4rem] border border-black/8 bg-[#f8f5ec] p-4 text-left'
+              onClick={() => openMainModal('task-journal')}
+            >
+              <div className='text-xs uppercase tracking-[0.24em] text-slate-500'>
+                Всего выполненных задач
+              </div>
+              <div className='mt-3 text-lg font-bold'>
+                {completedTasks.length === 0 ? 'Нет выполненных задач' : completedTasks.length}
+              </div>
+            </button>
 
             <div className='rounded-[1.4rem] border border-black/8 bg-[#eef7f0] p-4'>
               <div className='text-xs uppercase tracking-[0.24em] text-slate-500'>
