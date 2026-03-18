@@ -2,6 +2,14 @@ import { authorizeRequest } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+function getMemberDisplayName(member: {
+  firstName: string;
+  lastName: string | null;
+  username: string | null;
+}) {
+  return [member.firstName, member.lastName].filter(Boolean).join(" ").trim() || member.username || member.firstName;
+}
+
 function getCurrentMoscowMonthRange() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Europe/Moscow",
@@ -28,7 +36,7 @@ export async function GET(request: Request) {
 
   const { start, end } = getCurrentMoscowMonthRange();
 
-  const [openTasks, completedTasks, monthlyCompletedTasks, activeShoppingItems] = await Promise.all([
+  const [openTasks, completedTasks, monthlyCompletedTasks, activeShoppingItems, members] = await Promise.all([
     prisma.householdTask.findMany({
       where: { householdId: auth.member.householdId, status: "open" },
       orderBy: [{ createdAt: "desc" }],
@@ -53,6 +61,15 @@ export async function GET(request: Request) {
       where: { householdId: auth.member.householdId, status: "active" },
       orderBy: [{ urgency: "asc" }, { createdAt: "desc" }],
     }),
+    prisma.member.findMany({
+      where: { householdId: auth.member.householdId },
+      orderBy: [{ createdAt: "asc" }],
+      select: {
+        firstName: true,
+        lastName: true,
+        username: true,
+      },
+    }),
   ]);
 
   return NextResponse.json({
@@ -60,6 +77,7 @@ export async function GET(request: Request) {
     openTasks,
     completedTasks,
     monthlyCompletedTasks,
+    participantNames: members.map(getMemberDisplayName),
     activeShoppingItems,
   });
 }

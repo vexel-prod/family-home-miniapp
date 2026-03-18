@@ -52,6 +52,7 @@ export default function Page() {
   const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
   const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
   const [monthlyCompletedTasks, setMonthlyCompletedTasks] = useState<HouseholdTask[]>([])
+  const [participantNames, setParticipantNames] = useState<string[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
@@ -81,6 +82,7 @@ export default function Page() {
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
   const monthlyRatingSummary = buildMonthlyRatingSummary(
     monthlyCompletedTasks,
+    participantNames,
     getActorName(buyer),
   )
 
@@ -257,6 +259,7 @@ export default function Page() {
         setOpenTasks(payload.openTasks)
         setCompletedTasks(payload.completedTasks)
         setMonthlyCompletedTasks(payload.monthlyCompletedTasks)
+        setParticipantNames(payload.participantNames)
         setShoppingItems(payload.activeShoppingItems)
       } catch {
         setError(

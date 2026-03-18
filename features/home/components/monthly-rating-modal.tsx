@@ -14,25 +14,23 @@ export function MonthlyRatingModal({ summary, onClose }: MonthlyRatingModalProps
       wide
       tall
     >
-      <div className='flex h-[min(82dvh,44rem)] w-[min(100%,26rem)] flex-col overflow-hidden sm:w-[min(100%,54rem)]'>
-        <div className='flex-none border-b border-white/10 p-4 sm:p-6'>
-          <div className='text-center uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
-            Лидербоард месяца
-          </div>
+      <div className='border-b border-white/10 p-4 sm:p-6'>
+        <div className='flex items-center justify-center gap-4'>
+          <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
+            Лидерство за {summary.monthLabel}
+          </h2>
         </div>
+      </div>
 
-        <div className='min-h-0 flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4'>
-          <MonthlyRatingBoard summary={summary} />
-        </div>
+      <MonthlyRatingBoard summary={summary} />
 
-        <div className='flex-none border-t border-white/10 p-4 sm:p-6'>
-          <AppButton
-            tone='ghost'
-            onClick={onClose}
-          >
-            Закрыть лидербоард
-          </AppButton>
-        </div>
+      <div className='flex-none border-t border-white/10 p-4 sm:p-6'>
+        <AppButton
+          tone='ghost'
+          onClick={onClose}
+        >
+          Закрыть лидерборд
+        </AppButton>
       </div>
     </ModalPanel>
   )

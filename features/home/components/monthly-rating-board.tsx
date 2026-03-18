@@ -3,6 +3,25 @@ import { motion } from 'framer-motion'
 import { reveal } from '@/shared/lib/animations'
 import type { MonthlyRatingSummary } from '@/shared/lib/monthly-rating'
 
+const motivationRules = [
+  {
+    rule: 'Закрытая задача',
+    score: '3 балла',
+  },
+  {
+    rule: 'Срочная задача',
+    score: '+3 балла',
+  },
+  {
+    rule: 'Быстрое закрытие',
+    score: 'x1.5',
+  },
+  {
+    rule: 'Сделано вместе',
+    score: 'делим ровно',
+  },
+]
+
 type MonthlyRatingBoardProps = {
   summary: MonthlyRatingSummary
 }
@@ -21,21 +40,30 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
       initial='hidden'
       animate='visible'
       transition={{ delay: 0.12, duration: 0.35, ease: 'easeOut' }}
-      className='flex min-h-full flex-col rounded-2xl border border-[rgba(15,23,42,0.08)] bg-[linear-gradient(135deg,rgba(255,248,214,0.96),rgba(255,255,255,0.86))] p-4 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] sm:p-5'
+      className='px-4 py-4 max-h-[45dvh] overflow-y-auto sm:px-6'
     >
       <div className='flex flex-col gap-4'>
         <div className='flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between'>
           <div>
-            <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
-              Рейтинг месяца
+            <div className='overflow-hidden rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white/70 shadow-[0_14px_40px_rgba(15,23,42,0.08)]'>
+              <div className='grid grid-cols-[1.2fr_0.7fr] border-b border-[rgba(15,23,42,0.08)] bg-[linear-gradient(90deg,rgba(243,197,75,0.18),rgba(143,212,176,0.12))] px-4 py-3 text-[11px] uppercase tracking-[0.22em] text-(--color-text-muted) sm:grid-cols-[1.1fr_0.45fr_1.1fr]'>
+                <div>Правило</div>
+                <div>Бонус</div>
+                <div className='hidden sm:block'>Комментарий</div>
+              </div>
+
+              <div className='divide-y divide-[rgba(15,23,42,0.08)]'>
+                {motivationRules.map(item => (
+                  <div
+                    key={item.rule}
+                    className='grid grid-cols-[1.2fr_0.7fr] items-start gap-3 px-4 py-3 sm:grid-cols-[1.1fr_0.45fr_1.1fr]'
+                  >
+                    <div className='text-sm font-semibold text-(--color-page-text)'>{item.rule}</div>
+                    <div className='text-sm font-semibold text-(--color-success-text)'>{item.score}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h2 className='mt-2 text-xl font-semibold text-(--color-page-text) sm:text-2xl'>
-              Домашняя гонка за {summary.monthLabel}
-            </h2>
-            <p className='mt-2 max-w-2xl text-sm text-(--color-text-muted)'>
-              10 баллов за закрытую задачу, +6 за срочную, +3 за быстрый отклик за первые 24 часа.
-              Совместные закрытия копят отдельный командный бонус.
-            </p>
           </div>
 
           <div className='grid grid-cols-2 gap-3 lg:min-w-[24rem] lg:grid-cols-4'>
@@ -63,9 +91,11 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
         </div>
 
         <div className='grid gap-4 lg:grid-cols-[1.3fr_0.9fr]'>
-          <div className='flex flex-col rounded-[1.5rem] bg-white/70 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)]'>
+          <div className='flex flex-col rounded-2xl bg-white/70 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)]'>
             <div className='flex items-center justify-between gap-3'>
-              <div className='text-sm font-semibold text-(--color-page-text)'>Промежуточные результаты</div>
+              <div className='text-sm font-semibold text-(--color-page-text)'>
+                Промежуточные результаты
+              </div>
               <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
                 {chaseLabel}
               </div>
@@ -111,41 +141,23 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
                 ))
               ) : (
                 <div className='rounded-[1.25rem] border border-dashed border-[rgba(15,23,42,0.12)] bg-white/60 p-4 text-sm text-(--color-text-muted)'>
-                  В этом месяце еще нет закрытых задач. Первый завершенный бытовой шаг сразу откроет гонку.
+                  В этом месяце еще нет закрытых задач. Первый завершенный бытовой шаг сразу откроет
+                  гонку.
                 </div>
               )}
             </div>
           </div>
 
           <div className='flex flex-col gap-4'>
-            <div className='rounded-[1.5rem] bg-[#2d3648] p-4 text-white shadow-[0_22px_60px_rgba(17,24,39,0.26)]'>
-              <div className='text-xs uppercase tracking-[0.24em] text-white/60'>Мотивация</div>
-              <div className='mt-3 text-lg font-semibold'>
-                {summary.currentUser?.nextMilestone
-                  ? `${summary.currentUser.nextMilestone.pointsLeft} баллов до награды`
-                  : 'Главная награда уже взята'}
-              </div>
-              <p className='mt-2 text-sm text-white/70'>
-                {summary.currentUser?.nextMilestone
-                  ? `Следующая цель: ${summary.currentUser.nextMilestone.label}.`
-                  : 'Можно удержать лидерство и добрать максимум командных баллов.'}
-              </p>
-              {summary.currentUser ? (
-                <div className='mt-4 rounded-[1.25rem] bg-white/8 p-3 text-sm text-white/80'>
-                  {summary.currentUser.name}: {summary.currentUser.points} баллов, место #{summary.currentUser.place}.
-                </div>
-              ) : null}
-            </div>
-
-            <div className='flex flex-col rounded-[1.5rem] border border-[rgba(15,23,42,0.08)] bg-white/75 p-4'>
+            <div className='flex flex-col rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white/75 p-4'>
               <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
-                Идеи наград
+                блок мотивации
               </div>
               <div className='mt-3 flex flex-col gap-2'>
                 {summary.milestones.map(milestone => (
                   <div
                     key={milestone.target}
-                    className='flex-none rounded-[1rem] bg-(--color-surface-mint) px-3 py-3 text-sm text-(--color-page-text)'
+                    className='flex-none rounded-2xl bg-(--color-surface-mint) px-3 py-3 text-sm text-(--color-page-text)'
                   >
                     {milestone.target} баллов: {milestone.label}
                   </div>
@@ -177,7 +189,9 @@ function StatCard({
 
   return (
     <div className={`rounded-[1.2rem] ${toneClassName} p-3`}>
-      <div className='text-[11px] uppercase tracking-[0.22em] text-(--color-text-muted)'>{label}</div>
+      <div className='text-[11px] uppercase tracking-[0.22em] text-(--color-text-muted)'>
+        {label}
+      </div>
       <div className='mt-2 text-base font-semibold text-(--color-page-text)'>{value}</div>
     </div>
   )
@@ -185,7 +199,7 @@ function StatCard({
 
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className='rounded-[1rem] bg-(--color-surface-cream) px-3 py-2'>
+    <div className='rounded-2xl bg-(--color-surface-cream) px-3 py-2'>
       <div className='text-[11px] uppercase tracking-[0.18em]'>{label}</div>
       <div className='mt-1 font-semibold text-(--color-page-text)'>{value}</div>
     </div>

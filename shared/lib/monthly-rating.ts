@@ -1,6 +1,7 @@
-import type { HouseholdTask } from "@/shared/types/family"
+import type { HouseholdTask } from '@/shared/types/family'
 
 const MOSCOW_UTC_OFFSET_HOURS = 3
+const FAST_TASK_WINDOW_MS = 30 * 60 * 1000
 
 type MemberRating = {
   name: string
@@ -36,21 +37,21 @@ export type MonthlyRatingSummary = {
 }
 
 const MILESTONES = [
-  { target: 60, label: "Выбор семейного фильма" },
-  { target: 120, label: "Пропуск одной мелкой задачи" },
-  { target: 180, label: "Семейный десерт или ужин" },
+  { target: 60, label: 'пропуск одной задачи на выбор' },
+  { target: 120, label: 'пропуск прогулки с собакой' },
+  { target: 180, label: '3 любых желания 😈' },
 ]
 
 function getMoscowMonthStart(date = new Date()) {
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Moscow",
-    year: "numeric",
-    month: "2-digit",
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Moscow',
+    year: 'numeric',
+    month: '2-digit',
   })
 
   const parts = formatter.formatToParts(date)
-  const year = Number(parts.find(part => part.type === "year")?.value ?? date.getUTCFullYear())
-  const month = Number(parts.find(part => part.type === "month")?.value ?? date.getUTCMonth() + 1)
+  const year = Number(parts.find(part => part.type === 'year')?.value ?? date.getUTCFullYear())
+  const month = Number(parts.find(part => part.type === 'month')?.value ?? date.getUTCMonth() + 1)
 
   return new Date(Date.UTC(year, month - 1, 1, -MOSCOW_UTC_OFFSET_HOURS))
 }
@@ -70,19 +71,19 @@ export function isTaskInCurrentMoscowMonth(task: HouseholdTask, now = new Date()
 }
 
 function getTaskPoints(task: HouseholdTask) {
-  let points = 10
+  let points = 3
 
-  if (task.priority === "urgent") {
-    points += 6
+  if (task.priority === 'urgent') {
+    points += 3
   }
 
   if (task.completedAt) {
     const createdAt = new Date(task.createdAt).getTime()
     const completedAt = new Date(task.completedAt).getTime()
-    const hoursSinceCreate = (completedAt - createdAt) / (1000 * 60 * 60)
+    const elapsedMs = completedAt - createdAt
 
-    if (hoursSinceCreate <= 24) {
-      points += 3
+    if (elapsedMs <= FAST_TASK_WINDOW_MS) {
+      points *= 1.5
     }
   }
 
@@ -91,17 +92,28 @@ function getTaskPoints(task: HouseholdTask) {
 
 export function buildMonthlyRatingSummary(
   tasks: HouseholdTask[],
+  participantNames: string[],
   currentUserName?: string,
 ): MonthlyRatingSummary {
   const leaderboardMap = new Map<string, MemberRating>()
   let teamBonusPoints = 0
+
+  for (const participantName of participantNames) {
+    leaderboardMap.set(participantName, {
+      name: participantName,
+      points: 0,
+      completedCount: 0,
+      urgentCount: 0,
+      fastCount: 0,
+    })
+  }
 
   for (const task of tasks) {
     if (!task.completedAt || !task.completedByName) {
       continue
     }
 
-    if (task.completedByName === "Сделано вместе") {
+    if (task.completedByName === 'Сделано вместе') {
       teamBonusPoints += 8
       continue
     }
@@ -115,14 +127,33 @@ export function buildMonthlyRatingSummary(
     }
 
     const taskPoints = getTaskPoints(task)
-    const isFast = new Date(task.completedAt).getTime() - new Date(task.createdAt).getTime() <= 24 * 60 * 60 * 1000
+    const isFast =
+      new Date(task.completedAt).getTime() - new Date(task.createdAt).getTime() <=
+      FAST_TASK_WINDOW_MS
 
     current.points += taskPoints
     current.completedCount += 1
-    current.urgentCount += task.priority === "urgent" ? 1 : 0
+    current.urgentCount += task.priority === 'urgent' ? 1 : 0
     current.fastCount += isFast ? 1 : 0
 
     leaderboardMap.set(task.completedByName, current)
+  }
+
+  const teamBonusShare = participantNames.length > 0 ? teamBonusPoints / participantNames.length : 0
+
+  if (teamBonusShare > 0) {
+    for (const participantName of participantNames) {
+      const current = leaderboardMap.get(participantName) ?? {
+        name: participantName,
+        points: 0,
+        completedCount: 0,
+        urgentCount: 0,
+        fastCount: 0,
+      }
+
+      current.points += teamBonusShare
+      leaderboardMap.set(participantName, current)
+    }
   }
 
   const leaderboard = [...leaderboardMap.values()].sort((left, right) => {
@@ -133,9 +164,9 @@ export function buildMonthlyRatingSummary(
     return right.completedCount - left.completedCount
   })
 
-  const formatter = new Intl.DateTimeFormat("ru-RU", {
-    timeZone: "Europe/Moscow",
-    month: "long",
+  const formatter = new Intl.DateTimeFormat('ru-RU', {
+    timeZone: 'Europe/Moscow',
+    month: 'long',
   })
 
   const monthLabel = formatter.format(getMoscowMonthStart())
@@ -143,7 +174,9 @@ export function buildMonthlyRatingSummary(
   const runnerUp = leaderboard[1]
   const normalizedCurrentUserName = currentUserName?.trim().toLowerCase()
   const currentUserIndex = normalizedCurrentUserName
-    ? leaderboard.findIndex(member => member.name.trim().toLowerCase() === normalizedCurrentUserName)
+    ? leaderboard.findIndex(
+        member => member.name.trim().toLowerCase() === normalizedCurrentUserName,
+      )
     : -1
   const currentUser = currentUserIndex >= 0 ? leaderboard[currentUserIndex] : undefined
   const nextMilestone = currentUser
@@ -155,8 +188,8 @@ export function buildMonthlyRatingSummary(
     leaderboard,
     teamBonusPoints,
     totalTasks: tasks.length,
-    totalPoints: leaderboard.reduce((sum, member) => sum + member.points, 0) + teamBonusPoints,
-    leadingName: leader?.name ?? "Пока без лидера",
+    totalPoints: leaderboard.reduce((sum, member) => sum + member.points, 0),
+    leadingName: leader ? `${leader.name} 🏆` : 'Пока без лидера',
     leadingPoints: leader?.points ?? 0,
     runnerUpGap: leader && runnerUp ? leader.points - runnerUp.points : leader ? leader.points : 0,
     currentUser: currentUser

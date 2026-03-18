@@ -41,26 +41,25 @@ export function JournalSummary({
           </div>
         </button>
 
-        <button
-          type='button'
-          className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-mint) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
-          onClick={onOpenLeaderboard}
-        >
-          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
-            Лидербоард
-          </div>
-          <div className='mt-3 text-lg font-bold'>{leaderName}</div>
-          <div className='mt-2 text-sm text-(--color-text-muted)'>
-            {leaderPoints > 0 ? `${leaderPoints} баллов в этом месяце` : 'Открыть рейтинг месяца'}
-          </div>
-        </button>
-
         <div className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-lilac) p-4 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'>
           <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
             Последнее закрытие:
           </div>
           <div className='mt-3 text-lg font-bold'>{lastCompletedAt}</div>
         </div>
+        <button
+          type='button'
+          className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-mint) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+          onClick={onOpenLeaderboard}
+        >
+          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
+            доска лидеров
+          </div>
+          <div className='mt-3 text-lg font-bold'>{leaderName}</div>
+          <div className='mt-2 text-sm text-(--color-text-muted)'>
+            {leaderPoints > 0 ? `${leaderPoints} баллов в этом месяце` : 'Открыть рейтинг месяца'}
+          </div>
+        </button>
       </div>
     </motion.section>
   )

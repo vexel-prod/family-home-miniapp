@@ -50,6 +50,7 @@ export type BootstrapResponse = {
   openTasks: HouseholdTask[]
   completedTasks: HouseholdTask[]
   monthlyCompletedTasks: HouseholdTask[]
+  participantNames: string[]
   activeShoppingItems: ShoppingItem[]
 }
 
