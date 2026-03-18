@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 
 import { reveal } from '@/shared/lib/animations'
+import { TypingText } from '@/features/home/components/typing-text'
 
 type DashboardHeroProps = {
   actorName: string
@@ -36,18 +36,10 @@ export function DashboardHero({
             <div className='inline-flex w-max items-center rounded-md bg-white/10 backdrop-blur-[2px] px-4 py-3 text-xs uppercase tracking-(--letter-spacing-tag) text-white/70 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'>
               Family Plane
             </div>
-            <h1 className='uppercase font-(--font-family-heading) text-xl leading-none sm:text-xl'>
-              привет, <span className='font-bold'>{actorName}</span>
-            </h1>
+            <TypingText
+              typedText={`Привет, ${actorName}`}
+            />
           </div>
-
-          {/* <Image
-            src='/dashboard-image.png'
-            alt='Dashboard Hero'
-            width={400}
-            height={200}
-            className='w-full max-w-30 md:max-w-100 rounded-lg object-cover'
-          /> */}
         </div>
 
         <div className='grid grid-cols-2 gap-4'>
