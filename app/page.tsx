@@ -6,6 +6,7 @@ import { ModalOverlay } from '@/components/ui/app-modal'
 import { NoticeToast } from '@/components/ui/notice-toast'
 import { JournalSummary } from '@/features/home/components/journal-summary'
 import { DashboardHero } from '@/features/home/components/dashboard-hero'
+import { MonthlyRatingModal } from '@/features/home/components/monthly-rating-modal'
 import { ShoppingActionsModal } from '@/features/shopping/components/shopping-actions-modal'
 import { ShoppingFormModal } from '@/features/shopping/components/shopping-form-modal'
 import { ShoppingListModal } from '@/features/shopping/components/shopping-list-modal'
@@ -13,6 +14,7 @@ import { TaskActionsModal } from '@/features/tasks/components/task-actions-modal
 import { TaskFormModal } from '@/features/tasks/components/task-form-modal'
 import { TaskJournalModal } from '@/features/tasks/components/task-journal-modal'
 import { TaskListModal } from '@/features/tasks/components/task-list-modal'
+import { buildMonthlyRatingSummary, isTaskInCurrentMoscowMonth } from '@/shared/lib/monthly-rating'
 import {
   formatRelativeDate,
   sortCompletedTasks,
@@ -49,6 +51,7 @@ export default function Page() {
   const [modalGuardUntil, setModalGuardUntil] = useState(0)
   const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
   const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
+  const [monthlyCompletedTasks, setMonthlyCompletedTasks] = useState<HouseholdTask[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
@@ -76,6 +79,10 @@ export default function Page() {
   const sortedTasks = sortTasks(openTasks)
   const sortedCompletedTasks = sortCompletedTasks(completedTasks)
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
+  const monthlyRatingSummary = buildMonthlyRatingSummary(
+    monthlyCompletedTasks,
+    getActorName(buyer),
+  )
 
   const upsertOpenTask = useCallback((task: HouseholdTask) => {
     setOpenTasks(current => {
@@ -96,6 +103,20 @@ export default function Page() {
   const removeTaskFromLists = useCallback((taskId: string) => {
     setOpenTasks(current => current.filter(task => task.id !== taskId))
     setCompletedTasks(current => current.filter(task => task.id !== taskId))
+    setMonthlyCompletedTasks(current => current.filter(task => task.id !== taskId))
+  }, [])
+
+  const syncMonthlyCompletedTask = useCallback((task: HouseholdTask) => {
+    setMonthlyCompletedTasks(current => {
+      const filtered = current.filter(currentTask => currentTask.id !== task.id)
+
+      if (!task.completedAt || !isTaskInCurrentMoscowMonth(task)) {
+        return filtered
+      }
+
+      filtered.push(task)
+      return sortCompletedTasks(filtered)
+    })
   }, [])
 
   const applyTaskUpdate = useCallback(
@@ -103,13 +124,15 @@ export default function Page() {
       if (task.completedAt) {
         setOpenTasks(current => current.filter(currentTask => currentTask.id !== task.id))
         upsertCompletedTask(task)
+        syncMonthlyCompletedTask(task)
         return
       }
 
       setCompletedTasks(current => current.filter(currentTask => currentTask.id !== task.id))
+      setMonthlyCompletedTasks(current => current.filter(currentTask => currentTask.id !== task.id))
       upsertOpenTask(task)
     },
-    [upsertCompletedTask, upsertOpenTask],
+    [syncMonthlyCompletedTask, upsertCompletedTask, upsertOpenTask],
   )
 
   const upsertShoppingItem = useCallback((item: ShoppingItem) => {
@@ -134,7 +157,7 @@ export default function Page() {
   }
 
   function openMainModal(
-    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal'>,
+    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'leaderboard'>,
   ) {
     if (!canOpenModal()) {
       return
@@ -233,6 +256,7 @@ export default function Page() {
         const payload = (await response.json()) as BootstrapResponse
         setOpenTasks(payload.openTasks)
         setCompletedTasks(payload.completedTasks)
+        setMonthlyCompletedTasks(payload.monthlyCompletedTasks)
         setShoppingItems(payload.activeShoppingItems)
       } catch {
         setError(
@@ -764,6 +788,13 @@ export default function Page() {
             />
           ) : null}
 
+          {modal === 'leaderboard' ? (
+            <MonthlyRatingModal
+              summary={monthlyRatingSummary}
+              onClose={closeModalWithGuard}
+            />
+          ) : null}
+
           {modal === 'shopping-list' ? (
             <ShoppingListModal
               items={sortedShoppingItems}
@@ -837,13 +868,15 @@ export default function Page() {
 
         <JournalSummary
           completedTasksCount={completedTasks.length}
-          lastCompletedBy={sortedCompletedTasks[0]?.completedByName ?? 'Пока пусто'}
+          leaderName={monthlyRatingSummary.leadingName}
+          leaderPoints={monthlyRatingSummary.leadingPoints}
           lastCompletedAt={
             sortedCompletedTasks[0]?.completedAt
               ? formatRelativeDate(sortedCompletedTasks[0].completedAt)
               : 'Пока пусто'
           }
           onOpenJournal={() => openMainModal('task-journal')}
+          onOpenLeaderboard={() => openMainModal('leaderboard')}
         />
       </div>
     </main>

@@ -49,6 +49,7 @@ export type BootstrapResponse = {
   ok: boolean
   openTasks: HouseholdTask[]
   completedTasks: HouseholdTask[]
+  monthlyCompletedTasks: HouseholdTask[]
   activeShoppingItems: ShoppingItem[]
 }
 
@@ -58,6 +59,7 @@ export type ModalKey =
   | "task-actions"
   | "task-replace"
   | "task-journal"
+  | "leaderboard"
   | "shopping-list"
   | "shopping-create"
   | "shopping-actions"
