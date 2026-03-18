@@ -71,7 +71,7 @@
   --color-success-soft: #d1fae5;
   --color-success-text: #065f46;
   --color-text-muted: #64748b;
-  --overlay-backdrop: rgba(0, 0, 0, 0.55);
+  --overlay-backdrop: #00000069;
 
   --page-gutter: 1rem;
   --page-max-width: 80rem;

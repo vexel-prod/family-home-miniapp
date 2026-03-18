@@ -38,7 +38,7 @@ export type HouseholdTask = {
 export type ShoppingItem = {
   id: string
   title: string
-  urgency: "soon" | "out"
+  urgency: "soon" | "out" | "without"
   quantityLabel: string | null
   note: string | null
   addedByName: string

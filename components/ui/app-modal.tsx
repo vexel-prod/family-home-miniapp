@@ -9,12 +9,14 @@ type AppModalProps = {
 
 export function ModalOverlay({ children }: AppModalProps) {
   return (
-    <div className='w-full fixed inset-0 z-50 flex items-center justify-center bg-(--overlay-backdrop) px-4 pt-15 pb-15 backdrop-blur-md'>
+    <div
+      id='modal-overlay'
+      className='flex flex-col justify-center absolute inset-0 z-50 bg-(--overlay-backdrop) backdrop-blur-md px-4'
+    >
       {children}
     </div>
   )
 }
-
 
 type ModalPanelProps = {
   children: ReactNode
@@ -24,18 +26,21 @@ type ModalPanelProps = {
 
 export function ModalPanel({ children, wide = false, tall = false }: ModalPanelProps) {
   const classNames = [
-    'mx-auto w-full max-h-[70dvh] min-w-fit rounded-[var(--radius-2xl)] border border-white/10 bg-[var(--color-panel)] text-[var(--color-panel-text)] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]',
-    wide ? 'max-w-[42rem]' : 'max-w-md',
-    tall ? 'flex flex-col overflow-hidden' : '',
+    'rounded-xl border border-white/10 bg-[var(--color-panel)] text-[var(--color-panel-text)] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]',
+    wide ? '' : '',
+    tall ? '' : '',
   ]
-
 
   return (
     <motion.div
+      id='modal-panel'
       initial={modalReveal.initial}
       animate={modalReveal.animate}
       transition={modalReveal.transition}
       className={classNames.filter(Boolean).join(' ')}
+      style={{
+        maxHeight: '',
+      }}
     >
       {children}
     </motion.div>

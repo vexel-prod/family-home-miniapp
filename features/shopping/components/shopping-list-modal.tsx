@@ -11,30 +11,25 @@ type ShoppingListModalProps = {
   onSelectItem: (item: ShoppingItem) => void
 }
 
-export function ShoppingListModal({
-  items,
-  onClose,
-  onAdd,
-  onSelectItem,
-}: ShoppingListModalProps) {
+export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: ShoppingListModalProps) {
   return (
     <ModalPanel
       wide
       tall
     >
       <div className='border-b border-white/10 p-4 sm:p-6'>
-        <div className='flex flex-col items-center justify-center gap-4'>
+        <div className='flex items-center justify-center gap-4'>
           {items.length > 0 && (
-            <p className='uppercase font-(--font-family-heading) text-xs leading-(--line-height-snug)'>
-              Всего покупок: {items.length}
-            </p>
+            <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
+              Всего: {items.length}
+            </h2>
           )}
         </div>
       </div>
 
       <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {items.length ? (
-          <div className='space-y-4'>
+          <div className='space-y-4 max-h-[45dvh]'>
             {items.map(item => (
               <button
                 key={item.id}
@@ -44,7 +39,11 @@ export function ShoppingListModal({
               >
                 <div className='space-y-2'>
                   <StatusPill tone={item.urgency}>
-                    {item.urgency === 'out' ? 'Закончилось' : 'Заканчивается'}
+                    {item.urgency === 'out'
+                      ? 'Закончилось'
+                      : item.urgency === 'without'
+                        ? 'не срочно'
+                        : 'Заканчивается'}
                   </StatusPill>
                   <h3 className='font-(--font-family-heading) text-2xl leading-tight'>
                     {item.title}

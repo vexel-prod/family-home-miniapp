@@ -1,4 +1,4 @@
-type StatusTone = 'urgent' | 'normal' | 'out' | 'soon' | 'done'
+type StatusTone = 'urgent' | 'normal' | 'out' | 'soon' | 'done' | 'without'
 
 type StatusPillProps = {
   tone: StatusTone
@@ -11,6 +11,7 @@ const toneClassName: Record<StatusTone, string> = {
   out: 'bg-rose-100 text-rose-800',
   soon: 'bg-amber-100 text-amber-800',
   done: 'bg-[var(--color-success-soft)] text-[var(--color-success-text)]',
+  without: 'bg-gray-100 text-gray-800',
 }
 
 export function StatusPill({ tone, children }: StatusPillProps) {

@@ -1,7 +1,6 @@
 'use client'
 
 import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
 
 import { ModalOverlay } from '@/components/ui/app-modal'
 import { NoticeToast } from '@/components/ui/notice-toast'
@@ -14,7 +13,6 @@ import { TaskActionsModal } from '@/features/tasks/components/task-actions-modal
 import { TaskFormModal } from '@/features/tasks/components/task-form-modal'
 import { TaskJournalModal } from '@/features/tasks/components/task-journal-modal'
 import { TaskListModal } from '@/features/tasks/components/task-list-modal'
-import { reveal } from '@/shared/lib/animations'
 import {
   formatRelativeDate,
   sortCompletedTasks,
@@ -60,14 +58,14 @@ export default function Page() {
   const [productTitle, setProductTitle] = useState('')
   const [productQuantity, setProductQuantity] = useState('')
   const [productNote, setProductNote] = useState('')
-  const [productUrgency, setProductUrgency] = useState<'soon' | 'out'>('soon')
+  const [productUrgency, setProductUrgency] = useState<'soon' | 'out' | 'without'>('soon')
   const [replaceTaskTitle, setReplaceTaskTitle] = useState('')
   const [replaceTaskNote, setReplaceTaskNote] = useState('')
   const [replaceTaskPriority, setReplaceTaskPriority] = useState<'normal' | 'urgent'>('normal')
   const [replaceTitle, setReplaceTitle] = useState('')
   const [replaceQuantity, setReplaceQuantity] = useState('')
   const [replaceNote, setReplaceNote] = useState('')
-  const [replaceUrgency, setReplaceUrgency] = useState<'soon' | 'out'>('soon')
+  const [replaceUrgency, setReplaceUrgency] = useState<'soon' | 'out' | 'without'>('soon')
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [taskCreateStatus, setTaskCreateStatus] = useState('')
   const [toast, setToast] = useState('')
@@ -847,18 +845,6 @@ export default function Page() {
           }
           onOpenJournal={() => openMainModal('task-journal')}
         />
-
-        {loading ? (
-          <motion.section
-            variants={reveal}
-            initial='hidden'
-            animate='visible'
-            transition={{ delay: 0.24, duration: 0.35, ease: 'easeOut' }}
-            className='rounded-2xl border border-[rgba(15,23,42,0.08)] bg-(--color-surface) p-4 text-sm text-slate-600 shadow-(--shadow-card) sm:p-6'
-          >
-            Обновляю данные...
-          </motion.section>
-        ) : null}
       </div>
     </main>
   )

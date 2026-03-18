@@ -16,18 +16,18 @@ export function TaskJournalModal({ tasks, onClose }: TaskJournalModalProps) {
       tall
     >
       <div className='border-b border-white/10 p-4 sm:p-6'>
-        <div className='flex items-center justify-between gap-4'>
-          <div>
-            <h2 className='mt-2 font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
-              Выполненные задачи
+        <div className='flex items-center justify-center gap-4'>
+          {tasks.length > 0 && (
+            <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
+              Всего: {tasks.length}
             </h2>
-          </div>
+          )}
         </div>
       </div>
 
       <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {tasks.length ? (
-          <div className='space-y-4'>
+          <div className='space-y-4 max-h-[45dvh]'>
             {tasks.map(task => (
               <div
                 key={task.id}
