@@ -47,6 +47,13 @@ export type BonusPurchase = {
   createdAt: string
 }
 
+export type MonthlyLeaderboardEntry = {
+  name: string
+  points: number
+  completedCount: number
+  fastCount: number
+}
+
 export type MonthlyReport = {
   id: string
   monthKey: string
@@ -71,6 +78,8 @@ export type BootstrapResponse = {
   openTasks: HouseholdTask[]
   completedTasks: HouseholdTask[]
   monthlyCompletedTasks: HouseholdTask[]
+  monthlyLeaderboardEntries: MonthlyLeaderboardEntry[]
+  monthlyTeamBonusPoints: number
   participantNames: string[]
   currentUserBonusBalanceUnits: number
   bonusPurchases: BonusPurchase[]

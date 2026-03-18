@@ -7,14 +7,16 @@ type TaskFormModalProps = {
   mode: 'create' | 'replace'
   title: string
   note: string
-  deadline: string
+  deadlineDay: string
+  deadlineTime: string
   status: string
   loading: boolean
   submitLabel: string
   busyLabel: string
   onTitleChange: (value: string) => void
   onNoteChange: (value: string) => void
-  onDeadlineChange: (value: string) => void
+  onDeadlineDayChange: (value: string) => void
+  onDeadlineTimeChange: (value: string) => void
   onSubmit: () => void
   onBack: () => void
 }
@@ -23,14 +25,16 @@ export function TaskFormModal({
   mode,
   title,
   note,
-  deadline,
+  deadlineDay,
+  deadlineTime,
   status,
   loading,
   submitLabel,
   busyLabel,
   onTitleChange,
   onNoteChange,
-  onDeadlineChange,
+  onDeadlineDayChange,
+  onDeadlineTimeChange,
   onSubmit,
   onBack,
 }: TaskFormModalProps) {
@@ -59,11 +63,35 @@ export function TaskFormModal({
             <div className='text-xs uppercase tracking-[0.22em] text-white/45'>
               Сделать до
             </div>
-            <TextInput
-              type='datetime-local'
-              value={deadline}
-              onChange={event => onDeadlineChange(event.target.value)}
-            />
+            <div className='grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]'>
+              <div className='grid grid-cols-2 gap-3'>
+                {[
+                  { value: 'today', label: 'Сегодня' },
+                  { value: 'tomorrow', label: 'Завтра' },
+                ].map(option => (
+                  <button
+                    key={option.value}
+                    type='button'
+                    onClick={() => onDeadlineDayChange(option.value)}
+                    className={`rounded-[var(--radius-md)] border px-4 py-4 text-left text-base transition-colors duration-150 ${
+                      deadlineDay === option.value
+                        ? 'border-transparent bg-[var(--color-accent)] text-[var(--color-accent-text)] shadow-lg shadow-black/20'
+                        : 'border-white/10 bg-[var(--color-panel-field)] text-[var(--color-panel-text)] hover:border-white/20'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <TextInput
+                type='text'
+                inputMode='numeric'
+                placeholder='14:00'
+                maxLength={5}
+                value={deadlineTime}
+                onChange={event => onDeadlineTimeChange(event.target.value)}
+              />
+            </div>
           </div>
 
           <TextAreaField

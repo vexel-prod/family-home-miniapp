@@ -1,6 +1,5 @@
 import { authorizeRequest } from "@/lib/auth";
-import { getCurrentMemberBalanceUnits } from "@/lib/bonus-ledger";
-import { getMemberDisplayName } from "@/lib/household-notify";
+import { getCurrentMemberBalanceUnits, getMonthlyLeaderboardStats } from "@/lib/bonus-ledger";
 import { getPrisma } from "@/lib/prisma";
 import { getMonthKey } from "@/shared/lib/bonus-shop";
 import { NextResponse } from "next/server";
@@ -33,7 +32,7 @@ export async function GET(request: Request) {
 
   const monthKey = getMonthKey(new Date());
 
-  const [openTasks, completedTasks, monthlyCompletedTasks, activeShoppingItems, members, bonusPurchases, monthlyReports, currentUserBonusBalanceUnits] = await Promise.all([
+  const [openTasks, completedTasks, monthlyCompletedTasks, activeShoppingItems, monthlyStats, bonusPurchases, monthlyReports, currentUserBonusBalanceUnits] = await Promise.all([
     prisma.householdTask.findMany({
       where: { householdId: auth.member.householdId, status: "open" },
       orderBy: [{ deadlineAt: "asc" }, { createdAt: "desc" }],
@@ -58,15 +57,7 @@ export async function GET(request: Request) {
       where: { householdId: auth.member.householdId, status: "active" },
       orderBy: [{ urgency: "asc" }, { createdAt: "desc" }],
     }),
-    prisma.member.findMany({
-      where: { householdId: auth.member.householdId },
-      orderBy: [{ createdAt: "asc" }],
-      select: {
-        firstName: true,
-        lastName: true,
-        username: true,
-      },
-    }),
+    getMonthlyLeaderboardStats(prisma, auth.member.householdId),
     prisma.bonusPurchase.findMany({
       where: {
         householdId: auth.member.householdId,
@@ -87,7 +78,9 @@ export async function GET(request: Request) {
     openTasks,
     completedTasks,
     monthlyCompletedTasks,
-    participantNames: members.map(getMemberDisplayName),
+    participantNames: monthlyStats.participantNames,
+    monthlyLeaderboardEntries: monthlyStats.monthlyLeaderboardEntries,
+    monthlyTeamBonusPoints: monthlyStats.monthlyTeamBonusPoints,
     currentUserBonusBalanceUnits,
     bonusPurchases,
     monthlyReports,

@@ -2,6 +2,7 @@ import type { PrismaClient } from '@/generated/prisma/client'
 import {
   DEADLINE_PENALTY_DELAY_MS,
   DEADLINE_REMINDER_INTERVAL_MS,
+  FAST_COMPLETION_WINDOW_MS,
   formatMoscowDeadlineLabel,
   formatPoints,
   getMonthKey,
@@ -9,6 +10,22 @@ import {
   getTaskPenaltyUnits,
 } from '@/shared/lib/bonus-shop'
 import { getMemberDisplayName, notifyHousehold } from '@/lib/household-notify'
+
+function getCurrentMoscowMonthRange(now = new Date()) {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Moscow',
+    year: 'numeric',
+    month: '2-digit',
+  })
+
+  const parts = formatter.formatToParts(now)
+  const year = Number(parts.find(part => part.type === 'year')?.value ?? now.getUTCFullYear())
+  const month = Number(parts.find(part => part.type === 'month')?.value ?? now.getUTCMonth() + 1)
+  const start = new Date(Date.UTC(year, month - 1, 1, -3))
+  const end = new Date(Date.UTC(year, month, 1, -3))
+
+  return { start, end }
+}
 
 function splitUnitsEvenly(totalUnits: number, memberIds: string[]) {
   if (memberIds.length === 0) {
@@ -122,6 +139,221 @@ export async function getCurrentMemberBalanceUnits(
   })
 
   return aggregate._sum.amountUnits ?? 0
+}
+
+export async function backfillCurrentMonthTaskBonuses(
+  prisma: PrismaClient,
+  now = new Date(),
+) {
+  const { start, end } = getCurrentMoscowMonthRange(now)
+  const monthKey = getMonthKey(now)
+  const tasks = await prisma.householdTask.findMany({
+    where: {
+      status: 'done',
+      completedAt: {
+        gte: start,
+        lt: end,
+      },
+    },
+    orderBy: [{ completedAt: 'asc' }],
+  })
+
+  let createdTransactions = 0
+
+  for (const task of tasks) {
+    const existing = await prisma.bonusTransaction.count({
+      where: {
+        taskId: task.id,
+        kind: {
+          in: ['task-complete', 'task-complete-together'],
+        },
+      },
+    })
+
+    if (existing > 0 || !task.completedAt || !task.completedByName) {
+      continue
+    }
+
+    if (task.completedByName === 'Сделано вместе') {
+      const members = await prisma.member.findMany({
+        where: { householdId: task.householdId },
+        orderBy: [{ createdAt: 'asc' }],
+        select: { id: true },
+      })
+
+      const shares = splitUnitsEvenly(
+        getTaskAwardUnits({
+          createdAt: task.createdAt,
+          completedAt: task.completedAt,
+        }),
+        members.map(member => member.id),
+      )
+
+      if (shares.length) {
+        await prisma.bonusTransaction.createMany({
+          data: shares.map(share => ({
+            householdId: task.householdId,
+            memberId: share.memberId,
+            taskId: task.id,
+            monthKey,
+            kind: 'task-complete-together',
+            amountUnits: share.units,
+            note: `Backfill: совместно выполнена задача "${task.title}"`,
+          })),
+        })
+
+        createdTransactions += shares.length
+      }
+
+      continue
+    }
+
+    const members = await prisma.member.findMany({
+      where: { householdId: task.householdId },
+      orderBy: [{ createdAt: 'asc' }],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        username: true,
+      },
+    })
+
+    const matchedMember = members.find(
+      member => getMemberDisplayName(member).trim().toLowerCase() === task.completedByName?.trim().toLowerCase(),
+    )
+
+    if (!matchedMember) {
+      continue
+    }
+
+    await prisma.bonusTransaction.create({
+      data: {
+        householdId: task.householdId,
+        memberId: matchedMember.id,
+        taskId: task.id,
+        monthKey,
+        kind: 'task-complete',
+        amountUnits: getTaskAwardUnits({
+          createdAt: task.createdAt,
+          completedAt: task.completedAt,
+        }),
+        note: `Backfill: выполнена задача "${task.title}"`,
+      },
+    })
+
+    createdTransactions += 1
+  }
+
+  return {
+    tasksScanned: tasks.length,
+    createdTransactions,
+  }
+}
+
+export async function getMonthlyLeaderboardStats(
+  prisma: PrismaClient,
+  householdId: string,
+  now = new Date(),
+) {
+  const { start, end } = getCurrentMoscowMonthRange(now)
+  const monthKey = getMonthKey(now)
+  const [members, tasks, transactions] = await Promise.all([
+    prisma.member.findMany({
+      where: { householdId },
+      orderBy: [{ createdAt: 'asc' }],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        username: true,
+      },
+    }),
+    prisma.householdTask.findMany({
+      where: {
+        householdId,
+        status: 'done',
+        completedAt: {
+          gte: start,
+          lt: end,
+        },
+      },
+      orderBy: [{ completedAt: 'desc' }],
+    }),
+    prisma.bonusTransaction.findMany({
+      where: {
+        householdId,
+        monthKey,
+      },
+      select: {
+        memberId: true,
+        kind: true,
+        amountUnits: true,
+      },
+    }),
+  ])
+
+  const standingsMap = new Map<string, { name: string; points: number; completedCount: number; fastCount: number }>()
+  const nameByMemberId = new Map<string, string>()
+
+  for (const member of members) {
+    const displayName = getMemberDisplayName(member)
+    standingsMap.set(displayName, {
+      name: displayName,
+      points: 0,
+      completedCount: 0,
+      fastCount: 0,
+    })
+    nameByMemberId.set(member.id, displayName)
+  }
+
+  for (const transaction of transactions) {
+    const displayName = nameByMemberId.get(transaction.memberId)
+
+    if (!displayName) {
+      continue
+    }
+
+    const current = standingsMap.get(displayName)
+
+    if (!current) {
+      continue
+    }
+
+    current.points += Number(formatPoints(transaction.amountUnits))
+  }
+
+  for (const task of tasks) {
+    if (!task.completedAt || !task.completedByName || task.completedByName === 'Сделано вместе') {
+      continue
+    }
+
+    const current = standingsMap.get(task.completedByName)
+
+    if (!current) {
+      continue
+    }
+
+    current.completedCount += 1
+    current.fastCount +=
+      task.completedAt.getTime() - task.createdAt.getTime() <= FAST_COMPLETION_WINDOW_MS ? 1 : 0
+  }
+
+  const teamBonusUnits = transactions
+    .filter(transaction => transaction.kind === 'task-complete-together')
+    .reduce((sum, transaction) => sum + transaction.amountUnits, 0)
+
+  return {
+    participantNames: [...standingsMap.keys()],
+    monthlyLeaderboardEntries: [...standingsMap.values()].sort((left, right) => {
+      if (right.points !== left.points) {
+        return right.points - left.points
+      }
+
+      return right.completedCount - left.completedCount
+    }),
+    monthlyTeamBonusPoints: Number(formatPoints(teamBonusUnits)),
+  }
 }
 
 export async function processTaskDeadlineEvents(

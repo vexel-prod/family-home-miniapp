@@ -15,7 +15,7 @@ import { TaskActionsModal } from '@/features/tasks/components/task-actions-modal
 import { TaskFormModal } from '@/features/tasks/components/task-form-modal'
 import { TaskJournalModal } from '@/features/tasks/components/task-journal-modal'
 import { TaskListModal } from '@/features/tasks/components/task-list-modal'
-import { buildMonthlyRatingSummary, isTaskInCurrentMoscowMonth } from '@/shared/lib/monthly-rating'
+import { buildMonthlyRatingSummary } from '@/shared/lib/monthly-rating'
 import {
   formatRelativeDate,
   sortCompletedTasks,
@@ -29,6 +29,7 @@ import type {
   BootstrapResponse,
   FetchOptions,
   HouseholdTask,
+  MonthlyLeaderboardEntry,
   ModalKey,
   MonthlyReport,
   ShoppingItem,
@@ -46,21 +47,88 @@ type ShoppingMutationResponse = {
   shoppingItem: ShoppingItem
 }
 
-function toDateTimeLocalValue(value?: string | null) {
+function toDeadlineParts(value?: string | null) {
   if (!value) {
-    return ''
+    return { day: '', time: '' }
   }
 
   const date = new Date(value)
 
   if (Number.isNaN(date.getTime())) {
+    return { day: '', time: '' }
+  }
+
+  const now = new Date()
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const tomorrowStart = new Date(todayStart)
+  tomorrowStart.setDate(todayStart.getDate() + 1)
+  const dayAfterTomorrowStart = new Date(todayStart)
+  dayAfterTomorrowStart.setDate(todayStart.getDate() + 2)
+
+  let day = ''
+
+  if (date >= todayStart && date < tomorrowStart) {
+    day = 'today'
+  } else if (date >= tomorrowStart && date < dayAfterTomorrowStart) {
+    day = 'tomorrow'
+  }
+
+  return {
+    day,
+    time: `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
+  }
+}
+
+function normalizeDeadlineTime(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 4)
+
+  if (digits.length <= 2) {
+    return digits
+  }
+
+  return `${digits.slice(0, 2)}:${digits.slice(2)}`
+}
+
+function buildDeadlineIso(day: string, time: string) {
+  if (!day || !time) {
     return ''
   }
 
-  const timezoneOffsetMinutes = date.getTimezoneOffset()
-  const localDate = new Date(date.getTime() - timezoneOffsetMinutes * 60_000)
+  const match = time.match(/^(\d{2}):(\d{2})$/)
 
-  return localDate.toISOString().slice(0, 16)
+  if (!match) {
+    return ''
+  }
+
+  const hours = Number(match[1])
+  const minutes = Number(match[2])
+
+  if (
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
+    return ''
+  }
+
+  const nextValue = new Date()
+  nextValue.setSeconds(0, 0)
+  nextValue.setHours(hours, minutes, 0, 0)
+
+  if (day === 'tomorrow') {
+    nextValue.setDate(nextValue.getDate() + 1)
+  } else if (day !== 'today') {
+    return ''
+  }
+
+  if (Number.isNaN(nextValue.getTime())) {
+    return ''
+  }
+
+  return nextValue.toISOString()
 }
 
 export default function Page() {
@@ -72,8 +140,8 @@ export default function Page() {
   const [modalGuardUntil, setModalGuardUntil] = useState(0)
   const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
   const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
-  const [monthlyCompletedTasks, setMonthlyCompletedTasks] = useState<HouseholdTask[]>([])
-  const [participantNames, setParticipantNames] = useState<string[]>([])
+  const [monthlyLeaderboardEntries, setMonthlyLeaderboardEntries] = useState<MonthlyLeaderboardEntry[]>([])
+  const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
   const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
   const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([])
@@ -82,14 +150,16 @@ export default function Page() {
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
   const [taskTitle, setTaskTitle] = useState('')
   const [taskNote, setTaskNote] = useState('')
-  const [taskDeadline, setTaskDeadline] = useState('')
+  const [taskDeadlineDay, setTaskDeadlineDay] = useState('')
+  const [taskDeadlineTime, setTaskDeadlineTime] = useState('')
   const [productTitle, setProductTitle] = useState('')
   const [productQuantity, setProductQuantity] = useState('')
   const [productNote, setProductNote] = useState('')
   const [productUrgency, setProductUrgency] = useState<'soon' | 'out' | 'without'>('soon')
   const [replaceTaskTitle, setReplaceTaskTitle] = useState('')
   const [replaceTaskNote, setReplaceTaskNote] = useState('')
-  const [replaceTaskDeadline, setReplaceTaskDeadline] = useState('')
+  const [replaceTaskDeadlineDay, setReplaceTaskDeadlineDay] = useState('')
+  const [replaceTaskDeadlineTime, setReplaceTaskDeadlineTime] = useState('')
   const [replaceTitle, setReplaceTitle] = useState('')
   const [replaceQuantity, setReplaceQuantity] = useState('')
   const [replaceNote, setReplaceNote] = useState('')
@@ -105,8 +175,8 @@ export default function Page() {
   const sortedCompletedTasks = sortCompletedTasks(completedTasks)
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
   const monthlyRatingSummary = buildMonthlyRatingSummary(
-    monthlyCompletedTasks,
-    participantNames,
+    monthlyLeaderboardEntries,
+    monthlyTeamBonusPoints,
     getActorName(buyer),
   )
 
@@ -129,20 +199,6 @@ export default function Page() {
   const removeTaskFromLists = useCallback((taskId: string) => {
     setOpenTasks(current => current.filter(task => task.id !== taskId))
     setCompletedTasks(current => current.filter(task => task.id !== taskId))
-    setMonthlyCompletedTasks(current => current.filter(task => task.id !== taskId))
-  }, [])
-
-  const syncMonthlyCompletedTask = useCallback((task: HouseholdTask) => {
-    setMonthlyCompletedTasks(current => {
-      const filtered = current.filter(currentTask => currentTask.id !== task.id)
-
-      if (!task.completedAt || !isTaskInCurrentMoscowMonth(task)) {
-        return filtered
-      }
-
-      filtered.push(task)
-      return sortCompletedTasks(filtered)
-    })
   }, [])
 
   const applyTaskUpdate = useCallback(
@@ -150,15 +206,13 @@ export default function Page() {
       if (task.completedAt) {
         setOpenTasks(current => current.filter(currentTask => currentTask.id !== task.id))
         upsertCompletedTask(task)
-        syncMonthlyCompletedTask(task)
         return
       }
 
       setCompletedTasks(current => current.filter(currentTask => currentTask.id !== task.id))
-      setMonthlyCompletedTasks(current => current.filter(currentTask => currentTask.id !== task.id))
       upsertOpenTask(task)
     },
-    [syncMonthlyCompletedTask, upsertCompletedTask, upsertOpenTask],
+    [upsertCompletedTask, upsertOpenTask],
   )
 
   const upsertShoppingItem = useCallback((item: ShoppingItem) => {
@@ -224,7 +278,8 @@ export default function Page() {
     }
 
     setTaskCreateStatus('')
-    setTaskDeadline('')
+    setTaskDeadlineDay('')
+    setTaskDeadlineTime('')
     setModal('task-create')
   }
 
@@ -235,7 +290,9 @@ export default function Page() {
 
     setReplaceTaskTitle(selectedTask.title)
     setReplaceTaskNote(selectedTask.note ?? '')
-    setReplaceTaskDeadline(toDateTimeLocalValue(selectedTask.deadlineAt))
+    const deadlineParts = toDeadlineParts(selectedTask.deadlineAt)
+    setReplaceTaskDeadlineDay(deadlineParts.day)
+    setReplaceTaskDeadlineTime(deadlineParts.time)
     setModal('task-replace')
   }
 
@@ -245,8 +302,10 @@ export default function Page() {
     setSelectedTask(null)
     setReplaceTaskTitle('')
     setReplaceTaskNote('')
-    setReplaceTaskDeadline('')
-    setTaskDeadline('')
+    setReplaceTaskDeadlineDay('')
+    setReplaceTaskDeadlineTime('')
+    setTaskDeadlineDay('')
+    setTaskDeadlineTime('')
     setTaskCreateStatus('')
   }
 
@@ -284,8 +343,8 @@ export default function Page() {
         const payload = (await response.json()) as BootstrapResponse
         setOpenTasks(payload.openTasks)
         setCompletedTasks(payload.completedTasks)
-        setMonthlyCompletedTasks(payload.monthlyCompletedTasks)
-        setParticipantNames(payload.participantNames)
+        setMonthlyLeaderboardEntries(payload.monthlyLeaderboardEntries)
+        setMonthlyTeamBonusPoints(payload.monthlyTeamBonusPoints)
         setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
         setBonusPurchases(payload.bonusPurchases)
         setMonthlyReports(payload.monthlyReports)
@@ -448,6 +507,7 @@ export default function Page() {
 
   async function addTask() {
     const title = taskTitle.trim()
+    const deadlineAt = buildDeadlineIso(taskDeadlineDay, taskDeadlineTime)
 
     if (!title) {
       setError('Впиши, какое действие нужно сделать по дому.')
@@ -455,7 +515,7 @@ export default function Page() {
       return
     }
 
-    if (!taskDeadline) {
+    if (!deadlineAt) {
       setError('Укажи дедлайн задачи в пределах ближайших 24 часов.')
       setTaskCreateStatus('Ошибка: укажи дедлайн.')
       return
@@ -472,7 +532,7 @@ export default function Page() {
         body: JSON.stringify({
           title,
           note: taskNote,
-          deadlineAt: new Date(taskDeadline).toISOString(),
+          deadlineAt,
         }),
       })
 
@@ -484,7 +544,8 @@ export default function Page() {
 
       setTaskTitle('')
       setTaskNote('')
-      setTaskDeadline('')
+      setTaskDeadlineDay('')
+      setTaskDeadlineTime('')
       setTaskCreateStatus(`Добавлено: ${title}`)
       setModal('household')
       setToast(`Задача добавлена: ${title}`)
@@ -606,13 +667,14 @@ export default function Page() {
     }
 
     const title = replaceTaskTitle.trim()
+    const deadlineAt = buildDeadlineIso(replaceTaskDeadlineDay, replaceTaskDeadlineTime)
 
     if (!title) {
       setError('Впиши новое название задачи.')
       return
     }
 
-    if (!replaceTaskDeadline) {
+    if (!deadlineAt) {
       setError('Укажи новый дедлайн задачи.')
       return
     }
@@ -628,7 +690,7 @@ export default function Page() {
           action: 'replace',
           title,
           note: replaceTaskNote,
-          deadlineAt: new Date(replaceTaskDeadline).toISOString(),
+          deadlineAt,
         }),
       })
 
@@ -812,14 +874,16 @@ export default function Page() {
               mode='create'
               title={taskTitle}
               note={taskNote}
-              deadline={taskDeadline}
+              deadlineDay={taskDeadlineDay}
+              deadlineTime={taskDeadlineTime}
               status={taskCreateStatus}
               loading={busyKey === 'create-task' || loading}
               submitLabel='Добавить задачу'
               busyLabel='Добавляю...'
               onTitleChange={setTaskTitle}
               onNoteChange={setTaskNote}
-              onDeadlineChange={setTaskDeadline}
+              onDeadlineDayChange={setTaskDeadlineDay}
+              onDeadlineTimeChange={value => setTaskDeadlineTime(normalizeDeadlineTime(value))}
               onSubmit={() => void addTask()}
               onBack={() => setModal('household')}
             />
@@ -842,14 +906,16 @@ export default function Page() {
               mode='replace'
               title={replaceTaskTitle}
               note={replaceTaskNote}
-              deadline={replaceTaskDeadline}
+              deadlineDay={replaceTaskDeadlineDay}
+              deadlineTime={replaceTaskDeadlineTime}
               status=''
               loading={busyKey === `replace-task-${selectedTask.id}`}
               submitLabel='Сохранить изменения'
               busyLabel='Сохраняю...'
               onTitleChange={setReplaceTaskTitle}
               onNoteChange={setReplaceTaskNote}
-              onDeadlineChange={setReplaceTaskDeadline}
+              onDeadlineDayChange={setReplaceTaskDeadlineDay}
+              onDeadlineTimeChange={value => setReplaceTaskDeadlineTime(normalizeDeadlineTime(value))}
               onSubmit={() => void replaceTask()}
               onBack={() => setModal('task-actions')}
             />

@@ -1,5 +1,5 @@
-import type { HouseholdTask } from '@/shared/types/family'
-import { BONUS_REWARDS, FAST_COMPLETION_WINDOW_MS, formatPoints, getTaskAwardUnits, POINT_UNITS } from '@/shared/lib/bonus-shop'
+import type { HouseholdTask, MonthlyLeaderboardEntry } from '@/shared/types/family'
+import { BONUS_REWARDS, POINT_UNITS } from '@/shared/lib/bonus-shop'
 
 const MOSCOW_UTC_OFFSET_HOURS = 3
 
@@ -68,84 +68,12 @@ export function isTaskInCurrentMoscowMonth(task: HouseholdTask, now = new Date()
   return completedAt >= monthStart && completedAt < nextMonthStart
 }
 
-function getTaskPoints(task: HouseholdTask) {
-  if (!task.completedAt) {
-    return 0
-  }
-
-  return Number(
-    formatPoints(
-      getTaskAwardUnits({
-        createdAt: new Date(task.createdAt),
-        completedAt: new Date(task.completedAt),
-      }),
-    ),
-  )
-}
-
 export function buildMonthlyRatingSummary(
-  tasks: HouseholdTask[],
-  participantNames: string[],
+  leaderboardEntries: MonthlyLeaderboardEntry[],
+  teamBonusPoints: number,
   currentUserName?: string,
 ): MonthlyRatingSummary {
-  const leaderboardMap = new Map<string, MemberRating>()
-  let teamBonusPoints = 0
-
-  for (const participantName of participantNames) {
-    leaderboardMap.set(participantName, {
-      name: participantName,
-      points: 0,
-      completedCount: 0,
-      fastCount: 0,
-    })
-  }
-
-  for (const task of tasks) {
-    if (!task.completedAt || !task.completedByName) {
-      continue
-    }
-
-    if (task.completedByName === 'Сделано вместе') {
-      teamBonusPoints += 8
-      continue
-    }
-
-    const current = leaderboardMap.get(task.completedByName) ?? {
-      name: task.completedByName,
-      points: 0,
-      completedCount: 0,
-      fastCount: 0,
-    }
-
-    const taskPoints = getTaskPoints(task)
-    const isFast =
-      new Date(task.completedAt).getTime() - new Date(task.createdAt).getTime() <=
-      FAST_COMPLETION_WINDOW_MS
-
-    current.points += taskPoints
-    current.completedCount += 1
-    current.fastCount += isFast ? 1 : 0
-
-    leaderboardMap.set(task.completedByName, current)
-  }
-
-  const teamBonusShare = participantNames.length > 0 ? teamBonusPoints / participantNames.length : 0
-
-  if (teamBonusShare > 0) {
-    for (const participantName of participantNames) {
-      const current = leaderboardMap.get(participantName) ?? {
-        name: participantName,
-        points: 0,
-        completedCount: 0,
-        fastCount: 0,
-      }
-
-      current.points += teamBonusShare
-      leaderboardMap.set(participantName, current)
-    }
-  }
-
-  const leaderboard = [...leaderboardMap.values()].sort((left, right) => {
+  const leaderboard = [...leaderboardEntries].sort((left, right) => {
     if (right.points !== left.points) {
       return right.points - left.points
     }
@@ -176,7 +104,7 @@ export function buildMonthlyRatingSummary(
     monthLabel: monthLabel.slice(0, 1).toUpperCase() + monthLabel.slice(1),
     leaderboard,
     teamBonusPoints,
-    totalTasks: tasks.length,
+    totalTasks: leaderboard.reduce((sum, member) => sum + member.completedCount, 0),
     totalPoints: leaderboard.reduce((sum, member) => sum + member.points, 0),
     leadingName: leader ? `${leader.name} 🏆` : 'Пока без лидера',
     leadingPoints: leader?.points ?? 0,
