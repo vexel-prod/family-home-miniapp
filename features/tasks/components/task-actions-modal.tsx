@@ -49,11 +49,11 @@ export function TaskActionsModal({
             onClick={onCompleteTogether}
             disabled={busyKey === `task-together-${task.id}`}
           >
-            {busyKey === `task-together-${task.id}` ? 'Отмечаю...' : 'Сделано вместе'}
+            {busyKey === `task-together-${task.id}` ? 'Отмечаю...' : 'Сделали вместе 🤝'}
           </AppButton>
 
           <AppButton tone='success' onClick={onReplace}>
-            Изменить
+            Редактировать
           </AppButton>
 
           <AppButton

@@ -39,7 +39,7 @@ export function TypingText({ typedText, speed = 65, className = '' }: TypingText
         <span className='truncate text-sm text-white/90 sm:text-base'>{typedValue}</span>
         <span
           aria-hidden='true'
-          className='ml-1 inline-block h-[1.1em] w-0.5 rounded-full bg-white/80 align-middle'
+          className='ml-1 inline-block h-[1.1em] w-px rounded-full bg-white/80 align-middle'
           style={{ opacity: isCaretVisible ? 1 : 0 }}
         />
       </div>

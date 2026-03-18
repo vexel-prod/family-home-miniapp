@@ -42,14 +42,14 @@ export function ShoppingActionsModal({
           </AppButton>
 
           <AppButton tone='home' onClick={onReplace}>
-            Заменить
+            Редактировать
           </AppButton>
 
           <AppButton tone='danger' onClick={onDelete} disabled={busyKey === `delete-${item.id}`}>
             {busyKey === `delete-${item.id}` ? 'Удаляю...' : 'Удалить'}
           </AppButton>
 
-          <AppButton tone='secondary' onClick={onClose}>
+          <AppButton tone='ghost' onClick={onClose}>
             Закрыть
           </AppButton>
         </div>
