@@ -48,7 +48,7 @@ export function getActorName(user?: TelegramUser) {
   if (!user) return 'Таинственный незнакомец'
 
   if (user.id === 706355445) {
-    return 'Малышка 😘'
+    return 'Малышка 💖'
   }
 
   if (user.id === 5133992697) {
