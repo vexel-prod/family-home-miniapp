@@ -31,11 +31,8 @@ export function DashboardHero({
       }}
     >
       <div className='flex flex-col gap-4 p-4 sm:p-6'>
-        <div className='flex items-center flex-wrap md:flex-nowrap'>
+        <div className='w-full flex items-center justify-center flex-wrap md:flex-nowrap'>
           <div className='flex flex-col gap-6'>
-            <div className='inline-flex w-max items-center rounded-md bg-white/10 backdrop-blur-[2px] px-4 py-3 text-xs uppercase tracking-(--letter-spacing-tag) text-white/70 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'>
-              Family Plane
-            </div>
             <TypingText
               typedText={`Привет, ${actorName}`}
             />

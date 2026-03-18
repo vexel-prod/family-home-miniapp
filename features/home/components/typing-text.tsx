@@ -8,7 +8,7 @@ type TypingTextProps = {
   className?: string
 }
 
-export function TypingText({ typedText, speed = 85, className = '' }: TypingTextProps) {
+export function TypingText({ typedText, speed = 65, className = '' }: TypingTextProps) {
   const [pos, setPos] = useState(0)
   const [isCaretVisible, setIsCaretVisible] = useState(true)
 
