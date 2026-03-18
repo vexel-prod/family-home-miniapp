@@ -32,6 +32,16 @@ import type {
   TelegramWindow,
 } from '@/shared/types/family'
 
+type TaskMutationResponse = {
+  ok: boolean
+  task: HouseholdTask
+}
+
+type ShoppingMutationResponse = {
+  ok: boolean
+  shoppingItem: ShoppingItem
+}
+
 export default function Page() {
   const bootstrapRequestInFlight = useRef(false)
   const eventSourceRef = useRef<EventSource | null>(null)
@@ -68,6 +78,53 @@ export default function Page() {
   const sortedTasks = sortTasks(openTasks)
   const sortedCompletedTasks = sortCompletedTasks(completedTasks)
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
+
+  const upsertOpenTask = useCallback((task: HouseholdTask) => {
+    setOpenTasks(current => {
+      const next = current.filter(currentTask => currentTask.id !== task.id)
+      next.push(task)
+      return sortTasks(next)
+    })
+  }, [])
+
+  const upsertCompletedTask = useCallback((task: HouseholdTask) => {
+    setCompletedTasks(current => {
+      const next = current.filter(currentTask => currentTask.id !== task.id)
+      next.push(task)
+      return sortCompletedTasks(next).slice(0, 30)
+    })
+  }, [])
+
+  const removeTaskFromLists = useCallback((taskId: string) => {
+    setOpenTasks(current => current.filter(task => task.id !== taskId))
+    setCompletedTasks(current => current.filter(task => task.id !== taskId))
+  }, [])
+
+  const applyTaskUpdate = useCallback(
+    (task: HouseholdTask) => {
+      if (task.completedAt) {
+        setOpenTasks(current => current.filter(currentTask => currentTask.id !== task.id))
+        upsertCompletedTask(task)
+        return
+      }
+
+      setCompletedTasks(current => current.filter(currentTask => currentTask.id !== task.id))
+      upsertOpenTask(task)
+    },
+    [upsertCompletedTask, upsertOpenTask],
+  )
+
+  const upsertShoppingItem = useCallback((item: ShoppingItem) => {
+    setShoppingItems(current => {
+      const next = current.filter(currentItem => currentItem.id !== item.id)
+      next.push(item)
+      return sortShoppingItems(next)
+    })
+  }, [])
+
+  const removeShoppingItemFromList = useCallback((itemId: string) => {
+    setShoppingItems(current => current.filter(item => item.id !== itemId))
+  }, [])
 
   function canOpenModal() {
     return Date.now() >= modalGuardUntil
@@ -363,15 +420,15 @@ export default function Page() {
         throw new Error('task create failed')
       }
 
+      const payload = (await response.json()) as TaskMutationResponse
+
       setTaskTitle('')
       setTaskNote('')
       setTaskPriority('normal')
       setTaskCreateStatus(`Добавлено: ${title}`)
       setModal('household')
       setToast(`Задача добавлена: ${title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      upsertOpenTask(payload.task)
     } catch {
       setError(`Ошибка добавления задачи: ${title}`)
       setTaskCreateStatus(`Ошибка: не удалось добавить "${title}"`)
@@ -409,6 +466,8 @@ export default function Page() {
         throw new Error('shopping create failed')
       }
 
+      const payload = (await response.json()) as ShoppingMutationResponse
+
       setProductTitle('')
       setProductQuantity('')
       setProductNote('')
@@ -416,9 +475,7 @@ export default function Page() {
       setShoppingCreateStatus(`Добавлено: ${title}`)
       setModal('shopping-list')
       setToast(`Покупка добавлена: ${title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      upsertShoppingItem(payload.shoppingItem)
     } catch {
       setError(`Ошибка добавления покупки: ${title}`)
       setShoppingCreateStatus(`Ошибка: не удалось добавить "${title}"`)
@@ -444,11 +501,11 @@ export default function Page() {
         throw new Error('task update failed')
       }
 
+      const payload = (await response.json()) as TaskMutationResponse
+
       closeTaskModals()
       setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      applyTaskUpdate(payload.task)
     } catch {
       setError(
         together
@@ -475,9 +532,7 @@ export default function Page() {
 
       closeTaskModals()
       setToast(`Задача удалена: ${task.title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      removeTaskFromLists(task.id)
     } catch {
       setError(`Ошибка удаления задачи: ${task.title}`)
     } finally {
@@ -516,11 +571,11 @@ export default function Page() {
         throw new Error('task replace failed')
       }
 
+      const payload = (await response.json()) as TaskMutationResponse
+
       closeTaskModals()
       setToast(`Задача обновлена: ${title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      applyTaskUpdate(payload.task)
     } catch {
       setError(`Ошибка обновления задачи: ${title}`)
     } finally {
@@ -545,11 +600,11 @@ export default function Page() {
         throw new Error('shopping update failed')
       }
 
+      const payload = (await response.json()) as ShoppingMutationResponse
+
       closeShoppingModals()
       setToast(`Покупка отмечена: ${item.title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      removeShoppingItemFromList(payload.shoppingItem.id)
     } catch {
       setError(`Ошибка обновления покупки: ${item.title}`)
     } finally {
@@ -572,9 +627,7 @@ export default function Page() {
 
       closeShoppingModals()
       setToast(`Покупка удалена: ${item.title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      removeShoppingItemFromList(item.id)
     } catch {
       setError(`Ошибка удаления покупки: ${item.title}`)
     } finally {
@@ -614,11 +667,11 @@ export default function Page() {
         throw new Error('shopping replace failed')
       }
 
+      const payload = (await response.json()) as ShoppingMutationResponse
+
       closeShoppingModals()
       setToast(`Покупка обновлена: ${title}`)
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
+      upsertShoppingItem(payload.shoppingItem)
     } catch {
       setError(`Ошибка обновления покупки: ${title}`)
     } finally {
