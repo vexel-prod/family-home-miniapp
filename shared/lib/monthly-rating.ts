@@ -1,13 +1,12 @@
 import type { HouseholdTask } from '@/shared/types/family'
+import { BONUS_REWARDS, FAST_COMPLETION_WINDOW_MS, formatPoints, getTaskAwardUnits, POINT_UNITS } from '@/shared/lib/bonus-shop'
 
 const MOSCOW_UTC_OFFSET_HOURS = 3
-const FAST_TASK_WINDOW_MS = 30 * 60 * 1000
 
 type MemberRating = {
   name: string
   points: number
   completedCount: number
-  urgentCount: number
   fastCount: number
 }
 
@@ -36,11 +35,10 @@ export type MonthlyRatingSummary = {
   }>
 }
 
-const MILESTONES = [
-  { target: 60, label: 'пропуск одной задачи на выбор' },
-  { target: 120, label: 'пропуск прогулки с собакой' },
-  { target: 180, label: '3 любых желания 😈' },
-]
+const MILESTONES = BONUS_REWARDS.map(reward => ({
+  target: reward.costUnits / POINT_UNITS,
+  label: reward.title,
+}))
 
 function getMoscowMonthStart(date = new Date()) {
   const formatter = new Intl.DateTimeFormat('en-CA', {
@@ -71,23 +69,18 @@ export function isTaskInCurrentMoscowMonth(task: HouseholdTask, now = new Date()
 }
 
 function getTaskPoints(task: HouseholdTask) {
-  let points = 3
-
-  if (task.priority === 'urgent') {
-    points += 3
+  if (!task.completedAt) {
+    return 0
   }
 
-  if (task.completedAt) {
-    const createdAt = new Date(task.createdAt).getTime()
-    const completedAt = new Date(task.completedAt).getTime()
-    const elapsedMs = completedAt - createdAt
-
-    if (elapsedMs <= FAST_TASK_WINDOW_MS) {
-      points *= 1.5
-    }
-  }
-
-  return points
+  return Number(
+    formatPoints(
+      getTaskAwardUnits({
+        createdAt: new Date(task.createdAt),
+        completedAt: new Date(task.completedAt),
+      }),
+    ),
+  )
 }
 
 export function buildMonthlyRatingSummary(
@@ -103,7 +96,6 @@ export function buildMonthlyRatingSummary(
       name: participantName,
       points: 0,
       completedCount: 0,
-      urgentCount: 0,
       fastCount: 0,
     })
   }
@@ -122,18 +114,16 @@ export function buildMonthlyRatingSummary(
       name: task.completedByName,
       points: 0,
       completedCount: 0,
-      urgentCount: 0,
       fastCount: 0,
     }
 
     const taskPoints = getTaskPoints(task)
     const isFast =
       new Date(task.completedAt).getTime() - new Date(task.createdAt).getTime() <=
-      FAST_TASK_WINDOW_MS
+      FAST_COMPLETION_WINDOW_MS
 
     current.points += taskPoints
     current.completedCount += 1
-    current.urgentCount += task.priority === 'urgent' ? 1 : 0
     current.fastCount += isFast ? 1 : 0
 
     leaderboardMap.set(task.completedByName, current)
@@ -147,7 +137,6 @@ export function buildMonthlyRatingSummary(
         name: participantName,
         points: 0,
         completedCount: 0,
-        urgentCount: 0,
         fastCount: 0,
       }
 

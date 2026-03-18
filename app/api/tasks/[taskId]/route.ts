@@ -1,9 +1,11 @@
 import { authorizeRequest } from "@/lib/auth";
+import { awardTaskCompletionBonuses, clearTaskBonusTransactions } from "@/lib/bonus-ledger";
+import { getMemberDisplayName, notifyHousehold } from "@/lib/household-notify";
 import { getPrisma } from "@/lib/prisma";
+import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from "@/shared/lib/bonus-shop";
 import {
   formatElapsedLabel,
   formatMoscowDateTime,
-  notifyPartner,
 } from "@/lib/partner-notify";
 import { NextResponse } from "next/server";
 
@@ -14,8 +16,29 @@ type UpdateTaskPayload = {
   actorTelegramId?: string | null;
   title?: string;
   note?: string | null;
-  priority?: "normal" | "urgent";
+  deadlineAt?: string;
 };
+
+function parseDeadline(deadlineAt?: string) {
+  if (!deadlineAt) {
+    return null;
+  }
+
+  const deadline = new Date(deadlineAt);
+
+  if (Number.isNaN(deadline.getTime())) {
+    return null;
+  }
+
+  const now = new Date();
+  const diffMs = deadline.getTime() - now.getTime();
+
+  if (diffMs <= 0 || diffMs > DEADLINE_LIMIT_MS) {
+    return null;
+  }
+
+  return deadline;
+}
 
 export async function PATCH(
   request: Request,
@@ -54,25 +77,29 @@ export async function PATCH(
       return NextResponse.json({ ok: false, error: "Missing replacement title" }, { status: 400 });
     }
 
+    const deadline = parseDeadline(body.deadlineAt);
+
+    if (!deadline) {
+      return NextResponse.json({ ok: false, error: "Invalid deadline" }, { status: 400 });
+    }
+
     const updatedTask = await prisma.householdTask.update({
       where: { id: taskId },
       data: {
         title: body.title.trim(),
         note: body.note?.trim() || null,
-        priority: body.priority === "urgent" ? "urgent" : "normal",
+        deadlineAt: deadline,
       },
     });
 
-    await notifyPartner({
-      actorName,
-      actorTelegramId: String(auth.user.id),
-      actorUsername: auth.user.username ?? null,
-      text:
-        `Раздел: БЫТ\n` +
-        `Задача обновлена: ${updatedTask.title}\n` +
-        `Приоритет: ${updatedTask.priority === "urgent" ? "срочно" : "обычно"}` +
-        `${updatedTask.note ? `\nКомментарий: ${updatedTask.note}` : ""}`,
-    });
+    await notifyHousehold(
+      prisma,
+      auth.member.householdId,
+      `Family Home Mini App\n\n` +
+        `${actorName} обновил(а) задачу\n` +
+        `Задача: ${updatedTask.title}\n` +
+        `Новый дедлайн: ${formatMoscowDeadlineLabel(updatedTask.deadlineAt)}${updatedTask.note ? `\nКомментарий: ${updatedTask.note}` : ""}`,
+    );
 
     return NextResponse.json({ ok: true, task: updatedTask });
   }
@@ -91,24 +118,55 @@ export async function PATCH(
             status: "open",
             completedAt: null,
             completedByName: null,
+            lastDeadlineReminderAt: null,
           },
   });
+
+  if (body.action === "complete" || body.action === "complete-together") {
+    await awardTaskCompletionBonuses(
+      prisma,
+      {
+        id: updatedTask.id,
+        householdId: updatedTask.householdId,
+        title: updatedTask.title,
+        createdAt: updatedTask.createdAt,
+        completedAt: updatedTask.completedAt ?? new Date(),
+        completedByName: updatedTask.completedByName,
+      },
+      auth.member.id,
+      body.action === "complete-together",
+    );
+  }
+
+  if (body.action === "reopen") {
+    await clearTaskBonusTransactions(prisma, updatedTask.id);
+  }
 
   if (
     (body.action === "complete" || body.action === "complete-together") &&
     updatedTask.completedAt
   ) {
-    await notifyPartner({
-      actorName,
-      actorTelegramId: String(auth.user.id),
-      actorUsername: auth.user.username ?? null,
-      text:
-        `Раздел: БЫТ\n` +
+    const members = await prisma.member.findMany({
+      where: { householdId: auth.member.householdId },
+      orderBy: [{ createdAt: "asc" }],
+      select: {
+        firstName: true,
+        lastName: true,
+        username: true,
+      },
+    })
+
+    await notifyHousehold(
+      prisma,
+      auth.member.householdId,
+      `Family Home Mini App\n\n` +
         `Задача выполнена: ${updatedTask.title}\n` +
         `Кто выполнил: ${body.action === "complete-together" ? "вместе" : actorName}\n` +
         `Когда: ${formatMoscowDateTime(updatedTask.completedAt)}\n` +
-        `Прошло с момента создания: ${formatElapsedLabel(task.createdAt, updatedTask.completedAt)}`,
-    });
+        `Дедлайн: ${formatMoscowDeadlineLabel(updatedTask.deadlineAt)}\n` +
+        `Прошло с момента создания: ${formatElapsedLabel(task.createdAt, updatedTask.completedAt)}\n` +
+        `Участники месяца: ${members.map(getMemberDisplayName).join(", ")}`,
+    );
   }
 
   return NextResponse.json({ ok: true, task: updatedTask });
@@ -138,6 +196,8 @@ export async function DELETE(
   if (task.householdId !== auth.member.householdId) {
     return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
+
+  await clearTaskBonusTransactions(prisma, taskId);
 
   await prisma.householdTask.delete({
     where: { id: taskId },

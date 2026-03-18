@@ -1,0 +1,71 @@
+import { authorizeRequest } from '@/lib/auth'
+import { getCurrentMemberBalanceUnits } from '@/lib/bonus-ledger'
+import { notifyHousehold } from '@/lib/household-notify'
+import { getPrisma } from '@/lib/prisma'
+import { BONUS_REWARDS, formatPoints, getMonthKey } from '@/shared/lib/bonus-shop'
+import { NextResponse } from 'next/server'
+
+type PurchasePayload = {
+  rewardKey?: string
+}
+
+export async function POST(request: Request) {
+  const prisma = getPrisma()
+  const auth = await authorizeRequest(request, prisma)
+
+  if (!auth) {
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const body = (await request.json()) as PurchasePayload
+  const reward = BONUS_REWARDS.find(item => item.key === body.rewardKey)
+
+  if (!reward) {
+    return NextResponse.json({ ok: false, error: 'Reward not found' }, { status: 404 })
+  }
+
+  const balanceUnits = await getCurrentMemberBalanceUnits(prisma, auth.member.id)
+
+  if (balanceUnits < reward.costUnits) {
+    return NextResponse.json({ ok: false, error: 'Insufficient balance' }, { status: 400 })
+  }
+
+  const monthKey = getMonthKey(new Date())
+
+  const purchase = await prisma.bonusPurchase.create({
+    data: {
+      householdId: auth.member.householdId,
+      memberId: auth.member.id,
+      monthKey,
+      rewardKey: reward.key,
+      rewardTitle: reward.title,
+      costUnits: reward.costUnits,
+    },
+  })
+
+  await prisma.bonusTransaction.create({
+    data: {
+      householdId: auth.member.householdId,
+      memberId: auth.member.id,
+      purchaseId: purchase.id,
+      monthKey,
+      kind: 'reward-purchase',
+      amountUnits: -reward.costUnits,
+      note: `Покупка бонуса "${reward.title}"`,
+    },
+  })
+
+  await notifyHousehold(
+    prisma,
+    auth.member.householdId,
+    `Family Home Mini App\n\n` +
+      `${auth.member.firstName} купил(а) бонус: ${reward.title}\n` +
+      `Стоимость: ${formatPoints(reward.costUnits)} баллов`,
+  )
+
+  return NextResponse.json({
+    ok: true,
+    purchase,
+    balanceUnits: balanceUnits - reward.costUnits,
+  })
+}

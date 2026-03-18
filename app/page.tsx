@@ -4,6 +4,7 @@ import { startTransition, useCallback, useEffect, useRef, useState } from 'react
 
 import { ModalOverlay } from '@/components/ui/app-modal'
 import { NoticeToast } from '@/components/ui/notice-toast'
+import { BonusShopModal } from '@/features/home/components/bonus-shop-modal'
 import { JournalSummary } from '@/features/home/components/journal-summary'
 import { DashboardHero } from '@/features/home/components/dashboard-hero'
 import { MonthlyRatingModal } from '@/features/home/components/monthly-rating-modal'
@@ -21,12 +22,15 @@ import {
   sortShoppingItems,
   sortTasks,
 } from '@/shared/lib/format'
+import { formatPoints } from '@/shared/lib/bonus-shop'
 import { getActorName, getTelegramInitData, getTelegramUser } from '@/shared/lib/telegram'
 import type {
+  BonusPurchase,
   BootstrapResponse,
   FetchOptions,
   HouseholdTask,
   ModalKey,
+  MonthlyReport,
   ShoppingItem,
   TelegramUser,
   TelegramWindow,
@@ -42,6 +46,23 @@ type ShoppingMutationResponse = {
   shoppingItem: ShoppingItem
 }
 
+function toDateTimeLocalValue(value?: string | null) {
+  if (!value) {
+    return ''
+  }
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
+
+  const timezoneOffsetMinutes = date.getTimezoneOffset()
+  const localDate = new Date(date.getTime() - timezoneOffsetMinutes * 60_000)
+
+  return localDate.toISOString().slice(0, 16)
+}
+
 export default function Page() {
   const bootstrapRequestInFlight = useRef(false)
   const eventSourceRef = useRef<EventSource | null>(null)
@@ -53,19 +74,22 @@ export default function Page() {
   const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
   const [monthlyCompletedTasks, setMonthlyCompletedTasks] = useState<HouseholdTask[]>([])
   const [participantNames, setParticipantNames] = useState<string[]>([])
+  const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
+  const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
+  const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
   const [taskTitle, setTaskTitle] = useState('')
   const [taskNote, setTaskNote] = useState('')
-  const [taskPriority, setTaskPriority] = useState<'normal' | 'urgent'>('normal')
+  const [taskDeadline, setTaskDeadline] = useState('')
   const [productTitle, setProductTitle] = useState('')
   const [productQuantity, setProductQuantity] = useState('')
   const [productNote, setProductNote] = useState('')
   const [productUrgency, setProductUrgency] = useState<'soon' | 'out' | 'without'>('soon')
   const [replaceTaskTitle, setReplaceTaskTitle] = useState('')
   const [replaceTaskNote, setReplaceTaskNote] = useState('')
-  const [replaceTaskPriority, setReplaceTaskPriority] = useState<'normal' | 'urgent'>('normal')
+  const [replaceTaskDeadline, setReplaceTaskDeadline] = useState('')
   const [replaceTitle, setReplaceTitle] = useState('')
   const [replaceQuantity, setReplaceQuantity] = useState('')
   const [replaceNote, setReplaceNote] = useState('')
@@ -159,7 +183,7 @@ export default function Page() {
   }
 
   function openMainModal(
-    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'leaderboard'>,
+    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'leaderboard' | 'bonus-shop'>,
   ) {
     if (!canOpenModal()) {
       return
@@ -200,6 +224,7 @@ export default function Page() {
     }
 
     setTaskCreateStatus('')
+    setTaskDeadline('')
     setModal('task-create')
   }
 
@@ -210,7 +235,7 @@ export default function Page() {
 
     setReplaceTaskTitle(selectedTask.title)
     setReplaceTaskNote(selectedTask.note ?? '')
-    setReplaceTaskPriority(selectedTask.priority)
+    setReplaceTaskDeadline(toDateTimeLocalValue(selectedTask.deadlineAt))
     setModal('task-replace')
   }
 
@@ -220,7 +245,8 @@ export default function Page() {
     setSelectedTask(null)
     setReplaceTaskTitle('')
     setReplaceTaskNote('')
-    setReplaceTaskPriority('normal')
+    setReplaceTaskDeadline('')
+    setTaskDeadline('')
     setTaskCreateStatus('')
   }
 
@@ -260,6 +286,9 @@ export default function Page() {
         setCompletedTasks(payload.completedTasks)
         setMonthlyCompletedTasks(payload.monthlyCompletedTasks)
         setParticipantNames(payload.participantNames)
+        setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
+        setBonusPurchases(payload.bonusPurchases)
+        setMonthlyReports(payload.monthlyReports)
         setShoppingItems(payload.activeShoppingItems)
       } catch {
         setError(
@@ -426,6 +455,12 @@ export default function Page() {
       return
     }
 
+    if (!taskDeadline) {
+      setError('Укажи дедлайн задачи в пределах ближайших 24 часов.')
+      setTaskCreateStatus('Ошибка: укажи дедлайн.')
+      return
+    }
+
     setBusyKey('create-task')
     setError('')
     setTaskCreateStatus(`Добавляю: ${title}`)
@@ -437,7 +472,7 @@ export default function Page() {
         body: JSON.stringify({
           title,
           note: taskNote,
-          priority: taskPriority,
+          deadlineAt: new Date(taskDeadline).toISOString(),
         }),
       })
 
@@ -449,7 +484,7 @@ export default function Page() {
 
       setTaskTitle('')
       setTaskNote('')
-      setTaskPriority('normal')
+      setTaskDeadline('')
       setTaskCreateStatus(`Добавлено: ${title}`)
       setModal('household')
       setToast(`Задача добавлена: ${title}`)
@@ -577,6 +612,11 @@ export default function Page() {
       return
     }
 
+    if (!replaceTaskDeadline) {
+      setError('Укажи новый дедлайн задачи.')
+      return
+    }
+
     setBusyKey(`replace-task-${selectedTask.id}`)
     setError('')
 
@@ -588,7 +628,7 @@ export default function Page() {
           action: 'replace',
           title,
           note: replaceTaskNote,
-          priority: replaceTaskPriority,
+          deadlineAt: new Date(replaceTaskDeadline).toISOString(),
         }),
       })
 
@@ -603,6 +643,37 @@ export default function Page() {
       applyTaskUpdate(payload.task)
     } catch {
       setError(`Ошибка обновления задачи: ${title}`)
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function buyBonusReward(rewardKey: string) {
+    setBusyKey(`buy-reward-${rewardKey}`)
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/bonus-shop/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rewardKey }),
+      })
+
+      if (!response.ok) {
+        throw new Error('bonus purchase failed')
+      }
+
+      const payload = (await response.json()) as {
+        ok: boolean
+        purchase: BonusPurchase
+        balanceUnits: number
+      }
+
+      setCurrentUserBonusBalanceUnits(payload.balanceUnits)
+      setBonusPurchases(current => [payload.purchase, ...current])
+      setToast(`Куплен бонус: ${payload.purchase.rewardTitle}`)
+    } catch {
+      setError('Не удалось купить бонус. Проверь баланс и попробуй еще раз.')
     } finally {
       setBusyKey(null)
     }
@@ -741,14 +812,14 @@ export default function Page() {
               mode='create'
               title={taskTitle}
               note={taskNote}
-              priority={taskPriority}
+              deadline={taskDeadline}
               status={taskCreateStatus}
               loading={busyKey === 'create-task' || loading}
               submitLabel='Добавить задачу'
               busyLabel='Добавляю...'
               onTitleChange={setTaskTitle}
               onNoteChange={setTaskNote}
-              onPriorityChange={setTaskPriority}
+              onDeadlineChange={setTaskDeadline}
               onSubmit={() => void addTask()}
               onBack={() => setModal('household')}
             />
@@ -771,14 +842,14 @@ export default function Page() {
               mode='replace'
               title={replaceTaskTitle}
               note={replaceTaskNote}
-              priority={replaceTaskPriority}
+              deadline={replaceTaskDeadline}
               status=''
               loading={busyKey === `replace-task-${selectedTask.id}`}
               submitLabel='Сохранить изменения'
               busyLabel='Сохраняю...'
               onTitleChange={setReplaceTaskTitle}
               onNoteChange={setReplaceTaskNote}
-              onPriorityChange={setReplaceTaskPriority}
+              onDeadlineChange={setReplaceTaskDeadline}
               onSubmit={() => void replaceTask()}
               onBack={() => setModal('task-actions')}
             />
@@ -794,6 +865,19 @@ export default function Page() {
           {modal === 'leaderboard' ? (
             <MonthlyRatingModal
               summary={monthlyRatingSummary}
+              onClose={closeModalWithGuard}
+            />
+          ) : null}
+
+          {modal === 'bonus-shop' ? (
+            <BonusShopModal
+              balanceUnits={currentUserBonusBalanceUnits}
+              purchases={bonusPurchases}
+              reports={monthlyReports}
+              busyRewardKey={
+                busyKey?.startsWith('buy-reward-') ? busyKey.replace('buy-reward-', '') : null
+              }
+              onBuy={rewardKey => void buyBonusReward(rewardKey)}
               onClose={closeModalWithGuard}
             />
           ) : null}
@@ -878,8 +962,10 @@ export default function Page() {
               ? formatRelativeDate(sortedCompletedTasks[0].completedAt)
               : 'Пока пусто'
           }
+          balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} баллов`}
           onOpenJournal={() => openMainModal('task-journal')}
           onOpenLeaderboard={() => openMainModal('leaderboard')}
+          onOpenBonusShop={() => openMainModal('bonus-shop')}
         />
       </div>
     </main>

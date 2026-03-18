@@ -31,6 +31,10 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
         {tasks.length ? (
           <div className='space-y-4 max-h-[45dvh]'>
             {tasks.map(task => (
+              (() => {
+                const deadlineAlertActive = Boolean(task.lastDeadlineReminderAt || task.penaltyAppliedAt)
+
+                return (
               <button
                 key={task.id}
                 type='button'
@@ -38,8 +42,8 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
                 onClick={() => onSelectTask(task)}
               >
                 <div className='space-y-2'>
-                  <StatusPill tone={task.priority}>
-                    {task.priority === 'urgent' ? 'Срочно' : 'Обычно'}
+                  <StatusPill tone={deadlineAlertActive ? 'urgent' : 'soon'}>
+                    {deadlineAlertActive ? 'Дедлайн горит' : 'Есть дедлайн'}
                   </StatusPill>
                   <h3 className='font-(--font-family-heading) text-2xl leading-tight'>
                     {task.title}
@@ -47,11 +51,16 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
                   {task.note ? (
                     <p className='text-sm leading-6 text-white/70'>{task.note}</p>
                   ) : null}
+                  <div className='text-sm text-white/70'>
+                    Сделать до: {formatRelativeDate(task.deadlineAt)}
+                  </div>
                   <div className='text-xs text-white/45'>
                     Добавил(а) {task.addedByName} • {formatRelativeDate(task.createdAt)}
                   </div>
                 </div>
               </button>
+                )
+              })()
             ))}
           </div>
         ) : (

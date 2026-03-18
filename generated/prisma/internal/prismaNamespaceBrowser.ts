@@ -54,7 +54,10 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
-  ShoppingItem: 'ShoppingItem'
+  ShoppingItem: 'ShoppingItem',
+  BonusTransaction: 'BonusTransaction',
+  BonusPurchase: 'BonusPurchase',
+  MonthlyReport: 'MonthlyReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -108,8 +111,12 @@ export const HouseholdTaskScalarFieldEnum = {
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
+  deadlineAt: 'deadlineAt',
   completedAt: 'completedAt',
   completedByName: 'completedByName',
+  lastDeadlineReminderAt: 'lastDeadlineReminderAt',
+  penaltyAppliedAt: 'penaltyAppliedAt',
+  penaltyAppliedUnits: 'penaltyAppliedUnits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -135,6 +142,52 @@ export const ShoppingItemScalarFieldEnum = {
 } as const
 
 export type ShoppingItemScalarFieldEnum = (typeof ShoppingItemScalarFieldEnum)[keyof typeof ShoppingItemScalarFieldEnum]
+
+
+export const BonusTransactionScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  memberId: 'memberId',
+  taskId: 'taskId',
+  purchaseId: 'purchaseId',
+  monthKey: 'monthKey',
+  kind: 'kind',
+  amountUnits: 'amountUnits',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BonusTransactionScalarFieldEnum = (typeof BonusTransactionScalarFieldEnum)[keyof typeof BonusTransactionScalarFieldEnum]
+
+
+export const BonusPurchaseScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  memberId: 'memberId',
+  monthKey: 'monthKey',
+  rewardKey: 'rewardKey',
+  rewardTitle: 'rewardTitle',
+  costUnits: 'costUnits',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BonusPurchaseScalarFieldEnum = (typeof BonusPurchaseScalarFieldEnum)[keyof typeof BonusPurchaseScalarFieldEnum]
+
+
+export const MonthlyReportScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  monthKey: 'monthKey',
+  title: 'title',
+  reportBody: 'reportBody',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MonthlyReportScalarFieldEnum = (typeof MonthlyReportScalarFieldEnum)[keyof typeof MonthlyReportScalarFieldEnum]
 
 
 export const SortOrder = {

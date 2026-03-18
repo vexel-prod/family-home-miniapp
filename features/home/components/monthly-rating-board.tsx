@@ -1,24 +1,29 @@
 import { motion } from 'framer-motion'
 
 import { reveal } from '@/shared/lib/animations'
+import { formatPoints } from '@/shared/lib/bonus-shop'
 import type { MonthlyRatingSummary } from '@/shared/lib/monthly-rating'
 
 const motivationRules = [
   {
     rule: 'Закрытая задача',
     score: '3 балла',
-  },
-  {
-    rule: 'Срочная задача',
-    score: '+3 балла',
+    note: 'Базовое начисление за выполнение',
   },
   {
     rule: 'Быстрое закрытие',
     score: 'x1.5',
+    note: 'Если задача закрыта в первый час',
+  },
+  {
+    rule: 'Просрочка больше часа',
+    score: '-4.5',
+    note: 'Штраф делится между всеми участниками',
   },
   {
     rule: 'Сделано вместе',
     score: 'делим ровно',
+    note: 'Награда по общей задаче делится поровну',
   },
 ]
 
@@ -60,6 +65,9 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
                   >
                     <div className='text-sm font-semibold text-(--color-page-text)'>{item.rule}</div>
                     <div className='text-sm font-semibold text-(--color-success-text)'>{item.score}</div>
+                    <div className='col-span-2 text-sm text-(--color-text-muted) sm:col-span-1'>
+                      {item.note}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -74,7 +82,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
             />
             <StatCard
               label='Всего баллов'
-              value={String(summary.totalPoints)}
+              value={formatPoints(Math.round(summary.totalPoints * 4))}
               tone='white'
             />
             <StatCard
@@ -84,7 +92,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
             />
             <StatCard
               label='Командный бонус'
-              value={`${summary.teamBonusPoints}`}
+              value={formatPoints(summary.teamBonusPoints * 4)}
               tone='rose'
             />
           </div>
@@ -119,18 +127,14 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
                       </div>
 
                       <div className='rounded-full bg-(--color-brand-home) px-3 py-1 text-sm font-semibold text-(--color-page-text)'>
-                        {member.points} баллов
+                        {formatPoints(Math.round(member.points * 4))} баллов
                       </div>
                     </div>
 
-                    <div className='mt-4 grid grid-cols-3 gap-2 text-sm text-(--color-text-muted)'>
+                    <div className='mt-4 grid grid-cols-2 gap-2 text-sm text-(--color-text-muted)'>
                       <MiniMetric
                         label='Задачи'
                         value={String(member.completedCount)}
-                      />
-                      <MiniMetric
-                        label='Срочные'
-                        value={String(member.urgentCount)}
                       />
                       <MiniMetric
                         label='Быстрые'
@@ -151,7 +155,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
           <div className='flex flex-col gap-4'>
             <div className='flex flex-col rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white/75 p-4'>
               <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
-                блок мотивации
+                Цели месяца
               </div>
               <div className='mt-3 flex flex-col gap-2'>
                 {summary.milestones.map(milestone => (

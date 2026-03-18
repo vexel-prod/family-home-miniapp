@@ -7,8 +7,10 @@ type JournalSummaryProps = {
   leaderName: string
   leaderPoints: number
   lastCompletedAt: string
+  balanceLabel: string
   onOpenJournal: () => void
   onOpenLeaderboard: () => void
+  onOpenBonusShop: () => void
 }
 
 export function JournalSummary({
@@ -16,8 +18,10 @@ export function JournalSummary({
   leaderName,
   leaderPoints,
   lastCompletedAt,
+  balanceLabel,
   onOpenJournal,
   onOpenLeaderboard,
+  onOpenBonusShop,
 }: JournalSummaryProps) {
   return (
     <motion.section
@@ -27,7 +31,7 @@ export function JournalSummary({
       transition={{ delay: 0.18, duration: 0.35, ease: 'easeOut' }}
       className='rounded-2xl border border-[rgba(15,23,42,0.08)] bg-(--color-surface) p-4 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] sm:p-6'
     >
-      <div className='grid gap-4 sm:grid-cols-3'>
+      <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
         <button
           type='button'
           className='rounded-lg bg-(--color-success-soft) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
@@ -58,6 +62,20 @@ export function JournalSummary({
           <div className='mt-3 text-lg font-bold'>{leaderName}</div>
           <div className='mt-2 text-sm text-(--color-text-muted)'>
             {leaderPoints > 0 ? `${leaderPoints} баллов в этом месяце` : 'Открыть рейтинг месяца'}
+          </div>
+        </button>
+
+        <button
+          type='button'
+          className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-cream) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+          onClick={onOpenBonusShop}
+        >
+          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
+            Магазин бонусов
+          </div>
+          <div className='mt-3 text-lg font-bold'>{balanceLabel}</div>
+          <div className='mt-2 text-sm text-(--color-text-muted)'>
+            Открыть карточки услуг месяца
           </div>
         </button>
       </div>

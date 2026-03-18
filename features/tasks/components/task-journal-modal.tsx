@@ -45,6 +45,9 @@ export function TaskJournalModal({ tasks, onClose }: TaskJournalModalProps) {
                     Закрыл(а) {task.completedByName ?? 'неизвестно'} •{' '}
                     {task.completedAt ? formatRelativeDate(task.completedAt) : 'без даты'}
                   </div>
+                  <div className='text-xs text-white/45'>
+                    Дедлайн: {formatRelativeDate(task.deadlineAt)}
+                  </div>
                   <div className='text-xs text-white/35'>
                     Создано: {formatRelativeDate(task.createdAt)}
                   </div>

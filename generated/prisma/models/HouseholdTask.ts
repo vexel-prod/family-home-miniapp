@@ -20,8 +20,18 @@ export type HouseholdTaskModel = runtime.Types.Result.DefaultSelection<Prisma.$H
 
 export type AggregateHouseholdTask = {
   _count: HouseholdTaskCountAggregateOutputType | null
+  _avg: HouseholdTaskAvgAggregateOutputType | null
+  _sum: HouseholdTaskSumAggregateOutputType | null
   _min: HouseholdTaskMinAggregateOutputType | null
   _max: HouseholdTaskMaxAggregateOutputType | null
+}
+
+export type HouseholdTaskAvgAggregateOutputType = {
+  penaltyAppliedUnits: number | null
+}
+
+export type HouseholdTaskSumAggregateOutputType = {
+  penaltyAppliedUnits: number | null
 }
 
 export type HouseholdTaskMinAggregateOutputType = {
@@ -34,8 +44,12 @@ export type HouseholdTaskMinAggregateOutputType = {
   addedByName: string | null
   addedByUsername: string | null
   addedByTelegramId: string | null
+  deadlineAt: Date | null
   completedAt: Date | null
   completedByName: string | null
+  lastDeadlineReminderAt: Date | null
+  penaltyAppliedAt: Date | null
+  penaltyAppliedUnits: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,8 +64,12 @@ export type HouseholdTaskMaxAggregateOutputType = {
   addedByName: string | null
   addedByUsername: string | null
   addedByTelegramId: string | null
+  deadlineAt: Date | null
   completedAt: Date | null
   completedByName: string | null
+  lastDeadlineReminderAt: Date | null
+  penaltyAppliedAt: Date | null
+  penaltyAppliedUnits: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,13 +84,25 @@ export type HouseholdTaskCountAggregateOutputType = {
   addedByName: number
   addedByUsername: number
   addedByTelegramId: number
+  deadlineAt: number
   completedAt: number
   completedByName: number
+  lastDeadlineReminderAt: number
+  penaltyAppliedAt: number
+  penaltyAppliedUnits: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type HouseholdTaskAvgAggregateInputType = {
+  penaltyAppliedUnits?: true
+}
+
+export type HouseholdTaskSumAggregateInputType = {
+  penaltyAppliedUnits?: true
+}
 
 export type HouseholdTaskMinAggregateInputType = {
   id?: true
@@ -84,8 +114,12 @@ export type HouseholdTaskMinAggregateInputType = {
   addedByName?: true
   addedByUsername?: true
   addedByTelegramId?: true
+  deadlineAt?: true
   completedAt?: true
   completedByName?: true
+  lastDeadlineReminderAt?: true
+  penaltyAppliedAt?: true
+  penaltyAppliedUnits?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,8 +134,12 @@ export type HouseholdTaskMaxAggregateInputType = {
   addedByName?: true
   addedByUsername?: true
   addedByTelegramId?: true
+  deadlineAt?: true
   completedAt?: true
   completedByName?: true
+  lastDeadlineReminderAt?: true
+  penaltyAppliedAt?: true
+  penaltyAppliedUnits?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,8 +154,12 @@ export type HouseholdTaskCountAggregateInputType = {
   addedByName?: true
   addedByUsername?: true
   addedByTelegramId?: true
+  deadlineAt?: true
   completedAt?: true
   completedByName?: true
+  lastDeadlineReminderAt?: true
+  penaltyAppliedAt?: true
+  penaltyAppliedUnits?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -161,6 +203,18 @@ export type HouseholdTaskAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: HouseholdTaskAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: HouseholdTaskSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: HouseholdTaskMinAggregateInputType
@@ -191,6 +245,8 @@ export type HouseholdTaskGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: HouseholdTaskCountAggregateInputType | true
+  _avg?: HouseholdTaskAvgAggregateInputType
+  _sum?: HouseholdTaskSumAggregateInputType
   _min?: HouseholdTaskMinAggregateInputType
   _max?: HouseholdTaskMaxAggregateInputType
 }
@@ -205,11 +261,17 @@ export type HouseholdTaskGroupByOutputType = {
   addedByName: string
   addedByUsername: string | null
   addedByTelegramId: string | null
+  deadlineAt: Date
   completedAt: Date | null
   completedByName: string | null
+  lastDeadlineReminderAt: Date | null
+  penaltyAppliedAt: Date | null
+  penaltyAppliedUnits: number
   createdAt: Date
   updatedAt: Date
   _count: HouseholdTaskCountAggregateOutputType | null
+  _avg: HouseholdTaskAvgAggregateOutputType | null
+  _sum: HouseholdTaskSumAggregateOutputType | null
   _min: HouseholdTaskMinAggregateOutputType | null
   _max: HouseholdTaskMaxAggregateOutputType | null
 }
@@ -242,11 +304,16 @@ export type HouseholdTaskWhereInput = {
   addedByName?: Prisma.StringFilter<"HouseholdTask"> | string
   addedByUsername?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
   addedByTelegramId?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  deadlineAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
   completedByName?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  lastDeadlineReminderAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFilter<"HouseholdTask"> | number
   createdAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
+  bonusTransactions?: Prisma.BonusTransactionListRelationFilter
 }
 
 export type HouseholdTaskOrderByWithRelationInput = {
@@ -259,11 +326,16 @@ export type HouseholdTaskOrderByWithRelationInput = {
   addedByName?: Prisma.SortOrder
   addedByUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   addedByTelegramId?: Prisma.SortOrderInput | Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedByName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastDeadlineReminderAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  penaltyAppliedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  penaltyAppliedUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   household?: Prisma.HouseholdOrderByWithRelationInput
+  bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
 }
 
 export type HouseholdTaskWhereUniqueInput = Prisma.AtLeast<{
@@ -279,11 +351,16 @@ export type HouseholdTaskWhereUniqueInput = Prisma.AtLeast<{
   addedByName?: Prisma.StringFilter<"HouseholdTask"> | string
   addedByUsername?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
   addedByTelegramId?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  deadlineAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
   completedByName?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  lastDeadlineReminderAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFilter<"HouseholdTask"> | number
   createdAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
+  bonusTransactions?: Prisma.BonusTransactionListRelationFilter
 }, "id">
 
 export type HouseholdTaskOrderByWithAggregationInput = {
@@ -296,13 +373,19 @@ export type HouseholdTaskOrderByWithAggregationInput = {
   addedByName?: Prisma.SortOrder
   addedByUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   addedByTelegramId?: Prisma.SortOrderInput | Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedByName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastDeadlineReminderAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  penaltyAppliedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  penaltyAppliedUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HouseholdTaskCountOrderByAggregateInput
+  _avg?: Prisma.HouseholdTaskAvgOrderByAggregateInput
   _max?: Prisma.HouseholdTaskMaxOrderByAggregateInput
   _min?: Prisma.HouseholdTaskMinOrderByAggregateInput
+  _sum?: Prisma.HouseholdTaskSumOrderByAggregateInput
 }
 
 export type HouseholdTaskScalarWhereWithAggregatesInput = {
@@ -318,8 +401,12 @@ export type HouseholdTaskScalarWhereWithAggregatesInput = {
   addedByName?: Prisma.StringWithAggregatesFilter<"HouseholdTask"> | string
   addedByUsername?: Prisma.StringNullableWithAggregatesFilter<"HouseholdTask"> | string | null
   addedByTelegramId?: Prisma.StringNullableWithAggregatesFilter<"HouseholdTask"> | string | null
+  deadlineAt?: Prisma.DateTimeWithAggregatesFilter<"HouseholdTask"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HouseholdTask"> | Date | string | null
   completedByName?: Prisma.StringNullableWithAggregatesFilter<"HouseholdTask"> | string | null
+  lastDeadlineReminderAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntWithAggregatesFilter<"HouseholdTask"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HouseholdTask"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HouseholdTask"> | Date | string
 }
@@ -333,11 +420,16 @@ export type HouseholdTaskCreateInput = {
   addedByName: string
   addedByUsername?: string | null
   addedByTelegramId?: string | null
+  deadlineAt?: Date | string
   completedAt?: Date | string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household?: Prisma.HouseholdCreateNestedOneWithoutTasksInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateInput = {
@@ -350,10 +442,15 @@ export type HouseholdTaskUncheckedCreateInput = {
   addedByName: string
   addedByUsername?: string | null
   addedByTelegramId?: string | null
+  deadlineAt?: Date | string
   completedAt?: Date | string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUpdateInput = {
@@ -365,11 +462,16 @@ export type HouseholdTaskUpdateInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutTasksNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateInput = {
@@ -382,10 +484,15 @@ export type HouseholdTaskUncheckedUpdateInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskCreateManyInput = {
@@ -398,8 +505,12 @@ export type HouseholdTaskCreateManyInput = {
   addedByName: string
   addedByUsername?: string | null
   addedByTelegramId?: string | null
+  deadlineAt?: Date | string
   completedAt?: Date | string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -413,8 +524,12 @@ export type HouseholdTaskUpdateManyMutationInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -429,8 +544,12 @@ export type HouseholdTaskUncheckedUpdateManyInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,10 +574,18 @@ export type HouseholdTaskCountOrderByAggregateInput = {
   addedByName?: Prisma.SortOrder
   addedByUsername?: Prisma.SortOrder
   addedByTelegramId?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   completedByName?: Prisma.SortOrder
+  lastDeadlineReminderAt?: Prisma.SortOrder
+  penaltyAppliedAt?: Prisma.SortOrder
+  penaltyAppliedUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HouseholdTaskAvgOrderByAggregateInput = {
+  penaltyAppliedUnits?: Prisma.SortOrder
 }
 
 export type HouseholdTaskMaxOrderByAggregateInput = {
@@ -471,8 +598,12 @@ export type HouseholdTaskMaxOrderByAggregateInput = {
   addedByName?: Prisma.SortOrder
   addedByUsername?: Prisma.SortOrder
   addedByTelegramId?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   completedByName?: Prisma.SortOrder
+  lastDeadlineReminderAt?: Prisma.SortOrder
+  penaltyAppliedAt?: Prisma.SortOrder
+  penaltyAppliedUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -487,10 +618,23 @@ export type HouseholdTaskMinOrderByAggregateInput = {
   addedByName?: Prisma.SortOrder
   addedByUsername?: Prisma.SortOrder
   addedByTelegramId?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   completedByName?: Prisma.SortOrder
+  lastDeadlineReminderAt?: Prisma.SortOrder
+  penaltyAppliedAt?: Prisma.SortOrder
+  penaltyAppliedUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HouseholdTaskSumOrderByAggregateInput = {
+  penaltyAppliedUnits?: Prisma.SortOrder
+}
+
+export type HouseholdTaskNullableScalarRelationFilter = {
+  is?: Prisma.HouseholdTaskWhereInput | null
+  isNot?: Prisma.HouseholdTaskWhereInput | null
 }
 
 export type HouseholdTaskCreateNestedManyWithoutHouseholdInput = {
@@ -539,6 +683,30 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type HouseholdTaskCreateNestedOneWithoutBonusTransactionsInput = {
+  create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
+  connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput
+  connect?: Prisma.HouseholdTaskWhereUniqueInput
+}
+
+export type HouseholdTaskUpdateOneWithoutBonusTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
+  connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput
+  upsert?: Prisma.HouseholdTaskUpsertWithoutBonusTransactionsInput
+  disconnect?: Prisma.HouseholdTaskWhereInput | boolean
+  delete?: Prisma.HouseholdTaskWhereInput | boolean
+  connect?: Prisma.HouseholdTaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdTaskUpdateToOneWithWhereWithoutBonusTransactionsInput, Prisma.HouseholdTaskUpdateWithoutBonusTransactionsInput>, Prisma.HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput>
+}
+
 export type HouseholdTaskCreateWithoutHouseholdInput = {
   id?: string
   title: string
@@ -548,10 +716,15 @@ export type HouseholdTaskCreateWithoutHouseholdInput = {
   addedByName: string
   addedByUsername?: string | null
   addedByTelegramId?: string | null
+  deadlineAt?: Date | string
   completedAt?: Date | string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateWithoutHouseholdInput = {
@@ -563,10 +736,15 @@ export type HouseholdTaskUncheckedCreateWithoutHouseholdInput = {
   addedByName: string
   addedByUsername?: string | null
   addedByTelegramId?: string | null
+  deadlineAt?: Date | string
   completedAt?: Date | string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskCreateOrConnectWithoutHouseholdInput = {
@@ -608,10 +786,110 @@ export type HouseholdTaskScalarWhereInput = {
   addedByName?: Prisma.StringFilter<"HouseholdTask"> | string
   addedByUsername?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
   addedByTelegramId?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  deadlineAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
   completedByName?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  lastDeadlineReminderAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedAt?: Prisma.DateTimeNullableFilter<"HouseholdTask"> | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFilter<"HouseholdTask"> | number
   createdAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HouseholdTask"> | Date | string
+}
+
+export type HouseholdTaskCreateWithoutBonusTransactionsInput = {
+  id?: string
+  title: string
+  note?: string | null
+  status?: string
+  priority?: string
+  addedByName: string
+  addedByUsername?: string | null
+  addedByTelegramId?: string | null
+  deadlineAt?: Date | string
+  completedAt?: Date | string | null
+  completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household?: Prisma.HouseholdCreateNestedOneWithoutTasksInput
+}
+
+export type HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput = {
+  id?: string
+  householdId?: string
+  title: string
+  note?: string | null
+  status?: string
+  priority?: string
+  addedByName: string
+  addedByUsername?: string | null
+  addedByTelegramId?: string | null
+  deadlineAt?: Date | string
+  completedAt?: Date | string | null
+  completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput = {
+  where: Prisma.HouseholdTaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
+}
+
+export type HouseholdTaskUpsertWithoutBonusTransactionsInput = {
+  update: Prisma.XOR<Prisma.HouseholdTaskUpdateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput>
+  create: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
+  where?: Prisma.HouseholdTaskWhereInput
+}
+
+export type HouseholdTaskUpdateToOneWithWhereWithoutBonusTransactionsInput = {
+  where?: Prisma.HouseholdTaskWhereInput
+  data: Prisma.XOR<Prisma.HouseholdTaskUpdateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput>
+}
+
+export type HouseholdTaskUpdateWithoutBonusTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutTasksNestedInput
+}
+
+export type HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HouseholdTaskCreateManyHouseholdInput = {
@@ -623,8 +901,12 @@ export type HouseholdTaskCreateManyHouseholdInput = {
   addedByName: string
   addedByUsername?: string | null
   addedByTelegramId?: string | null
+  deadlineAt?: Date | string
   completedAt?: Date | string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -638,10 +920,15 @@ export type HouseholdTaskUpdateWithoutHouseholdInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateWithoutHouseholdInput = {
@@ -653,10 +940,15 @@ export type HouseholdTaskUncheckedUpdateWithoutHouseholdInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateManyWithoutHouseholdInput = {
@@ -668,12 +960,45 @@ export type HouseholdTaskUncheckedUpdateManyWithoutHouseholdInput = {
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
   addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type HouseholdTaskCountOutputType
+ */
+
+export type HouseholdTaskCountOutputType = {
+  bonusTransactions: number
+}
+
+export type HouseholdTaskCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bonusTransactions?: boolean | HouseholdTaskCountOutputTypeCountBonusTransactionsArgs
+}
+
+/**
+ * HouseholdTaskCountOutputType without action
+ */
+export type HouseholdTaskCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HouseholdTaskCountOutputType
+   */
+  select?: Prisma.HouseholdTaskCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * HouseholdTaskCountOutputType without action
+ */
+export type HouseholdTaskCountOutputTypeCountBonusTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BonusTransactionWhereInput
+}
 
 
 export type HouseholdTaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -686,11 +1011,17 @@ export type HouseholdTaskSelect<ExtArgs extends runtime.Types.Extensions.Interna
   addedByName?: boolean
   addedByUsername?: boolean
   addedByTelegramId?: boolean
+  deadlineAt?: boolean
   completedAt?: boolean
   completedByName?: boolean
+  lastDeadlineReminderAt?: boolean
+  penaltyAppliedAt?: boolean
+  penaltyAppliedUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+  bonusTransactions?: boolean | Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>
+  _count?: boolean | Prisma.HouseholdTaskCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["householdTask"]>
 
 export type HouseholdTaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -703,8 +1034,12 @@ export type HouseholdTaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   addedByName?: boolean
   addedByUsername?: boolean
   addedByTelegramId?: boolean
+  deadlineAt?: boolean
   completedAt?: boolean
   completedByName?: boolean
+  lastDeadlineReminderAt?: boolean
+  penaltyAppliedAt?: boolean
+  penaltyAppliedUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -720,8 +1055,12 @@ export type HouseholdTaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   addedByName?: boolean
   addedByUsername?: boolean
   addedByTelegramId?: boolean
+  deadlineAt?: boolean
   completedAt?: boolean
   completedByName?: boolean
+  lastDeadlineReminderAt?: boolean
+  penaltyAppliedAt?: boolean
+  penaltyAppliedUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -737,15 +1076,21 @@ export type HouseholdTaskSelectScalar = {
   addedByName?: boolean
   addedByUsername?: boolean
   addedByTelegramId?: boolean
+  deadlineAt?: boolean
   completedAt?: boolean
   completedByName?: boolean
+  lastDeadlineReminderAt?: boolean
+  penaltyAppliedAt?: boolean
+  penaltyAppliedUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HouseholdTaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "title" | "note" | "status" | "priority" | "addedByName" | "addedByUsername" | "addedByTelegramId" | "completedAt" | "completedByName" | "createdAt" | "updatedAt", ExtArgs["result"]["householdTask"]>
+export type HouseholdTaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "title" | "note" | "status" | "priority" | "addedByName" | "addedByUsername" | "addedByTelegramId" | "deadlineAt" | "completedAt" | "completedByName" | "lastDeadlineReminderAt" | "penaltyAppliedAt" | "penaltyAppliedUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["householdTask"]>
 export type HouseholdTaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+  bonusTransactions?: boolean | Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>
+  _count?: boolean | Prisma.HouseholdTaskCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HouseholdTaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -758,6 +1103,7 @@ export type $HouseholdTaskPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "HouseholdTask"
   objects: {
     household: Prisma.$HouseholdPayload<ExtArgs>
+    bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -769,8 +1115,12 @@ export type $HouseholdTaskPayload<ExtArgs extends runtime.Types.Extensions.Inter
     addedByName: string
     addedByUsername: string | null
     addedByTelegramId: string | null
+    deadlineAt: Date
     completedAt: Date | null
     completedByName: string | null
+    lastDeadlineReminderAt: Date | null
+    penaltyAppliedAt: Date | null
+    penaltyAppliedUnits: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["householdTask"]>
@@ -1168,6 +1518,7 @@ readonly fields: HouseholdTaskFieldRefs;
 export interface Prisma__HouseholdTaskClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   household<T extends Prisma.HouseholdDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdDefaultArgs<ExtArgs>>): Prisma.Prisma__HouseholdClient<runtime.Types.Result.GetResult<Prisma.$HouseholdPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  bonusTransactions<T extends Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1206,8 +1557,12 @@ export interface HouseholdTaskFieldRefs {
   readonly addedByName: Prisma.FieldRef<"HouseholdTask", 'String'>
   readonly addedByUsername: Prisma.FieldRef<"HouseholdTask", 'String'>
   readonly addedByTelegramId: Prisma.FieldRef<"HouseholdTask", 'String'>
+  readonly deadlineAt: Prisma.FieldRef<"HouseholdTask", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"HouseholdTask", 'DateTime'>
   readonly completedByName: Prisma.FieldRef<"HouseholdTask", 'String'>
+  readonly lastDeadlineReminderAt: Prisma.FieldRef<"HouseholdTask", 'DateTime'>
+  readonly penaltyAppliedAt: Prisma.FieldRef<"HouseholdTask", 'DateTime'>
+  readonly penaltyAppliedUnits: Prisma.FieldRef<"HouseholdTask", 'Int'>
   readonly createdAt: Prisma.FieldRef<"HouseholdTask", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HouseholdTask", 'DateTime'>
 }
@@ -1608,6 +1963,30 @@ export type HouseholdTaskDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many HouseholdTasks to delete.
    */
   limit?: number
+}
+
+/**
+ * HouseholdTask.bonusTransactions
+ */
+export type HouseholdTask$bonusTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BonusTransaction
+   */
+  select?: Prisma.BonusTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BonusTransaction
+   */
+  omit?: Prisma.BonusTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BonusTransactionInclude<ExtArgs> | null
+  where?: Prisma.BonusTransactionWhereInput
+  orderBy?: Prisma.BonusTransactionOrderByWithRelationInput | Prisma.BonusTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.BonusTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BonusTransactionScalarFieldEnum | Prisma.BonusTransactionScalarFieldEnum[]
 }
 
 /**

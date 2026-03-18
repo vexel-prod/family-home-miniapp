@@ -1,6 +1,7 @@
 import { AppButton } from '@/components/ui/app-button'
 import { ModalPanel } from '@/components/ui/app-modal'
 import { StatusPill } from '@/components/ui/status-pill'
+import { formatRelativeDate } from '@/shared/lib/format'
 import type { HouseholdTask } from '@/shared/types/family'
 
 type TaskActionsModalProps = {
@@ -22,6 +23,8 @@ export function TaskActionsModal({
   onReplace,
   onDelete,
 }: TaskActionsModalProps) {
+  const deadlineAlertActive = Boolean(task.lastDeadlineReminderAt || task.penaltyAppliedAt)
+
   return (
     <ModalPanel>
       <div className='p-4 sm:p-6'>
@@ -32,10 +35,11 @@ export function TaskActionsModal({
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             {task.title}
           </h2>
-          <StatusPill tone={task.priority}>
-            {task.priority === 'urgent' ? 'Срочно' : 'Обычно'}
+          <StatusPill tone={deadlineAlertActive ? 'urgent' : 'soon'}>
+            {deadlineAlertActive ? 'Срок уже горит' : 'В работе'}
           </StatusPill>
           {task.note ? <div className='text-sm leading-6 text-white/65'>{task.note}</div> : null}
+          <div className='text-sm text-white/65'>Дедлайн: {formatRelativeDate(task.deadlineAt)}</div>
           <div className='text-sm text-white/60'>Выбери действие для этой задачи.</div>
         </div>
 

@@ -177,6 +177,9 @@ export type HouseholdWhereInput = {
   members?: Prisma.MemberListRelationFilter
   tasks?: Prisma.HouseholdTaskListRelationFilter
   shoppingItems?: Prisma.ShoppingItemListRelationFilter
+  bonusTransactions?: Prisma.BonusTransactionListRelationFilter
+  bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
+  monthlyReports?: Prisma.MonthlyReportListRelationFilter
 }
 
 export type HouseholdOrderByWithRelationInput = {
@@ -187,6 +190,9 @@ export type HouseholdOrderByWithRelationInput = {
   members?: Prisma.MemberOrderByRelationAggregateInput
   tasks?: Prisma.HouseholdTaskOrderByRelationAggregateInput
   shoppingItems?: Prisma.ShoppingItemOrderByRelationAggregateInput
+  bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
+  bonusPurchases?: Prisma.BonusPurchaseOrderByRelationAggregateInput
+  monthlyReports?: Prisma.MonthlyReportOrderByRelationAggregateInput
 }
 
 export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
@@ -200,6 +206,9 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   members?: Prisma.MemberListRelationFilter
   tasks?: Prisma.HouseholdTaskListRelationFilter
   shoppingItems?: Prisma.ShoppingItemListRelationFilter
+  bonusTransactions?: Prisma.BonusTransactionListRelationFilter
+  bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
+  monthlyReports?: Prisma.MonthlyReportListRelationFilter
 }, "id">
 
 export type HouseholdOrderByWithAggregationInput = {
@@ -230,6 +239,9 @@ export type HouseholdCreateInput = {
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateInput = {
@@ -240,6 +252,9 @@ export type HouseholdUncheckedCreateInput = {
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUpdateInput = {
@@ -250,6 +265,9 @@ export type HouseholdUpdateInput = {
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateInput = {
@@ -260,6 +278,9 @@ export type HouseholdUncheckedUpdateInput = {
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateManyInput = {
@@ -359,6 +380,48 @@ export type HouseholdUpdateOneRequiredWithoutShoppingItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutShoppingItemsInput, Prisma.HouseholdUpdateWithoutShoppingItemsInput>, Prisma.HouseholdUncheckedUpdateWithoutShoppingItemsInput>
 }
 
+export type HouseholdCreateNestedOneWithoutBonusTransactionsInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusTransactionsInput, Prisma.HouseholdUncheckedCreateWithoutBonusTransactionsInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutBonusTransactionsInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+}
+
+export type HouseholdUpdateOneRequiredWithoutBonusTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusTransactionsInput, Prisma.HouseholdUncheckedCreateWithoutBonusTransactionsInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutBonusTransactionsInput
+  upsert?: Prisma.HouseholdUpsertWithoutBonusTransactionsInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutBonusTransactionsInput, Prisma.HouseholdUpdateWithoutBonusTransactionsInput>, Prisma.HouseholdUncheckedUpdateWithoutBonusTransactionsInput>
+}
+
+export type HouseholdCreateNestedOneWithoutBonusPurchasesInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusPurchasesInput, Prisma.HouseholdUncheckedCreateWithoutBonusPurchasesInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutBonusPurchasesInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+}
+
+export type HouseholdUpdateOneRequiredWithoutBonusPurchasesNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusPurchasesInput, Prisma.HouseholdUncheckedCreateWithoutBonusPurchasesInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutBonusPurchasesInput
+  upsert?: Prisma.HouseholdUpsertWithoutBonusPurchasesInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutBonusPurchasesInput, Prisma.HouseholdUpdateWithoutBonusPurchasesInput>, Prisma.HouseholdUncheckedUpdateWithoutBonusPurchasesInput>
+}
+
+export type HouseholdCreateNestedOneWithoutMonthlyReportsInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedCreateWithoutMonthlyReportsInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutMonthlyReportsInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+}
+
+export type HouseholdUpdateOneRequiredWithoutMonthlyReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedCreateWithoutMonthlyReportsInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutMonthlyReportsInput
+  upsert?: Prisma.HouseholdUpsertWithoutMonthlyReportsInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutMonthlyReportsInput, Prisma.HouseholdUpdateWithoutMonthlyReportsInput>, Prisma.HouseholdUncheckedUpdateWithoutMonthlyReportsInput>
+}
+
 export type HouseholdCreateWithoutMembersInput = {
   id: string
   name: string
@@ -366,6 +429,9 @@ export type HouseholdCreateWithoutMembersInput = {
   updatedAt?: Date | string
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutMembersInput = {
@@ -375,6 +441,9 @@ export type HouseholdUncheckedCreateWithoutMembersInput = {
   updatedAt?: Date | string
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutMembersInput = {
@@ -400,6 +469,9 @@ export type HouseholdUpdateWithoutMembersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutMembersInput = {
@@ -409,6 +481,9 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutTasksInput = {
@@ -418,6 +493,9 @@ export type HouseholdCreateWithoutTasksInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutTasksInput = {
@@ -427,6 +505,9 @@ export type HouseholdUncheckedCreateWithoutTasksInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutTasksInput = {
@@ -452,6 +533,9 @@ export type HouseholdUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutTasksInput = {
@@ -461,6 +545,9 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutShoppingItemsInput = {
@@ -470,6 +557,9 @@ export type HouseholdCreateWithoutShoppingItemsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
@@ -479,6 +569,9 @@ export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutShoppingItemsInput = {
@@ -504,6 +597,9 @@ export type HouseholdUpdateWithoutShoppingItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
@@ -513,6 +609,201 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdCreateWithoutBonusTransactionsInput = {
+  id: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
+  id: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdCreateOrConnectWithoutBonusTransactionsInput = {
+  where: Prisma.HouseholdWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusTransactionsInput, Prisma.HouseholdUncheckedCreateWithoutBonusTransactionsInput>
+}
+
+export type HouseholdUpsertWithoutBonusTransactionsInput = {
+  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutBonusTransactionsInput, Prisma.HouseholdUncheckedUpdateWithoutBonusTransactionsInput>
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusTransactionsInput, Prisma.HouseholdUncheckedCreateWithoutBonusTransactionsInput>
+  where?: Prisma.HouseholdWhereInput
+}
+
+export type HouseholdUpdateToOneWithWhereWithoutBonusTransactionsInput = {
+  where?: Prisma.HouseholdWhereInput
+  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutBonusTransactionsInput, Prisma.HouseholdUncheckedUpdateWithoutBonusTransactionsInput>
+}
+
+export type HouseholdUpdateWithoutBonusTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdCreateWithoutBonusPurchasesInput = {
+  id: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
+  id: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdCreateOrConnectWithoutBonusPurchasesInput = {
+  where: Prisma.HouseholdWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusPurchasesInput, Prisma.HouseholdUncheckedCreateWithoutBonusPurchasesInput>
+}
+
+export type HouseholdUpsertWithoutBonusPurchasesInput = {
+  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutBonusPurchasesInput, Prisma.HouseholdUncheckedUpdateWithoutBonusPurchasesInput>
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutBonusPurchasesInput, Prisma.HouseholdUncheckedCreateWithoutBonusPurchasesInput>
+  where?: Prisma.HouseholdWhereInput
+}
+
+export type HouseholdUpdateToOneWithWhereWithoutBonusPurchasesInput = {
+  where?: Prisma.HouseholdWhereInput
+  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutBonusPurchasesInput, Prisma.HouseholdUncheckedUpdateWithoutBonusPurchasesInput>
+}
+
+export type HouseholdUpdateWithoutBonusPurchasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdCreateWithoutMonthlyReportsInput = {
+  id: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
+  id: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdCreateOrConnectWithoutMonthlyReportsInput = {
+  where: Prisma.HouseholdWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedCreateWithoutMonthlyReportsInput>
+}
+
+export type HouseholdUpsertWithoutMonthlyReportsInput = {
+  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedUpdateWithoutMonthlyReportsInput>
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedCreateWithoutMonthlyReportsInput>
+  where?: Prisma.HouseholdWhereInput
+}
+
+export type HouseholdUpdateToOneWithWhereWithoutMonthlyReportsInput = {
+  where?: Prisma.HouseholdWhereInput
+  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedUpdateWithoutMonthlyReportsInput>
+}
+
+export type HouseholdUpdateWithoutMonthlyReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 
@@ -524,12 +815,18 @@ export type HouseholdCountOutputType = {
   members: number
   tasks: number
   shoppingItems: number
+  bonusTransactions: number
+  bonusPurchases: number
+  monthlyReports: number
 }
 
 export type HouseholdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | HouseholdCountOutputTypeCountMembersArgs
   tasks?: boolean | HouseholdCountOutputTypeCountTasksArgs
   shoppingItems?: boolean | HouseholdCountOutputTypeCountShoppingItemsArgs
+  bonusTransactions?: boolean | HouseholdCountOutputTypeCountBonusTransactionsArgs
+  bonusPurchases?: boolean | HouseholdCountOutputTypeCountBonusPurchasesArgs
+  monthlyReports?: boolean | HouseholdCountOutputTypeCountMonthlyReportsArgs
 }
 
 /**
@@ -563,6 +860,27 @@ export type HouseholdCountOutputTypeCountShoppingItemsArgs<ExtArgs extends runti
   where?: Prisma.ShoppingItemWhereInput
 }
 
+/**
+ * HouseholdCountOutputType without action
+ */
+export type HouseholdCountOutputTypeCountBonusTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BonusTransactionWhereInput
+}
+
+/**
+ * HouseholdCountOutputType without action
+ */
+export type HouseholdCountOutputTypeCountBonusPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BonusPurchaseWhereInput
+}
+
+/**
+ * HouseholdCountOutputType without action
+ */
+export type HouseholdCountOutputTypeCountMonthlyReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MonthlyReportWhereInput
+}
+
 
 export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -572,6 +890,9 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
   tasks?: boolean | Prisma.Household$tasksArgs<ExtArgs>
   shoppingItems?: boolean | Prisma.Household$shoppingItemsArgs<ExtArgs>
+  bonusTransactions?: boolean | Prisma.Household$bonusTransactionsArgs<ExtArgs>
+  bonusPurchases?: boolean | Prisma.Household$bonusPurchasesArgs<ExtArgs>
+  monthlyReports?: boolean | Prisma.Household$monthlyReportsArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["household"]>
 
@@ -601,6 +922,9 @@ export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
   tasks?: boolean | Prisma.Household$tasksArgs<ExtArgs>
   shoppingItems?: boolean | Prisma.Household$shoppingItemsArgs<ExtArgs>
+  bonusTransactions?: boolean | Prisma.Household$bonusTransactionsArgs<ExtArgs>
+  bonusPurchases?: boolean | Prisma.Household$bonusPurchasesArgs<ExtArgs>
+  monthlyReports?: boolean | Prisma.Household$monthlyReportsArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HouseholdIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -612,6 +936,9 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     members: Prisma.$MemberPayload<ExtArgs>[]
     tasks: Prisma.$HouseholdTaskPayload<ExtArgs>[]
     shoppingItems: Prisma.$ShoppingItemPayload<ExtArgs>[]
+    bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
+    bonusPurchases: Prisma.$BonusPurchasePayload<ExtArgs>[]
+    monthlyReports: Prisma.$MonthlyReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1015,6 +1342,9 @@ export interface Prisma__HouseholdClient<T, Null = never, ExtArgs extends runtim
   members<T extends Prisma.Household$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.Household$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shoppingItems<T extends Prisma.Household$shoppingItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$shoppingItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShoppingItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bonusTransactions<T extends Prisma.Household$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bonusPurchases<T extends Prisma.Household$bonusPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$bonusPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  monthlyReports<T extends Prisma.Household$monthlyReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$monthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1510,6 +1840,78 @@ export type Household$shoppingItemsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.ShoppingItemScalarFieldEnum | Prisma.ShoppingItemScalarFieldEnum[]
+}
+
+/**
+ * Household.bonusTransactions
+ */
+export type Household$bonusTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BonusTransaction
+   */
+  select?: Prisma.BonusTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BonusTransaction
+   */
+  omit?: Prisma.BonusTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BonusTransactionInclude<ExtArgs> | null
+  where?: Prisma.BonusTransactionWhereInput
+  orderBy?: Prisma.BonusTransactionOrderByWithRelationInput | Prisma.BonusTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.BonusTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BonusTransactionScalarFieldEnum | Prisma.BonusTransactionScalarFieldEnum[]
+}
+
+/**
+ * Household.bonusPurchases
+ */
+export type Household$bonusPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BonusPurchase
+   */
+  select?: Prisma.BonusPurchaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BonusPurchase
+   */
+  omit?: Prisma.BonusPurchaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BonusPurchaseInclude<ExtArgs> | null
+  where?: Prisma.BonusPurchaseWhereInput
+  orderBy?: Prisma.BonusPurchaseOrderByWithRelationInput | Prisma.BonusPurchaseOrderByWithRelationInput[]
+  cursor?: Prisma.BonusPurchaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BonusPurchaseScalarFieldEnum | Prisma.BonusPurchaseScalarFieldEnum[]
+}
+
+/**
+ * Household.monthlyReports
+ */
+export type Household$monthlyReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MonthlyReport
+   */
+  select?: Prisma.MonthlyReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MonthlyReport
+   */
+  omit?: Prisma.MonthlyReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MonthlyReportInclude<ExtArgs> | null
+  where?: Prisma.MonthlyReportWhereInput
+  orderBy?: Prisma.MonthlyReportOrderByWithRelationInput | Prisma.MonthlyReportOrderByWithRelationInput[]
+  cursor?: Prisma.MonthlyReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MonthlyReportScalarFieldEnum | Prisma.MonthlyReportScalarFieldEnum[]
 }
 
 /**

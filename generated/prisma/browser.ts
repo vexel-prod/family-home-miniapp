@@ -37,3 +37,18 @@ export type HouseholdTask = Prisma.HouseholdTaskModel
  * 
  */
 export type ShoppingItem = Prisma.ShoppingItemModel
+/**
+ * Model BonusTransaction
+ * 
+ */
+export type BonusTransaction = Prisma.BonusTransactionModel
+/**
+ * Model BonusPurchase
+ * 
+ */
+export type BonusPurchase = Prisma.BonusPurchaseModel
+/**
+ * Model MonthlyReport
+ * 
+ */
+export type MonthlyReport = Prisma.MonthlyReportModel

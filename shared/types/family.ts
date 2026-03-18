@@ -31,8 +31,29 @@ export type HouseholdTask = {
   priority: "normal" | "urgent"
   addedByName: string
   createdAt: string
+  deadlineAt: string
   completedAt?: string | null
   completedByName?: string | null
+  lastDeadlineReminderAt?: string | null
+  penaltyAppliedAt?: string | null
+  penaltyAppliedUnits?: number
+}
+
+export type BonusPurchase = {
+  id: string
+  rewardKey: string
+  rewardTitle: string
+  costUnits: number
+  createdAt: string
+}
+
+export type MonthlyReport = {
+  id: string
+  monthKey: string
+  title: string
+  reportBody: string
+  sentAt?: string | null
+  createdAt: string
 }
 
 export type ShoppingItem = {
@@ -51,6 +72,9 @@ export type BootstrapResponse = {
   completedTasks: HouseholdTask[]
   monthlyCompletedTasks: HouseholdTask[]
   participantNames: string[]
+  currentUserBonusBalanceUnits: number
+  bonusPurchases: BonusPurchase[]
+  monthlyReports: MonthlyReport[]
   activeShoppingItems: ShoppingItem[]
 }
 
@@ -61,6 +85,7 @@ export type ModalKey =
   | "task-replace"
   | "task-journal"
   | "leaderboard"
+  | "bonus-shop"
   | "shopping-list"
   | "shopping-create"
   | "shopping-actions"

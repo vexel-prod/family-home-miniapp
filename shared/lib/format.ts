@@ -17,10 +17,10 @@ export function formatRelativeDate(value: string) {
 
 export function sortTasks(tasks: HouseholdTask[]) {
   return [...tasks].sort((left, right) => {
-    const priorityDiff = Number(right.priority === "urgent") - Number(left.priority === "urgent")
+    const deadlineDiff = new Date(left.deadlineAt).getTime() - new Date(right.deadlineAt).getTime()
 
-    if (priorityDiff !== 0) {
-      return priorityDiff
+    if (deadlineDiff !== 0) {
+      return deadlineDiff
     }
 
     return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()

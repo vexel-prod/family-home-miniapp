@@ -1,14 +1,9 @@
 import { authorizeRequest } from "@/lib/auth";
+import { getCurrentMemberBalanceUnits } from "@/lib/bonus-ledger";
+import { getMemberDisplayName } from "@/lib/household-notify";
 import { getPrisma } from "@/lib/prisma";
+import { getMonthKey } from "@/shared/lib/bonus-shop";
 import { NextResponse } from "next/server";
-
-function getMemberDisplayName(member: {
-  firstName: string;
-  lastName: string | null;
-  username: string | null;
-}) {
-  return [member.firstName, member.lastName].filter(Boolean).join(" ").trim() || member.username || member.firstName;
-}
 
 function getCurrentMoscowMonthRange() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -36,10 +31,12 @@ export async function GET(request: Request) {
 
   const { start, end } = getCurrentMoscowMonthRange();
 
-  const [openTasks, completedTasks, monthlyCompletedTasks, activeShoppingItems, members] = await Promise.all([
+  const monthKey = getMonthKey(new Date());
+
+  const [openTasks, completedTasks, monthlyCompletedTasks, activeShoppingItems, members, bonusPurchases, monthlyReports, currentUserBonusBalanceUnits] = await Promise.all([
     prisma.householdTask.findMany({
       where: { householdId: auth.member.householdId, status: "open" },
-      orderBy: [{ createdAt: "desc" }],
+      orderBy: [{ deadlineAt: "asc" }, { createdAt: "desc" }],
     }),
     prisma.householdTask.findMany({
       where: { householdId: auth.member.householdId, status: "done" },
@@ -70,6 +67,19 @@ export async function GET(request: Request) {
         username: true,
       },
     }),
+    prisma.bonusPurchase.findMany({
+      where: {
+        householdId: auth.member.householdId,
+        monthKey,
+      },
+      orderBy: [{ createdAt: "desc" }],
+    }),
+    prisma.monthlyReport.findMany({
+      where: { householdId: auth.member.householdId },
+      orderBy: [{ createdAt: "desc" }],
+      take: 6,
+    }),
+    getCurrentMemberBalanceUnits(prisma, auth.member.id),
   ]);
 
   return NextResponse.json({
@@ -78,6 +88,9 @@ export async function GET(request: Request) {
     completedTasks,
     monthlyCompletedTasks,
     participantNames: members.map(getMemberDisplayName),
+    currentUserBonusBalanceUnits,
+    bonusPurchases,
+    monthlyReports,
     activeShoppingItems,
   });
 }

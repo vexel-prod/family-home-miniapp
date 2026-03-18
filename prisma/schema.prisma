@@ -16,6 +16,9 @@ model Household {
   members       Member[]
   tasks         HouseholdTask[]
   shoppingItems ShoppingItem[]
+  bonusTransactions BonusTransaction[]
+  bonusPurchases BonusPurchase[]
+  monthlyReports MonthlyReport[]
 }
 
 model Member {
@@ -29,6 +32,8 @@ model Member {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  bonusTransactions BonusTransaction[]
+  bonusPurchases BonusPurchase[]
 
   @@index([householdId])
 }
@@ -43,13 +48,19 @@ model HouseholdTask {
   addedByName       String
   addedByUsername   String?
   addedByTelegramId String?
+  deadlineAt        DateTime  @default(dbgenerated("(now() + interval '24 hours')"))
   completedAt       DateTime?
   completedByName   String?
+  lastDeadlineReminderAt DateTime?
+  penaltyAppliedAt  DateTime?
+  penaltyAppliedUnits Int @default(0)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  bonusTransactions BonusTransaction[]
 
   @@index([householdId, status, createdAt])
+  @@index([householdId, status, deadlineAt])
 }
 
 model ShoppingItem {
@@ -70,4 +81,57 @@ model ShoppingItem {
   household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
 
   @@index([householdId, status, createdAt])
+}
+
+model BonusTransaction {
+  id          String        @id @default(cuid())
+  householdId String
+  memberId    String
+  taskId      String?
+  purchaseId  String?
+  monthKey    String
+  kind        String
+  amountUnits Int
+  note        String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  household   Household     @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  member      Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  task        HouseholdTask? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  purchase    BonusPurchase? @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+
+  @@index([householdId, monthKey, memberId])
+  @@index([taskId, kind])
+}
+
+model BonusPurchase {
+  id          String      @id @default(cuid())
+  householdId String
+  memberId    String
+  monthKey    String
+  rewardKey   String
+  rewardTitle String
+  costUnits   Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  household   Household   @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  member      Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  transactions BonusTransaction[]
+
+  @@index([householdId, monthKey, memberId])
+}
+
+model MonthlyReport {
+  id            String   @id @default(cuid())
+  householdId   String
+  monthKey      String
+  title         String
+  reportBody    String
+  sentAt        DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  household     Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@unique([householdId, monthKey])
+  @@index([householdId, createdAt])
 }

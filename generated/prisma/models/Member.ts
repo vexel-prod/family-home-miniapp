@@ -215,6 +215,8 @@ export type MemberWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
+  bonusTransactions?: Prisma.BonusTransactionListRelationFilter
+  bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -228,6 +230,8 @@ export type MemberOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   household?: Prisma.HouseholdOrderByWithRelationInput
+  bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
+  bonusPurchases?: Prisma.BonusPurchaseOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -244,6 +248,8 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
+  bonusTransactions?: Prisma.BonusTransactionListRelationFilter
+  bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
 }, "id" | "telegramUserId" | "chatId">
 
 export type MemberOrderByWithAggregationInput = {
@@ -286,6 +292,8 @@ export type MemberCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -298,6 +306,8 @@ export type MemberUncheckedCreateInput = {
   username?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -310,6 +320,8 @@ export type MemberUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -322,6 +334,8 @@ export type MemberUncheckedUpdateInput = {
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -405,6 +419,11 @@ export type MemberMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type MemberScalarRelationFilter = {
+  is?: Prisma.MemberWhereInput
+  isNot?: Prisma.MemberWhereInput
+}
+
 export type MemberCreateNestedManyWithoutHouseholdInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutHouseholdInput, Prisma.MemberUncheckedCreateWithoutHouseholdInput> | Prisma.MemberCreateWithoutHouseholdInput[] | Prisma.MemberUncheckedCreateWithoutHouseholdInput[]
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutHouseholdInput | Prisma.MemberCreateOrConnectWithoutHouseholdInput[]
@@ -451,6 +470,34 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type MemberCreateNestedOneWithoutBonusTransactionsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutBonusTransactionsInput, Prisma.MemberUncheckedCreateWithoutBonusTransactionsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutBonusTransactionsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutBonusTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutBonusTransactionsInput, Prisma.MemberUncheckedCreateWithoutBonusTransactionsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutBonusTransactionsInput
+  upsert?: Prisma.MemberUpsertWithoutBonusTransactionsInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutBonusTransactionsInput, Prisma.MemberUpdateWithoutBonusTransactionsInput>, Prisma.MemberUncheckedUpdateWithoutBonusTransactionsInput>
+}
+
+export type MemberCreateNestedOneWithoutBonusPurchasesInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutBonusPurchasesInput, Prisma.MemberUncheckedCreateWithoutBonusPurchasesInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutBonusPurchasesInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutBonusPurchasesNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutBonusPurchasesInput, Prisma.MemberUncheckedCreateWithoutBonusPurchasesInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutBonusPurchasesInput
+  upsert?: Prisma.MemberUpsertWithoutBonusPurchasesInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutBonusPurchasesInput, Prisma.MemberUpdateWithoutBonusPurchasesInput>, Prisma.MemberUncheckedUpdateWithoutBonusPurchasesInput>
+}
+
 export type MemberCreateWithoutHouseholdInput = {
   id?: string
   telegramUserId: string
@@ -460,6 +507,8 @@ export type MemberCreateWithoutHouseholdInput = {
   username?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutHouseholdInput = {
@@ -471,6 +520,8 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   username?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutHouseholdInput = {
@@ -514,6 +565,142 @@ export type MemberScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
 }
 
+export type MemberCreateWithoutBonusTransactionsInput = {
+  id?: string
+  telegramUserId: string
+  chatId: string
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+}
+
+export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
+  id?: string
+  householdId: string
+  telegramUserId: string
+  chatId: string
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+}
+
+export type MemberCreateOrConnectWithoutBonusTransactionsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutBonusTransactionsInput, Prisma.MemberUncheckedCreateWithoutBonusTransactionsInput>
+}
+
+export type MemberUpsertWithoutBonusTransactionsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutBonusTransactionsInput, Prisma.MemberUncheckedUpdateWithoutBonusTransactionsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutBonusTransactionsInput, Prisma.MemberUncheckedCreateWithoutBonusTransactionsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutBonusTransactionsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutBonusTransactionsInput, Prisma.MemberUncheckedUpdateWithoutBonusTransactionsInput>
+}
+
+export type MemberUpdateWithoutBonusTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberCreateWithoutBonusPurchasesInput = {
+  id?: string
+  telegramUserId: string
+  chatId: string
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+}
+
+export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
+  id?: string
+  householdId: string
+  telegramUserId: string
+  chatId: string
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+}
+
+export type MemberCreateOrConnectWithoutBonusPurchasesInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutBonusPurchasesInput, Prisma.MemberUncheckedCreateWithoutBonusPurchasesInput>
+}
+
+export type MemberUpsertWithoutBonusPurchasesInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutBonusPurchasesInput, Prisma.MemberUncheckedUpdateWithoutBonusPurchasesInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutBonusPurchasesInput, Prisma.MemberUncheckedCreateWithoutBonusPurchasesInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutBonusPurchasesInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutBonusPurchasesInput, Prisma.MemberUncheckedUpdateWithoutBonusPurchasesInput>
+}
+
+export type MemberUpdateWithoutBonusPurchasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+}
+
 export type MemberCreateManyHouseholdInput = {
   id?: string
   telegramUserId: string
@@ -534,6 +721,8 @@ export type MemberUpdateWithoutHouseholdInput = {
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutHouseholdInput = {
@@ -545,6 +734,8 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
@@ -559,6 +750,44 @@ export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
 }
 
 
+/**
+ * Count Type MemberCountOutputType
+ */
+
+export type MemberCountOutputType = {
+  bonusTransactions: number
+  bonusPurchases: number
+}
+
+export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bonusTransactions?: boolean | MemberCountOutputTypeCountBonusTransactionsArgs
+  bonusPurchases?: boolean | MemberCountOutputTypeCountBonusPurchasesArgs
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberCountOutputType
+   */
+  select?: Prisma.MemberCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountBonusTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BonusTransactionWhereInput
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountBonusPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BonusPurchaseWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -571,6 +800,9 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+  bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
+  bonusPurchases?: boolean | Prisma.Member$bonusPurchasesArgs<ExtArgs>
+  _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -614,6 +846,9 @@ export type MemberSelectScalar = {
 export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+  bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
+  bonusPurchases?: boolean | Prisma.Member$bonusPurchasesArgs<ExtArgs>
+  _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -626,6 +861,8 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Member"
   objects: {
     household: Prisma.$HouseholdPayload<ExtArgs>
+    bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
+    bonusPurchases: Prisma.$BonusPurchasePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1032,6 +1269,8 @@ readonly fields: MemberFieldRefs;
 export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   household<T extends Prisma.HouseholdDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdDefaultArgs<ExtArgs>>): Prisma.Prisma__HouseholdClient<runtime.Types.Result.GetResult<Prisma.$HouseholdPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  bonusTransactions<T extends Prisma.Member$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bonusPurchases<T extends Prisma.Member$bonusPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$bonusPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1468,6 +1707,54 @@ export type MemberDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Members to delete.
    */
   limit?: number
+}
+
+/**
+ * Member.bonusTransactions
+ */
+export type Member$bonusTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BonusTransaction
+   */
+  select?: Prisma.BonusTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BonusTransaction
+   */
+  omit?: Prisma.BonusTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BonusTransactionInclude<ExtArgs> | null
+  where?: Prisma.BonusTransactionWhereInput
+  orderBy?: Prisma.BonusTransactionOrderByWithRelationInput | Prisma.BonusTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.BonusTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BonusTransactionScalarFieldEnum | Prisma.BonusTransactionScalarFieldEnum[]
+}
+
+/**
+ * Member.bonusPurchases
+ */
+export type Member$bonusPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BonusPurchase
+   */
+  select?: Prisma.BonusPurchaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BonusPurchase
+   */
+  omit?: Prisma.BonusPurchaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BonusPurchaseInclude<ExtArgs> | null
+  where?: Prisma.BonusPurchaseWhereInput
+  orderBy?: Prisma.BonusPurchaseOrderByWithRelationInput | Prisma.BonusPurchaseOrderByWithRelationInput[]
+  cursor?: Prisma.BonusPurchaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BonusPurchaseScalarFieldEnum | Prisma.BonusPurchaseScalarFieldEnum[]
 }
 
 /**

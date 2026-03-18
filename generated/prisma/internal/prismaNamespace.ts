@@ -387,7 +387,10 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
-  ShoppingItem: 'ShoppingItem'
+  ShoppingItem: 'ShoppingItem',
+  BonusTransaction: 'BonusTransaction',
+  BonusPurchase: 'BonusPurchase',
+  MonthlyReport: 'MonthlyReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "shoppingItem"
+    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +706,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BonusTransaction: {
+      payload: Prisma.$BonusTransactionPayload<ExtArgs>
+      fields: Prisma.BonusTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BonusTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BonusTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.BonusTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BonusTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.BonusTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.BonusTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.BonusTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BonusTransactionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>[]
+        }
+        delete: {
+          args: Prisma.BonusTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>
+        }
+        update: {
+          args: Prisma.BonusTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.BonusTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BonusTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BonusTransactionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>[]
+        }
+        upsert: {
+          args: Prisma.BonusTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.BonusTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBonusTransaction>
+        }
+        groupBy: {
+          args: Prisma.BonusTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BonusTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BonusTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BonusTransactionCountAggregateOutputType> | number
+        }
+      }
+    }
+    BonusPurchase: {
+      payload: Prisma.$BonusPurchasePayload<ExtArgs>
+      fields: Prisma.BonusPurchaseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BonusPurchaseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BonusPurchaseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>
+        }
+        findFirst: {
+          args: Prisma.BonusPurchaseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BonusPurchaseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>
+        }
+        findMany: {
+          args: Prisma.BonusPurchaseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>[]
+        }
+        create: {
+          args: Prisma.BonusPurchaseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>
+        }
+        createMany: {
+          args: Prisma.BonusPurchaseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BonusPurchaseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>[]
+        }
+        delete: {
+          args: Prisma.BonusPurchaseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>
+        }
+        update: {
+          args: Prisma.BonusPurchaseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>
+        }
+        deleteMany: {
+          args: Prisma.BonusPurchaseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BonusPurchaseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BonusPurchaseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>[]
+        }
+        upsert: {
+          args: Prisma.BonusPurchaseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusPurchasePayload>
+        }
+        aggregate: {
+          args: Prisma.BonusPurchaseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBonusPurchase>
+        }
+        groupBy: {
+          args: Prisma.BonusPurchaseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BonusPurchaseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BonusPurchaseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BonusPurchaseCountAggregateOutputType> | number
+        }
+      }
+    }
+    MonthlyReport: {
+      payload: Prisma.$MonthlyReportPayload<ExtArgs>
+      fields: Prisma.MonthlyReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MonthlyReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MonthlyReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        findFirst: {
+          args: Prisma.MonthlyReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MonthlyReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        findMany: {
+          args: Prisma.MonthlyReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>[]
+        }
+        create: {
+          args: Prisma.MonthlyReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        createMany: {
+          args: Prisma.MonthlyReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MonthlyReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>[]
+        }
+        delete: {
+          args: Prisma.MonthlyReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        update: {
+          args: Prisma.MonthlyReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.MonthlyReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MonthlyReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MonthlyReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.MonthlyReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        aggregate: {
+          args: Prisma.MonthlyReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMonthlyReport>
+        }
+        groupBy: {
+          args: Prisma.MonthlyReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MonthlyReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MonthlyReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MonthlyReportCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -777,8 +1002,12 @@ export const HouseholdTaskScalarFieldEnum = {
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
+  deadlineAt: 'deadlineAt',
   completedAt: 'completedAt',
   completedByName: 'completedByName',
+  lastDeadlineReminderAt: 'lastDeadlineReminderAt',
+  penaltyAppliedAt: 'penaltyAppliedAt',
+  penaltyAppliedUnits: 'penaltyAppliedUnits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -804,6 +1033,52 @@ export const ShoppingItemScalarFieldEnum = {
 } as const
 
 export type ShoppingItemScalarFieldEnum = (typeof ShoppingItemScalarFieldEnum)[keyof typeof ShoppingItemScalarFieldEnum]
+
+
+export const BonusTransactionScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  memberId: 'memberId',
+  taskId: 'taskId',
+  purchaseId: 'purchaseId',
+  monthKey: 'monthKey',
+  kind: 'kind',
+  amountUnits: 'amountUnits',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BonusTransactionScalarFieldEnum = (typeof BonusTransactionScalarFieldEnum)[keyof typeof BonusTransactionScalarFieldEnum]
+
+
+export const BonusPurchaseScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  memberId: 'memberId',
+  monthKey: 'monthKey',
+  rewardKey: 'rewardKey',
+  rewardTitle: 'rewardTitle',
+  costUnits: 'costUnits',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BonusPurchaseScalarFieldEnum = (typeof BonusPurchaseScalarFieldEnum)[keyof typeof BonusPurchaseScalarFieldEnum]
+
+
+export const MonthlyReportScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  monthKey: 'monthKey',
+  title: 'title',
+  reportBody: 'reportBody',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MonthlyReportScalarFieldEnum = (typeof MonthlyReportScalarFieldEnum)[keyof typeof MonthlyReportScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -875,6 +1150,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -976,6 +1265,9 @@ export type GlobalOmitConfig = {
   member?: Prisma.MemberOmit
   householdTask?: Prisma.HouseholdTaskOmit
   shoppingItem?: Prisma.ShoppingItemOmit
+  bonusTransaction?: Prisma.BonusTransactionOmit
+  bonusPurchase?: Prisma.BonusPurchaseOmit
+  monthlyReport?: Prisma.MonthlyReportOmit
 }
 
 /* Types for Logging */

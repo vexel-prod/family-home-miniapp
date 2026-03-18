@@ -7,14 +7,14 @@ type TaskFormModalProps = {
   mode: 'create' | 'replace'
   title: string
   note: string
-  priority: 'normal' | 'urgent'
+  deadline: string
   status: string
   loading: boolean
   submitLabel: string
   busyLabel: string
   onTitleChange: (value: string) => void
   onNoteChange: (value: string) => void
-  onPriorityChange: (value: 'normal' | 'urgent') => void
+  onDeadlineChange: (value: string) => void
   onSubmit: () => void
   onBack: () => void
 }
@@ -23,14 +23,14 @@ export function TaskFormModal({
   mode,
   title,
   note,
-  priority,
+  deadline,
   status,
   loading,
   submitLabel,
   busyLabel,
   onTitleChange,
   onNoteChange,
-  onPriorityChange,
+  onDeadlineChange,
   onSubmit,
   onBack,
 }: TaskFormModalProps) {
@@ -55,30 +55,15 @@ export function TaskFormModal({
             onChange={event => onTitleChange(event.target.value)}
           />
 
-          <div className='grid grid-cols-2 rounded-md border border-white/10 bg-white/5 p-1'>
-            <button
-              type='button'
-              onClick={() => onPriorityChange('normal')}
-              className={`rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                priority === 'normal'
-                  ? 'bg-(--color-success-soft) text-(--color-page-text) shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
-                  : 'text-white/70'
-              } `}
-            >
-              когда удобно
-            </button>
-
-            <button
-              type='button'
-              onClick={() => onPriorityChange('urgent')}
-              className={`rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                priority === 'urgent'
-                  ? 'bg-rose-100 text-rose-900 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
-                  : 'text-white/70'
-              } `}
-            >
-              срочно
-            </button>
+          <div className='space-y-2'>
+            <div className='text-xs uppercase tracking-[0.22em] text-white/45'>
+              Сделать до
+            </div>
+            <TextInput
+              type='datetime-local'
+              value={deadline}
+              onChange={event => onDeadlineChange(event.target.value)}
+            />
           </div>
 
           <TextAreaField
