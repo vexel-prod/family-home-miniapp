@@ -1,6 +1,6 @@
 import { AppButton } from '@/components/ui/app-button'
 import { ModalPanel } from '@/components/ui/app-modal'
-import { SelectField, TextAreaField, TextInput } from '@/components/ui/form-field'
+import { TextAreaField, TextInput } from '@/components/ui/form-field'
 import { StatusMessage } from '@/components/ui/status-message'
 
 type ShoppingFormModalProps = {

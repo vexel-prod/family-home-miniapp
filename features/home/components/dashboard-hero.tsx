@@ -33,7 +33,10 @@ export function DashboardHero({
       <div className='flex flex-col gap-4 p-4 sm:p-6'>
         <div className='w-full flex items-center justify-center flex-wrap md:flex-nowrap'>
           <div className='flex flex-col gap-6'>
-            <TypingText typedText={`Привет, ${actorName}`} />
+            <TypingText
+              key={actorName}
+              typedText={`Привет, ${actorName}`}
+            />
           </div>
         </div>
 

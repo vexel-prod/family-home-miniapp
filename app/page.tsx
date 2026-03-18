@@ -1,6 +1,6 @@
 'use client'
 
-import { startTransition, useCallback, useEffect, useState } from 'react'
+import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 
 import { ModalOverlay } from '@/components/ui/app-modal'
@@ -33,6 +33,8 @@ import type {
 } from '@/shared/types/family'
 
 export default function Page() {
+  const bootstrapRequestInFlight = useRef(false)
+  const eventSourceRef = useRef<EventSource | null>(null)
   const [buyer, setBuyer] = useState<TelegramUser | undefined>()
   const [telegramInitData, setTelegramInitData] = useState('')
   const [modal, setModal] = useState<ModalKey>(null)
@@ -143,8 +145,23 @@ export default function Page() {
   }
 
   const loadData = useCallback(
-    async (initDataOverride?: string) => {
-      setLoading(true)
+    async ({
+      initDataOverride,
+      silent = false,
+    }: {
+      initDataOverride?: string
+      silent?: boolean
+    } = {}) => {
+      if (bootstrapRequestInFlight.current) {
+        return
+      }
+
+      bootstrapRequestInFlight.current = true
+
+      if (!silent) {
+        setLoading(true)
+      }
+
       setError('')
 
       try {
@@ -167,7 +184,11 @@ export default function Page() {
           'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
         )
       } finally {
-        setLoading(false)
+        bootstrapRequestInFlight.current = false
+
+        if (!silent) {
+          setLoading(false)
+        }
       }
     },
     [telegramFetch],
@@ -182,7 +203,7 @@ export default function Page() {
     setTelegramInitData(nextInitData)
 
     if (nextInitData) {
-      void loadData(nextInitData)
+      void loadData({ initDataOverride: nextInitData })
     } else {
       setLoading(false)
       setError(
@@ -190,6 +211,70 @@ export default function Page() {
       )
     }
   }, [loadData])
+
+  useEffect(() => {
+    if (!telegramInitData) {
+      return
+    }
+
+    let disposed = false
+    let reconnectTimeoutId: number | null = null
+
+    const refreshData = () => {
+      startTransition(() => {
+        void loadData({ silent: true })
+      })
+    }
+
+    const connectToEventStream = () => {
+      const eventSource = new EventSource(
+        `/api/events?initData=${encodeURIComponent(telegramInitData)}`,
+      )
+
+      eventSourceRef.current = eventSource
+
+      eventSource.onopen = () => {}
+
+      eventSource.addEventListener('household-updated', () => {
+        refreshData()
+      })
+
+      eventSource.onerror = () => {
+        eventSource.close()
+
+        if (!disposed) {
+          reconnectTimeoutId = window.setTimeout(() => {
+            connectToEventStream()
+          }, 2000)
+        }
+      }
+    }
+
+    const refreshOnFocus = () => {
+      if (document.visibilityState !== 'visible') {
+        return
+      }
+
+      refreshData()
+    }
+
+    connectToEventStream()
+    window.addEventListener('focus', refreshOnFocus)
+    document.addEventListener('visibilitychange', refreshOnFocus)
+
+    return () => {
+      disposed = true
+      eventSourceRef.current?.close()
+      eventSourceRef.current = null
+
+      if (reconnectTimeoutId !== null) {
+        window.clearTimeout(reconnectTimeoutId)
+      }
+
+      window.removeEventListener('focus', refreshOnFocus)
+      document.removeEventListener('visibilitychange', refreshOnFocus)
+    }
+  }, [telegramInitData, loadData])
 
   useEffect(() => {
     if (!toast) {
@@ -285,7 +370,7 @@ export default function Page() {
       setModal('household')
       setToast(`Задача добавлена: ${title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка добавления задачи: ${title}`)
@@ -332,7 +417,7 @@ export default function Page() {
       setModal('shopping-list')
       setToast(`Покупка добавлена: ${title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка добавления покупки: ${title}`)
@@ -362,7 +447,7 @@ export default function Page() {
       closeTaskModals()
       setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(
@@ -391,7 +476,7 @@ export default function Page() {
       closeTaskModals()
       setToast(`Задача удалена: ${task.title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка удаления задачи: ${task.title}`)
@@ -434,7 +519,7 @@ export default function Page() {
       closeTaskModals()
       setToast(`Задача обновлена: ${title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка обновления задачи: ${title}`)
@@ -463,7 +548,7 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка отмечена: ${item.title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка обновления покупки: ${item.title}`)
@@ -488,7 +573,7 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка удалена: ${item.title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка удаления покупки: ${item.title}`)
@@ -532,7 +617,7 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка обновлена: ${title}`)
       startTransition(() => {
-        void loadData()
+        void loadData({ silent: true })
       })
     } catch {
       setError(`Ошибка обновления покупки: ${title}`)

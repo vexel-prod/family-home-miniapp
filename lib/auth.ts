@@ -26,6 +26,10 @@ function getHeaderInitData(request: Request) {
   return request.headers.get("x-telegram-init-data")?.trim() ?? "";
 }
 
+function getQueryInitData(request: Request) {
+  return new URL(request.url).searchParams.get("initData")?.trim() ?? "";
+}
+
 function validateTelegramInitData(rawInitData: string) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -78,7 +82,7 @@ function validateTelegramInitData(rawInitData: string) {
 export async function authorizeRequest(request: Request, prisma: PrismaClient): Promise<AuthorizedMember | null> {
   await ensureDefaultHousehold(prisma);
 
-  const initData = getHeaderInitData(request);
+  const initData = getHeaderInitData(request) || getQueryInitData(request);
   const user = validateTelegramInitData(initData);
 
   if (!user?.id) {

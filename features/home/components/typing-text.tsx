@@ -13,10 +13,6 @@ export function TypingText({ typedText, speed = 65, className = '' }: TypingText
   const [isCaretVisible, setIsCaretVisible] = useState(true)
 
   useEffect(() => {
-    setPos(0)
-  }, [typedText])
-
-  useEffect(() => {
     const intervalId = window.setInterval(() => {
       setIsCaretVisible(current => !current)
     }, 530)
