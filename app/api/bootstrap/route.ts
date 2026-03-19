@@ -1,4 +1,5 @@
 import { authorizeRequest } from '@/lib/auth'
+import { getMemberProfileSnapshot } from '@/lib/household-profile'
 import { getCurrentMemberBalanceUnits, getMonthlyLeaderboardStats } from '@/lib/bonus-ledger'
 import { getPrisma } from '@/lib/prisma'
 import { getMonthKey } from '@/shared/lib/bonus-shop'
@@ -34,6 +35,7 @@ export async function GET(request: Request) {
 
   const { start, end } = getCurrentMoscowMonthRange()
 
+  const currentUserProfile = await getMemberProfileSnapshot(prisma, auth.member.id)
   const monthKey = getMonthKey(new Date())
 
   const [
@@ -95,6 +97,7 @@ export async function GET(request: Request) {
     monthlyLeaderboardEntries: monthlyStats.monthlyLeaderboardEntries,
     monthlyTeamBonusPoints: monthlyStats.monthlyTeamBonusPoints,
     currentUserBonusBalanceUnits,
+    currentUserProfile,
     bonusPurchases,
     monthlyReports,
     activeShoppingItems,

@@ -47,6 +47,30 @@ export type BonusPurchase = {
   createdAt: string
 }
 
+export type HouseholdProfileEvent = {
+  id: string
+  title: string
+  completedAt: string
+  expDelta: number
+  variant: "base" | "fast" | "overdue"
+}
+
+export type HouseholdProfile = {
+  totalExp: number
+  currentLevel: number
+  bonusBalanceUnits: number
+  currentLevelThreshold: number
+  nextLevel: number
+  nextLevelThreshold: number
+  expIntoCurrentLevel: number
+  expToNextLevel: number
+  completedTasksCount: number
+  fastTasksCount: number
+  overdueTasksCount: number
+  levelBonusUnits: number
+  recentEvents: HouseholdProfileEvent[]
+}
+
 export type MonthlyLeaderboardEntry = {
   name: string
   points: number
@@ -82,6 +106,7 @@ export type BootstrapResponse = {
   monthlyTeamBonusPoints: number
   participantNames: string[]
   currentUserBonusBalanceUnits: number
+  currentUserProfile: HouseholdProfile
   bonusPurchases: BonusPurchase[]
   monthlyReports: MonthlyReport[]
   activeShoppingItems: ShoppingItem[]
@@ -96,6 +121,7 @@ export type ModalKey =
   | "last-completed-task"
   | "leaderboard"
   | "bonus-shop"
+  | "profile"
   | "shopping-list"
   | "shopping-create"
   | "shopping-actions"

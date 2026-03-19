@@ -94,6 +94,9 @@ export const MemberScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   username: 'username',
+  experiencePoints: 'experiencePoints',
+  level: 'level',
+  bonusBalanceUnits: 'bonusBalanceUnits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -683,14 +683,6 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type HouseholdTaskCreateNestedOneWithoutBonusTransactionsInput = {
   create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
   connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput

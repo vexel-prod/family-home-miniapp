@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@/generated/prisma/client'
+import { syncHouseholdProfiles } from '@/lib/household-profile'
 import {
   DEADLINE_PENALTY_DELAY_MS,
   DEADLINE_REMINDER_INTERVAL_MS,
@@ -125,20 +126,15 @@ export async function awardTaskCompletionBonuses(
 export async function getCurrentMemberBalanceUnits(
   prisma: PrismaClient,
   memberId: string,
-  now = new Date(),
 ) {
-  const monthKey = getMonthKey(now)
-  const aggregate = await prisma.bonusTransaction.aggregate({
-    where: {
-      memberId,
-      monthKey,
-    },
-    _sum: {
-      amountUnits: true,
+  const member = await prisma.member.findUnique({
+    where: { id: memberId },
+    select: {
+      bonusBalanceUnits: true,
     },
   })
 
-  return aggregate._sum.amountUnits ?? 0
+  return member?.bonusBalanceUnits ?? 0
 }
 
 export async function backfillCurrentMonthTaskBonuses(
@@ -418,6 +414,8 @@ export async function processTaskDeadlineEvents(
             },
           }),
         ])
+
+        await syncHouseholdProfiles(prisma, task.householdId)
       }
 
       const memberNames = members.map(getMemberDisplayName).join(', ')

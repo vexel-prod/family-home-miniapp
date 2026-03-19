@@ -20,8 +20,22 @@ export type MemberModel = runtime.Types.Result.DefaultSelection<Prisma.$MemberPa
 
 export type AggregateMember = {
   _count: MemberCountAggregateOutputType | null
+  _avg: MemberAvgAggregateOutputType | null
+  _sum: MemberSumAggregateOutputType | null
   _min: MemberMinAggregateOutputType | null
   _max: MemberMaxAggregateOutputType | null
+}
+
+export type MemberAvgAggregateOutputType = {
+  experiencePoints: number | null
+  level: number | null
+  bonusBalanceUnits: number | null
+}
+
+export type MemberSumAggregateOutputType = {
+  experiencePoints: number | null
+  level: number | null
+  bonusBalanceUnits: number | null
 }
 
 export type MemberMinAggregateOutputType = {
@@ -32,6 +46,9 @@ export type MemberMinAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   username: string | null
+  experiencePoints: number | null
+  level: number | null
+  bonusBalanceUnits: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +61,9 @@ export type MemberMaxAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   username: string | null
+  experiencePoints: number | null
+  level: number | null
+  bonusBalanceUnits: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,11 +76,26 @@ export type MemberCountAggregateOutputType = {
   firstName: number
   lastName: number
   username: number
+  experiencePoints: number
+  level: number
+  bonusBalanceUnits: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type MemberAvgAggregateInputType = {
+  experiencePoints?: true
+  level?: true
+  bonusBalanceUnits?: true
+}
+
+export type MemberSumAggregateInputType = {
+  experiencePoints?: true
+  level?: true
+  bonusBalanceUnits?: true
+}
 
 export type MemberMinAggregateInputType = {
   id?: true
@@ -70,6 +105,9 @@ export type MemberMinAggregateInputType = {
   firstName?: true
   lastName?: true
   username?: true
+  experiencePoints?: true
+  level?: true
+  bonusBalanceUnits?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +120,9 @@ export type MemberMaxAggregateInputType = {
   firstName?: true
   lastName?: true
   username?: true
+  experiencePoints?: true
+  level?: true
+  bonusBalanceUnits?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +135,9 @@ export type MemberCountAggregateInputType = {
   firstName?: true
   lastName?: true
   username?: true
+  experiencePoints?: true
+  level?: true
+  bonusBalanceUnits?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -137,6 +181,18 @@ export type MemberAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: MemberAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: MemberSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: MemberMinAggregateInputType
@@ -167,6 +223,8 @@ export type MemberGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: MemberCountAggregateInputType | true
+  _avg?: MemberAvgAggregateInputType
+  _sum?: MemberSumAggregateInputType
   _min?: MemberMinAggregateInputType
   _max?: MemberMaxAggregateInputType
 }
@@ -179,9 +237,14 @@ export type MemberGroupByOutputType = {
   firstName: string
   lastName: string | null
   username: string | null
+  experiencePoints: number
+  level: number
+  bonusBalanceUnits: number
   createdAt: Date
   updatedAt: Date
   _count: MemberCountAggregateOutputType | null
+  _avg: MemberAvgAggregateOutputType | null
+  _sum: MemberSumAggregateOutputType | null
   _min: MemberMinAggregateOutputType | null
   _max: MemberMaxAggregateOutputType | null
 }
@@ -212,6 +275,9 @@ export type MemberWhereInput = {
   firstName?: Prisma.StringFilter<"Member"> | string
   lastName?: Prisma.StringNullableFilter<"Member"> | string | null
   username?: Prisma.StringNullableFilter<"Member"> | string | null
+  experiencePoints?: Prisma.IntFilter<"Member"> | number
+  level?: Prisma.IntFilter<"Member"> | number
+  bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
@@ -227,6 +293,9 @@ export type MemberOrderByWithRelationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   household?: Prisma.HouseholdOrderByWithRelationInput
@@ -245,6 +314,9 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   firstName?: Prisma.StringFilter<"Member"> | string
   lastName?: Prisma.StringNullableFilter<"Member"> | string | null
   username?: Prisma.StringNullableFilter<"Member"> | string | null
+  experiencePoints?: Prisma.IntFilter<"Member"> | number
+  level?: Prisma.IntFilter<"Member"> | number
+  bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
@@ -260,11 +332,16 @@ export type MemberOrderByWithAggregationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
+  _avg?: Prisma.MemberAvgOrderByAggregateInput
   _max?: Prisma.MemberMaxOrderByAggregateInput
   _min?: Prisma.MemberMinOrderByAggregateInput
+  _sum?: Prisma.MemberSumOrderByAggregateInput
 }
 
 export type MemberScalarWhereWithAggregatesInput = {
@@ -278,6 +355,9 @@ export type MemberScalarWhereWithAggregatesInput = {
   firstName?: Prisma.StringWithAggregatesFilter<"Member"> | string
   lastName?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   username?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  experiencePoints?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  level?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  bonusBalanceUnits?: Prisma.IntWithAggregatesFilter<"Member"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
 }
@@ -289,6 +369,9 @@ export type MemberCreateInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -304,6 +387,9 @@ export type MemberUncheckedCreateInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -317,6 +403,9 @@ export type MemberUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -332,6 +421,9 @@ export type MemberUncheckedUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -346,6 +438,9 @@ export type MemberCreateManyInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -357,6 +452,9 @@ export type MemberUpdateManyMutationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -369,6 +467,9 @@ export type MemberUncheckedUpdateManyInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -391,8 +492,17 @@ export type MemberCountOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MemberAvgOrderByAggregateInput = {
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
 }
 
 export type MemberMaxOrderByAggregateInput = {
@@ -403,6 +513,9 @@ export type MemberMaxOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -415,8 +528,17 @@ export type MemberMinOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MemberSumOrderByAggregateInput = {
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  bonusBalanceUnits?: Prisma.SortOrder
 }
 
 export type MemberScalarRelationFilter = {
@@ -470,6 +592,14 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type MemberCreateNestedOneWithoutBonusTransactionsInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutBonusTransactionsInput, Prisma.MemberUncheckedCreateWithoutBonusTransactionsInput>
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutBonusTransactionsInput
@@ -505,6 +635,9 @@ export type MemberCreateWithoutHouseholdInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
@@ -518,6 +651,9 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -561,6 +697,9 @@ export type MemberScalarWhereInput = {
   firstName?: Prisma.StringFilter<"Member"> | string
   lastName?: Prisma.StringNullableFilter<"Member"> | string | null
   username?: Prisma.StringNullableFilter<"Member"> | string | null
+  experiencePoints?: Prisma.IntFilter<"Member"> | number
+  level?: Prisma.IntFilter<"Member"> | number
+  bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
 }
@@ -572,6 +711,9 @@ export type MemberCreateWithoutBonusTransactionsInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -586,6 +728,9 @@ export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
@@ -614,6 +759,9 @@ export type MemberUpdateWithoutBonusTransactionsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -628,6 +776,9 @@ export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
@@ -640,6 +791,9 @@ export type MemberCreateWithoutBonusPurchasesInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -654,6 +808,9 @@ export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -682,6 +839,9 @@ export type MemberUpdateWithoutBonusPurchasesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -696,6 +856,9 @@ export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -708,6 +871,9 @@ export type MemberCreateManyHouseholdInput = {
   firstName: string
   lastName?: string | null
   username?: string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -719,6 +885,9 @@ export type MemberUpdateWithoutHouseholdInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
@@ -732,6 +901,9 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -745,6 +917,9 @@ export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -797,6 +972,9 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  bonusBalanceUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -813,6 +991,9 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  bonusBalanceUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -826,6 +1007,9 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  bonusBalanceUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -839,11 +1023,14 @@ export type MemberSelectScalar = {
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  bonusBalanceUnits?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "experiencePoints" | "level" | "bonusBalanceUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
@@ -872,6 +1059,9 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     firstName: string
     lastName: string | null
     username: string | null
+    experiencePoints: number
+    level: number
+    bonusBalanceUnits: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["member"]>
@@ -1307,6 +1497,9 @@ export interface MemberFieldRefs {
   readonly firstName: Prisma.FieldRef<"Member", 'String'>
   readonly lastName: Prisma.FieldRef<"Member", 'String'>
   readonly username: Prisma.FieldRef<"Member", 'String'>
+  readonly experiencePoints: Prisma.FieldRef<"Member", 'Int'>
+  readonly level: Prisma.FieldRef<"Member", 'Int'>
+  readonly bonusBalanceUnits: Prisma.FieldRef<"Member", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Member", 'DateTime'>
 }

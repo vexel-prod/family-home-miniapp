@@ -1,5 +1,6 @@
 import { authorizeRequest } from '@/lib/auth'
 import { awardTaskCompletionBonuses, clearTaskBonusTransactions } from '@/lib/bonus-ledger'
+import { syncHouseholdProfiles } from '@/lib/household-profile'
 import { getMemberDisplayName, notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
 import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@/shared/lib/bonus-shop'
@@ -132,10 +133,13 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
       auth.member.id,
       body.action === 'complete-together',
     )
+
+    await syncHouseholdProfiles(prisma, auth.member.householdId)
   }
 
   if (body.action === 'reopen') {
     await clearTaskBonusTransactions(prisma, updatedTask.id)
+    await syncHouseholdProfiles(prisma, auth.member.householdId)
   }
 
   if (
@@ -191,6 +195,7 @@ export async function DELETE(request: Request, context: { params: Promise<{ task
   }
 
   await clearTaskBonusTransactions(prisma, taskId)
+  await syncHouseholdProfiles(prisma, auth.member.householdId)
 
   await prisma.householdTask.delete({
     where: { id: taskId },

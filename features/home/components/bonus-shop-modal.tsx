@@ -30,7 +30,7 @@ export function BonusShopModal({
         <div className='flex items-center justify-between gap-4'>
           <div>
             <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
-              Баланс месяца: {formatPoints(balanceUnits)}
+              Доступный баланс: {formatPoints(balanceUnits)}
             </h2>
           </div>
           <div className='rounded-md bg-white/5 px-4 py-3 text-right text-sm text-white/70'>

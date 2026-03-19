@@ -1,5 +1,5 @@
 import { authorizeRequest } from '@/lib/auth'
-import { getCurrentMemberBalanceUnits } from '@/lib/bonus-ledger'
+import { getMemberProfileSnapshot } from '@/lib/household-profile'
 import { notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
 import { BONUS_REWARDS, formatPoints, getMonthKey } from '@/shared/lib/bonus-shop'
@@ -24,7 +24,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Reward not found' }, { status: 404 })
   }
 
-  const balanceUnits = await getCurrentMemberBalanceUnits(prisma, auth.member.id)
+  const profile = await getMemberProfileSnapshot(prisma, auth.member.id)
+  const balanceUnits = profile.bonusBalanceUnits
 
   if (balanceUnits < reward.costUnits) {
     return NextResponse.json({ ok: false, error: 'Insufficient balance' }, { status: 400 })
@@ -66,6 +67,6 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ok: true,
     purchase,
-    balanceUnits: balanceUnits - reward.costUnits,
+    balanceUnits: (await getMemberProfileSnapshot(prisma, auth.member.id)).bonusBalanceUnits,
   })
 }

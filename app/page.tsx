@@ -5,8 +5,9 @@ import { startTransition, useCallback, useEffect, useRef, useState } from 'react
 import { ModalOverlay } from '@/components/ui/app-modal'
 import { NoticeToast } from '@/components/ui/notice-toast'
 import { BonusShopModal } from '@/features/home/components/bonus-shop-modal'
-import { JournalSummary } from '@/features/home/components/journal-summary'
 import { DashboardHero } from '@/features/home/components/dashboard-hero'
+import { HouseholdProfileModal } from '@/features/home/components/household-profile-modal'
+import { JournalSummary } from '@/features/home/components/journal-summary'
 import { MonthlyRatingModal } from '@/features/home/components/monthly-rating-modal'
 import { ShoppingActionsModal } from '@/features/shopping/components/shopping-actions-modal'
 import { ShoppingFormModal } from '@/features/shopping/components/shopping-form-modal'
@@ -29,6 +30,7 @@ import type {
   BonusPurchase,
   BootstrapResponse,
   FetchOptions,
+  HouseholdProfile,
   HouseholdTask,
   MonthlyLeaderboardEntry,
   ModalKey,
@@ -145,6 +147,21 @@ export default function Page() {
   const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
   const [participantNames, setParticipantNames] = useState<string[]>([])
   const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
+  const [currentUserProfile, setCurrentUserProfile] = useState<HouseholdProfile>({
+    totalExp: 0,
+    currentLevel: 0,
+    bonusBalanceUnits: 0,
+    currentLevelThreshold: 0,
+    nextLevel: 1,
+    nextLevelThreshold: 100,
+    expIntoCurrentLevel: 0,
+    expToNextLevel: 100,
+    completedTasksCount: 0,
+    fastTasksCount: 0,
+    overdueTasksCount: 0,
+    levelBonusUnits: 0,
+    recentEvents: [],
+  })
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
   const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
@@ -239,7 +256,7 @@ export default function Page() {
   }
 
   function openMainModal(
-    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'last-completed-task' | 'leaderboard' | 'bonus-shop'>,
+    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'last-completed-task' | 'leaderboard' | 'bonus-shop' | 'profile'>,
   ) {
     if (!canOpenModal()) {
       return
@@ -349,6 +366,7 @@ export default function Page() {
         setMonthlyTeamBonusPoints(payload.monthlyTeamBonusPoints)
         setParticipantNames(payload.participantNames)
         setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
+        setCurrentUserProfile(payload.currentUserProfile)
         setBonusPurchases(payload.bonusPurchases)
         setMonthlyReports(payload.monthlyReports)
         setShoppingItems(payload.activeShoppingItems)
@@ -960,6 +978,14 @@ export default function Page() {
             />
           ) : null}
 
+          {modal === 'profile' ? (
+            <HouseholdProfileModal
+              actorName={getActorName(buyer)}
+              profile={currentUserProfile}
+              onClose={closeModalWithGuard}
+            />
+          ) : null}
+
           {modal === 'shopping-list' ? (
             <ShoppingListModal
               items={sortedShoppingItems}
@@ -1041,10 +1067,13 @@ export default function Page() {
               : 'Пока пусто'
           }
           balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} баллов`}
+          profileLevel={currentUserProfile.currentLevel}
+          profileExpToNextLevel={currentUserProfile.expToNextLevel}
           onOpenJournal={() => openMainModal('task-journal')}
           onOpenLastCompleted={() => openMainModal('last-completed-task')}
           onOpenLeaderboard={() => openMainModal('leaderboard')}
           onOpenBonusShop={() => openMainModal('bonus-shop')}
+          onOpenProfile={() => openMainModal('profile')}
         />
       </div>
     </main>

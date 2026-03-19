@@ -29,6 +29,9 @@ model Member {
   firstName      String
   lastName       String?
   username       String?
+  experiencePoints Int     @default(0)
+  level          Int       @default(0)
+  bonusBalanceUnits Int    @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
