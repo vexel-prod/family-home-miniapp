@@ -11,6 +11,7 @@ datasource db {
 model Household {
   id            String          @id @default(cuid())
   name          String
+  revision      Int             @default(0)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   members       Member[]
@@ -37,6 +38,9 @@ model Member {
   experiencePoints Int     @default(0)
   level          Int       @default(0)
   bonusBalanceUnits Int    @default(0)
+  completedTasksCount Int  @default(0)
+  fastTasksCount   Int     @default(0)
+  overdueTasksCount Int    @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
@@ -144,6 +148,20 @@ model HouseholdInvite {
   createdByMember    Member    @relation("InviteCreator", fields: [createdByMemberId], references: [id], onDelete: Cascade)
 
   @@index([householdId, expiresAt])
+}
+
+model ActionRateLimit {
+  key             String   @id
+  action          String
+  scope           String
+  hits            Int      @default(0)
+  windowStartedAt DateTime
+  blockedUntil    DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([action, scope])
+  @@index([blockedUntil])
 }
 
 model MonthlyReport {

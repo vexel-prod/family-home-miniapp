@@ -1,9 +1,19 @@
 import { authorizeRequest } from '@/lib/auth'
+import { jsonRateLimited } from '@/lib/api-response'
 import { awardTaskCompletionBonuses, clearTaskBonusTransactions } from '@/lib/bonus-ledger'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { syncHouseholdProfiles } from '@/lib/household-profile'
 import { getMemberDisplayName, notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
 import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@/shared/lib/bonus-shop'
+import {
+  sanitizeOptionalText,
+  TASK_NOTE_MAX_LENGTH,
+  TASK_TITLE_MAX_LENGTH,
+  validateLength,
+  validateRequiredText,
+} from '@/shared/lib/validation'
 import { formatElapsedLabel, formatMoscowDateTime } from '@/lib/partner-notify'
 import { NextResponse } from 'next/server'
 
@@ -47,7 +57,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
   }
 
   const { taskId } = await context.params
-  const body = (await request.json()) as UpdateTaskPayload
+  const body = (await request.json().catch(() => ({}))) as UpdateTaskPayload
 
   const actorName =
     [auth.user.first_name, auth.user.last_name].filter(Boolean).join(' ').trim() ||
@@ -56,6 +66,21 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
 
   if (!body.action) {
     return NextResponse.json({ ok: false, error: 'Missing update data' }, { status: 400 })
+  }
+
+  try {
+    await enforceRateLimit(prisma, {
+      action: `task-${body.action}`,
+      scope: auth.member.id,
+      limit: body.action === 'replace' ? 20 : 60,
+      windowMs: 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
   }
 
   const task = await prisma.householdTask.findUnique({
@@ -71,8 +96,15 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
   }
 
   if (body.action === 'replace') {
-    if (!body.title?.trim()) {
+    const title = validateRequiredText(body.title ?? null, TASK_TITLE_MAX_LENGTH)
+    const note = sanitizeOptionalText(body.note)
+
+    if (!title) {
       return NextResponse.json({ ok: false, error: 'Missing replacement title' }, { status: 400 })
+    }
+
+    if (note && !validateLength(note, TASK_NOTE_MAX_LENGTH)) {
+      return NextResponse.json({ ok: false, error: 'Task note is too long' }, { status: 400 })
     }
 
     const deadline = parseDeadline(body.deadlineAt)
@@ -84,11 +116,13 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
     const updatedTask = await prisma.householdTask.update({
       where: { id: taskId },
       data: {
-        title: body.title.trim(),
-        note: body.note?.trim() || null,
+        title,
+        note,
         deadlineAt: deadline,
       },
     })
+
+    await bumpHouseholdRevision(prisma, auth.member.householdId)
 
     await notifyHousehold(
       prisma,
@@ -142,6 +176,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
     await syncHouseholdProfiles(prisma, auth.member.householdId)
   }
 
+  await bumpHouseholdRevision(prisma, auth.member.householdId)
+
   if (
     (body.action === 'complete' || body.action === 'complete-together') &&
     updatedTask.completedAt
@@ -182,6 +218,21 @@ export async function DELETE(request: Request, context: { params: Promise<{ task
 
   const { taskId } = await context.params
 
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'task-delete',
+      scope: auth.member.id,
+      limit: 20,
+      windowMs: 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
   const task = await prisma.householdTask.findUnique({
     where: { id: taskId },
   })
@@ -200,6 +251,8 @@ export async function DELETE(request: Request, context: { params: Promise<{ task
   await prisma.householdTask.delete({
     where: { id: taskId },
   })
+
+  await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   return NextResponse.json({ ok: true })
 }

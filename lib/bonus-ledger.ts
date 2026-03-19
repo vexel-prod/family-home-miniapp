@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@/generated/prisma/client'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { syncHouseholdProfiles } from '@/lib/household-profile'
 import {
   DEADLINE_PENALTY_DELAY_MS,
@@ -416,6 +417,7 @@ export async function processTaskDeadlineEvents(
         ])
 
         await syncHouseholdProfiles(prisma, task.householdId)
+        await bumpHouseholdRevision(prisma, task.householdId)
       }
 
       const memberNames = members.map(getMemberDisplayName).join(', ')
@@ -448,6 +450,8 @@ export async function processTaskDeadlineEvents(
         lastDeadlineReminderAt: now,
       },
     })
+
+    await bumpHouseholdRevision(prisma, task.householdId)
 
     await notifyHousehold(
       prisma,
@@ -540,7 +544,7 @@ export async function createMonthlyReportIfNeeded(
     )
   }
 
-  return prisma.monthlyReport.create({
+  const report = await prisma.monthlyReport.create({
     data: {
       householdId,
       monthKey,
@@ -548,4 +552,8 @@ export async function createMonthlyReportIfNeeded(
       reportBody: lines.join('\n'),
     },
   })
+
+  await bumpHouseholdRevision(prisma, householdId)
+
+  return report
 }

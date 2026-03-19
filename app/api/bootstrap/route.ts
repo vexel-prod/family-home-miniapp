@@ -1,8 +1,11 @@
 import { authenticateTelegramRequest } from '@/lib/auth'
+import { jsonRateLimited } from '@/lib/api-response'
 import { getMemberProfileSnapshot } from '@/lib/household-profile'
 import { getHouseholdSummary } from '@/lib/household'
-import { getCurrentMemberBalanceUnits, getMonthlyLeaderboardStats } from '@/lib/bonus-ledger'
+import { getMonthlyLeaderboardStats } from '@/lib/bonus-ledger'
+import { getElapsedMs, logApiEvent } from '@/lib/observability'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
 import { getMonthKey } from '@/shared/lib/bonus-shop'
 import { NextResponse } from 'next/server'
 
@@ -27,91 +30,167 @@ function getCurrentMoscowMonthRange() {
 }
 
 export async function GET(request: Request) {
+  const startedAt = Date.now()
   const prisma = getPrisma()
   const auth = await authenticateTelegramRequest(request, prisma)
 
   if (!auth) {
+    logApiEvent('warn', {
+      route: '/api/bootstrap',
+      method: 'GET',
+      status: 401,
+      durationMs: getElapsedMs(startedAt),
+    })
+
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
 
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'bootstrap-load',
+      scope: String(auth.user.id),
+      limit: 180,
+      windowMs: 5 * 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      logApiEvent('warn', {
+        route: '/api/bootstrap',
+        method: 'GET',
+        status: 429,
+        durationMs: getElapsedMs(startedAt),
+        userId: String(auth.user.id),
+        retryAfterSeconds: error.retryAfterSeconds,
+      })
+
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
   if (!auth.member) {
-    return NextResponse.json({
+    const response = NextResponse.json({
       ok: true,
       state: 'onboarding',
     })
+
+    logApiEvent('info', {
+      route: '/api/bootstrap',
+      method: 'GET',
+      status: 200,
+      durationMs: getElapsedMs(startedAt),
+      userId: String(auth.user.id),
+      meta: {
+        state: 'onboarding',
+      },
+    })
+
+    return response
   }
 
-  const { start, end } = getCurrentMoscowMonthRange()
+  try {
+    const { start, end } = getCurrentMoscowMonthRange()
 
-  const currentUserProfile = await getMemberProfileSnapshot(prisma, auth.member.id)
-  const monthKey = getMonthKey(new Date())
+    const currentUserProfile = await getMemberProfileSnapshot(prisma, auth.member.id)
+    const monthKey = getMonthKey(new Date())
 
-  const [
-    openTasks,
-    completedTasks,
-    monthlyCompletedTasks,
-    activeShoppingItems,
-    monthlyStats,
-    bonusPurchases,
-    monthlyReports,
-    currentUserBonusBalanceUnits,
-    household,
-  ] = await Promise.all([
-    prisma.householdTask.findMany({
-      where: { householdId: auth.member.householdId, status: 'open' },
-      orderBy: [{ deadlineAt: 'asc' }, { createdAt: 'desc' }],
-    }),
-    prisma.householdTask.findMany({
-      where: { householdId: auth.member.householdId, status: 'done' },
-      orderBy: [{ completedAt: 'desc' }, { updatedAt: 'desc' }],
-      take: 30,
-    }),
-    prisma.householdTask.findMany({
-      where: {
-        householdId: auth.member.householdId,
-        status: 'done',
-        completedAt: {
-          gte: start,
-          lt: end,
+    const [
+      openTasks,
+      completedTasks,
+      monthlyCompletedTasks,
+      activeShoppingItems,
+      monthlyStats,
+      bonusPurchases,
+      monthlyReports,
+      household,
+    ] = await Promise.all([
+      prisma.householdTask.findMany({
+        where: { householdId: auth.member.householdId, status: 'open' },
+        orderBy: [{ deadlineAt: 'asc' }, { createdAt: 'desc' }],
+      }),
+      prisma.householdTask.findMany({
+        where: { householdId: auth.member.householdId, status: 'done' },
+        orderBy: [{ completedAt: 'desc' }, { updatedAt: 'desc' }],
+        take: 30,
+      }),
+      prisma.householdTask.findMany({
+        where: {
+          householdId: auth.member.householdId,
+          status: 'done',
+          completedAt: {
+            gte: start,
+            lt: end,
+          },
         },
-      },
-      orderBy: [{ completedAt: 'desc' }, { updatedAt: 'desc' }],
-    }),
-    prisma.shoppingItem.findMany({
-      where: { householdId: auth.member.householdId, status: 'active' },
-      orderBy: [{ urgency: 'asc' }, { createdAt: 'desc' }],
-    }),
-    getMonthlyLeaderboardStats(prisma, auth.member.householdId),
-    prisma.bonusPurchase.findMany({
-      where: {
-        householdId: auth.member.householdId,
-        monthKey,
-      },
-      orderBy: [{ createdAt: 'desc' }],
-    }),
-    prisma.monthlyReport.findMany({
-      where: { householdId: auth.member.householdId },
-      orderBy: [{ createdAt: 'desc' }],
-      take: 6,
-    }),
-    getCurrentMemberBalanceUnits(prisma, auth.member.id),
-    getHouseholdSummary(prisma, auth.member.householdId, auth.member.id),
-  ])
+        orderBy: [{ completedAt: 'desc' }, { updatedAt: 'desc' }],
+      }),
+      prisma.shoppingItem.findMany({
+        where: { householdId: auth.member.householdId, status: 'active' },
+        orderBy: [{ urgency: 'asc' }, { createdAt: 'desc' }],
+      }),
+      getMonthlyLeaderboardStats(prisma, auth.member.householdId),
+      prisma.bonusPurchase.findMany({
+        where: {
+          householdId: auth.member.householdId,
+          monthKey,
+        },
+        orderBy: [{ createdAt: 'desc' }],
+      }),
+      prisma.monthlyReport.findMany({
+        where: { householdId: auth.member.householdId },
+        orderBy: [{ createdAt: 'desc' }],
+        take: 6,
+      }),
+      getHouseholdSummary(prisma, auth.member.householdId, auth.member.id),
+    ])
 
-  return NextResponse.json({
-    ok: true,
-    state: 'active',
-    openTasks,
-    completedTasks,
-    monthlyCompletedTasks,
-    participantNames: monthlyStats.participantNames,
-    monthlyLeaderboardEntries: monthlyStats.monthlyLeaderboardEntries,
-    monthlyTeamBonusPoints: monthlyStats.monthlyTeamBonusPoints,
-    currentUserBonusBalanceUnits,
-    currentUserProfile,
-    household,
-    bonusPurchases,
-    monthlyReports,
-    activeShoppingItems,
-  })
+    const response = NextResponse.json({
+      ok: true,
+      state: 'active',
+      openTasks,
+      completedTasks,
+      monthlyCompletedTasks,
+      participantNames: monthlyStats.participantNames,
+      monthlyLeaderboardEntries: monthlyStats.monthlyLeaderboardEntries,
+      monthlyTeamBonusPoints: monthlyStats.monthlyTeamBonusPoints,
+      currentUserBonusBalanceUnits: currentUserProfile.bonusBalanceUnits,
+      currentUserProfile,
+      household,
+      bonusPurchases,
+      monthlyReports,
+      activeShoppingItems,
+    })
+
+    logApiEvent('info', {
+      route: '/api/bootstrap',
+      method: 'GET',
+      status: 200,
+      durationMs: getElapsedMs(startedAt),
+      userId: String(auth.user.id),
+      memberId: auth.member.id,
+      householdId: auth.member.householdId,
+      meta: {
+        state: 'active',
+        openTasks: openTasks.length,
+        completedTasks: completedTasks.length,
+        shoppingItems: activeShoppingItems.length,
+      },
+    })
+
+    return response
+  } catch (error) {
+    logApiEvent('error', {
+      route: '/api/bootstrap',
+      method: 'GET',
+      status: 500,
+      durationMs: getElapsedMs(startedAt),
+      userId: String(auth.user.id),
+      memberId: auth.member.id,
+      householdId: auth.member.householdId,
+      error: error instanceof Error ? error.message : 'bootstrap-failed',
+    })
+
+    throw error
+  }
 }

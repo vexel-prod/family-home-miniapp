@@ -20,13 +20,24 @@ export type HouseholdModel = runtime.Types.Result.DefaultSelection<Prisma.$House
 
 export type AggregateHousehold = {
   _count: HouseholdCountAggregateOutputType | null
+  _avg: HouseholdAvgAggregateOutputType | null
+  _sum: HouseholdSumAggregateOutputType | null
   _min: HouseholdMinAggregateOutputType | null
   _max: HouseholdMaxAggregateOutputType | null
+}
+
+export type HouseholdAvgAggregateOutputType = {
+  revision: number | null
+}
+
+export type HouseholdSumAggregateOutputType = {
+  revision: number | null
 }
 
 export type HouseholdMinAggregateOutputType = {
   id: string | null
   name: string | null
+  revision: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -34,6 +45,7 @@ export type HouseholdMinAggregateOutputType = {
 export type HouseholdMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  revision: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -41,15 +53,25 @@ export type HouseholdMaxAggregateOutputType = {
 export type HouseholdCountAggregateOutputType = {
   id: number
   name: number
+  revision: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type HouseholdAvgAggregateInputType = {
+  revision?: true
+}
+
+export type HouseholdSumAggregateInputType = {
+  revision?: true
+}
+
 export type HouseholdMinAggregateInputType = {
   id?: true
   name?: true
+  revision?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -57,6 +79,7 @@ export type HouseholdMinAggregateInputType = {
 export type HouseholdMaxAggregateInputType = {
   id?: true
   name?: true
+  revision?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -64,6 +87,7 @@ export type HouseholdMaxAggregateInputType = {
 export type HouseholdCountAggregateInputType = {
   id?: true
   name?: true
+  revision?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -107,6 +131,18 @@ export type HouseholdAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: HouseholdAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: HouseholdSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: HouseholdMinAggregateInputType
@@ -137,6 +173,8 @@ export type HouseholdGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   _count?: HouseholdCountAggregateInputType | true
+  _avg?: HouseholdAvgAggregateInputType
+  _sum?: HouseholdSumAggregateInputType
   _min?: HouseholdMinAggregateInputType
   _max?: HouseholdMaxAggregateInputType
 }
@@ -144,9 +182,12 @@ export type HouseholdGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type HouseholdGroupByOutputType = {
   id: string
   name: string
+  revision: number
   createdAt: Date
   updatedAt: Date
   _count: HouseholdCountAggregateOutputType | null
+  _avg: HouseholdAvgAggregateOutputType | null
+  _sum: HouseholdSumAggregateOutputType | null
   _min: HouseholdMinAggregateOutputType | null
   _max: HouseholdMaxAggregateOutputType | null
 }
@@ -172,6 +213,7 @@ export type HouseholdWhereInput = {
   NOT?: Prisma.HouseholdWhereInput | Prisma.HouseholdWhereInput[]
   id?: Prisma.StringFilter<"Household"> | string
   name?: Prisma.StringFilter<"Household"> | string
+  revision?: Prisma.IntFilter<"Household"> | number
   createdAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   members?: Prisma.MemberListRelationFilter
@@ -186,6 +228,7 @@ export type HouseholdWhereInput = {
 export type HouseholdOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  revision?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   members?: Prisma.MemberOrderByRelationAggregateInput
@@ -203,6 +246,7 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.HouseholdWhereInput[]
   NOT?: Prisma.HouseholdWhereInput | Prisma.HouseholdWhereInput[]
   name?: Prisma.StringFilter<"Household"> | string
+  revision?: Prisma.IntFilter<"Household"> | number
   createdAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   members?: Prisma.MemberListRelationFilter
@@ -217,11 +261,14 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
 export type HouseholdOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  revision?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HouseholdCountOrderByAggregateInput
+  _avg?: Prisma.HouseholdAvgOrderByAggregateInput
   _max?: Prisma.HouseholdMaxOrderByAggregateInput
   _min?: Prisma.HouseholdMinOrderByAggregateInput
+  _sum?: Prisma.HouseholdSumOrderByAggregateInput
 }
 
 export type HouseholdScalarWhereWithAggregatesInput = {
@@ -230,6 +277,7 @@ export type HouseholdScalarWhereWithAggregatesInput = {
   NOT?: Prisma.HouseholdScalarWhereWithAggregatesInput | Prisma.HouseholdScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Household"> | string
   name?: Prisma.StringWithAggregatesFilter<"Household"> | string
+  revision?: Prisma.IntWithAggregatesFilter<"Household"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Household"> | Date | string
 }
@@ -237,6 +285,7 @@ export type HouseholdScalarWhereWithAggregatesInput = {
 export type HouseholdCreateInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -251,6 +300,7 @@ export type HouseholdCreateInput = {
 export type HouseholdUncheckedCreateInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -265,6 +315,7 @@ export type HouseholdUncheckedCreateInput = {
 export type HouseholdUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -279,6 +330,7 @@ export type HouseholdUpdateInput = {
 export type HouseholdUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -293,6 +345,7 @@ export type HouseholdUncheckedUpdateInput = {
 export type HouseholdCreateManyInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -300,6 +353,7 @@ export type HouseholdCreateManyInput = {
 export type HouseholdUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -307,6 +361,7 @@ export type HouseholdUpdateManyMutationInput = {
 export type HouseholdUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -314,13 +369,19 @@ export type HouseholdUncheckedUpdateManyInput = {
 export type HouseholdCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  revision?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HouseholdAvgOrderByAggregateInput = {
+  revision?: Prisma.SortOrder
 }
 
 export type HouseholdMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  revision?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -328,8 +389,13 @@ export type HouseholdMaxOrderByAggregateInput = {
 export type HouseholdMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  revision?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HouseholdSumOrderByAggregateInput = {
+  revision?: Prisma.SortOrder
 }
 
 export type HouseholdScalarRelationFilter = {
@@ -339,6 +405,14 @@ export type HouseholdScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -446,6 +520,7 @@ export type HouseholdUpdateOneRequiredWithoutMonthlyReportsNestedInput = {
 export type HouseholdCreateWithoutMembersInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
@@ -459,6 +534,7 @@ export type HouseholdCreateWithoutMembersInput = {
 export type HouseholdUncheckedCreateWithoutMembersInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
@@ -488,6 +564,7 @@ export type HouseholdUpdateToOneWithWhereWithoutMembersInput = {
 export type HouseholdUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
@@ -501,6 +578,7 @@ export type HouseholdUpdateWithoutMembersInput = {
 export type HouseholdUncheckedUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -514,6 +592,7 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
 export type HouseholdCreateWithoutTasksInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -527,6 +606,7 @@ export type HouseholdCreateWithoutTasksInput = {
 export type HouseholdUncheckedCreateWithoutTasksInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -556,6 +636,7 @@ export type HouseholdUpdateToOneWithWhereWithoutTasksInput = {
 export type HouseholdUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -569,6 +650,7 @@ export type HouseholdUpdateWithoutTasksInput = {
 export type HouseholdUncheckedUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -582,6 +664,7 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
 export type HouseholdCreateWithoutShoppingItemsInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -595,6 +678,7 @@ export type HouseholdCreateWithoutShoppingItemsInput = {
 export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -624,6 +708,7 @@ export type HouseholdUpdateToOneWithWhereWithoutShoppingItemsInput = {
 export type HouseholdUpdateWithoutShoppingItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -637,6 +722,7 @@ export type HouseholdUpdateWithoutShoppingItemsInput = {
 export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -650,6 +736,7 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
 export type HouseholdCreateWithoutBonusTransactionsInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -663,6 +750,7 @@ export type HouseholdCreateWithoutBonusTransactionsInput = {
 export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -692,6 +780,7 @@ export type HouseholdUpdateToOneWithWhereWithoutBonusTransactionsInput = {
 export type HouseholdUpdateWithoutBonusTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -705,6 +794,7 @@ export type HouseholdUpdateWithoutBonusTransactionsInput = {
 export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -718,6 +808,7 @@ export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
 export type HouseholdCreateWithoutBonusPurchasesInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -731,6 +822,7 @@ export type HouseholdCreateWithoutBonusPurchasesInput = {
 export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -760,6 +852,7 @@ export type HouseholdUpdateToOneWithWhereWithoutBonusPurchasesInput = {
 export type HouseholdUpdateWithoutBonusPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -773,6 +866,7 @@ export type HouseholdUpdateWithoutBonusPurchasesInput = {
 export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -786,6 +880,7 @@ export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
 export type HouseholdCreateWithoutInvitesInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -799,6 +894,7 @@ export type HouseholdCreateWithoutInvitesInput = {
 export type HouseholdUncheckedCreateWithoutInvitesInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -828,6 +924,7 @@ export type HouseholdUpdateToOneWithWhereWithoutInvitesInput = {
 export type HouseholdUpdateWithoutInvitesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -841,6 +938,7 @@ export type HouseholdUpdateWithoutInvitesInput = {
 export type HouseholdUncheckedUpdateWithoutInvitesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -854,6 +952,7 @@ export type HouseholdUncheckedUpdateWithoutInvitesInput = {
 export type HouseholdCreateWithoutMonthlyReportsInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -867,6 +966,7 @@ export type HouseholdCreateWithoutMonthlyReportsInput = {
 export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
   id?: string
   name: string
+  revision?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -896,6 +996,7 @@ export type HouseholdUpdateToOneWithWhereWithoutMonthlyReportsInput = {
 export type HouseholdUpdateWithoutMonthlyReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -909,6 +1010,7 @@ export type HouseholdUpdateWithoutMonthlyReportsInput = {
 export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1007,6 +1109,7 @@ export type HouseholdCountOutputTypeCountMonthlyReportsArgs<ExtArgs extends runt
 export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  revision?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
@@ -1022,6 +1125,7 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type HouseholdSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  revision?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["household"]>
@@ -1029,6 +1133,7 @@ export type HouseholdSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type HouseholdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  revision?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["household"]>
@@ -1036,11 +1141,12 @@ export type HouseholdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type HouseholdSelectScalar = {
   id?: boolean
   name?: boolean
+  revision?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
+export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "revision" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
 export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
   invites?: boolean | Prisma.Household$invitesArgs<ExtArgs>
@@ -1068,6 +1174,7 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    revision: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["household"]>
@@ -1502,6 +1609,7 @@ export interface Prisma__HouseholdClient<T, Null = never, ExtArgs extends runtim
 export interface HouseholdFieldRefs {
   readonly id: Prisma.FieldRef<"Household", 'String'>
   readonly name: Prisma.FieldRef<"Household", 'String'>
+  readonly revision: Prisma.FieldRef<"Household", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Household", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Household", 'DateTime'>
 }

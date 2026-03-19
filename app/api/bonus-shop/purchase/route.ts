@@ -1,7 +1,10 @@
 import { authorizeRequest } from '@/lib/auth'
-import { getMemberProfileSnapshot } from '@/lib/household-profile'
+import { jsonRateLimited } from '@/lib/api-response'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
+import { getMemberProfileSnapshot, syncHouseholdProfiles } from '@/lib/household-profile'
 import { notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
 import { BONUS_REWARDS, formatPoints, getMonthKey } from '@/shared/lib/bonus-shop'
 import { NextResponse } from 'next/server'
 
@@ -17,7 +20,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = (await request.json()) as PurchasePayload
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'bonus-purchase',
+      scope: auth.member.id,
+      limit: 20,
+      windowMs: 10 * 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
+  const body = (await request.json().catch(() => ({}))) as PurchasePayload
   const reward = BONUS_REWARDS.find(item => item.key === body.rewardKey)
 
   if (!reward) {
@@ -55,6 +73,9 @@ export async function POST(request: Request) {
       note: `Покупка бонуса "${reward.title}"`,
     },
   })
+
+  await syncHouseholdProfiles(prisma, auth.member.householdId)
+  await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   await notifyHousehold(
     prisma,

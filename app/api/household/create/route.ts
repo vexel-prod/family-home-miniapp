@@ -1,6 +1,12 @@
 import { authenticateTelegramRequest } from '@/lib/auth'
+import { jsonRateLimited } from '@/lib/api-response'
 import { generateInviteCode, HOUSEHOLD_INVITE_TTL_MS } from '@/lib/household'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
+import {
+  HOUSEHOLD_NAME_MAX_LENGTH,
+  validateRequiredText,
+} from '@/shared/lib/validation'
 import { NextResponse } from 'next/server'
 
 type CreateHouseholdPayload = {
@@ -19,12 +25,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Already in household' }, { status: 400 })
   }
 
-  const body = (await request.json()) as CreateHouseholdPayload
-  const householdName =
-    body.name?.trim() ||
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'household-create',
+      scope: String(auth.user.id),
+      limit: 3,
+      windowMs: 10 * 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
+  const body = (await request.json().catch(() => ({}))) as CreateHouseholdPayload
+  const fallbackName =
     [auth.user.first_name, auth.user.last_name].filter(Boolean).join(' ').trim() ||
     auth.user.username ||
     'My Household'
+  const householdName =
+    validateRequiredText(body.name ?? null, HOUSEHOLD_NAME_MAX_LENGTH) ??
+    validateRequiredText(fallbackName, HOUSEHOLD_NAME_MAX_LENGTH)
+
+  if (!householdName) {
+    return NextResponse.json({ ok: false, error: 'Invalid household name' }, { status: 400 })
+  }
 
   const member = await prisma.$transaction(async tx => {
     const household = await tx.household.create({

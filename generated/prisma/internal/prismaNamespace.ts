@@ -391,6 +391,7 @@ export const ModelName = {
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
   HouseholdInvite: 'HouseholdInvite',
+  ActionRateLimit: 'ActionRateLimit',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "householdInvite" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "householdInvite" | "actionRateLimit" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,6 +930,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ActionRateLimit: {
+      payload: Prisma.$ActionRateLimitPayload<ExtArgs>
+      fields: Prisma.ActionRateLimitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ActionRateLimitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ActionRateLimitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        findFirst: {
+          args: Prisma.ActionRateLimitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ActionRateLimitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        findMany: {
+          args: Prisma.ActionRateLimitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>[]
+        }
+        create: {
+          args: Prisma.ActionRateLimitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        createMany: {
+          args: Prisma.ActionRateLimitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ActionRateLimitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>[]
+        }
+        delete: {
+          args: Prisma.ActionRateLimitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        update: {
+          args: Prisma.ActionRateLimitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        deleteMany: {
+          args: Prisma.ActionRateLimitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ActionRateLimitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ActionRateLimitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>[]
+        }
+        upsert: {
+          args: Prisma.ActionRateLimitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        aggregate: {
+          args: Prisma.ActionRateLimitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateActionRateLimit>
+        }
+        groupBy: {
+          args: Prisma.ActionRateLimitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActionRateLimitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ActionRateLimitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActionRateLimitCountAggregateOutputType> | number
+        }
+      }
+    }
     MonthlyReport: {
       payload: Prisma.$MonthlyReportPayload<ExtArgs>
       fields: Prisma.MonthlyReportFieldRefs
@@ -1045,6 +1120,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const HouseholdScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  revision: 'revision',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1067,6 +1143,9 @@ export const MemberScalarFieldEnum = {
   experiencePoints: 'experiencePoints',
   level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
+  completedTasksCount: 'completedTasksCount',
+  fastTasksCount: 'fastTasksCount',
+  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1164,6 +1243,20 @@ export const HouseholdInviteScalarFieldEnum = {
 export type HouseholdInviteScalarFieldEnum = (typeof HouseholdInviteScalarFieldEnum)[keyof typeof HouseholdInviteScalarFieldEnum]
 
 
+export const ActionRateLimitScalarFieldEnum = {
+  key: 'key',
+  action: 'action',
+  scope: 'scope',
+  hits: 'hits',
+  windowStartedAt: 'windowStartedAt',
+  blockedUntil: 'blockedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ActionRateLimitScalarFieldEnum = (typeof ActionRateLimitScalarFieldEnum)[keyof typeof ActionRateLimitScalarFieldEnum]
+
+
 export const MonthlyReportScalarFieldEnum = {
   id: 'id',
   householdId: 'householdId',
@@ -1223,6 +1316,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1240,20 +1347,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1372,6 +1465,7 @@ export type GlobalOmitConfig = {
   bonusTransaction?: Prisma.BonusTransactionOmit
   bonusPurchase?: Prisma.BonusPurchaseOmit
   householdInvite?: Prisma.HouseholdInviteOmit
+  actionRateLimit?: Prisma.ActionRateLimitOmit
   monthlyReport?: Prisma.MonthlyReportOmit
 }
 

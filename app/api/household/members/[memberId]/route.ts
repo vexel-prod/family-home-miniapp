@@ -1,4 +1,5 @@
 import { authorizeRequest } from '@/lib/auth'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { getPrisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
@@ -46,6 +47,8 @@ export async function DELETE(
       role: 'member',
     },
   })
+
+  await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   return NextResponse.json({ ok: true })
 }

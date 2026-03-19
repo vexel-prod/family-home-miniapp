@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@/generated/prisma/client'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { randomBytes } from 'node:crypto'
 import { getMemberDisplayName } from '@/lib/household-notify'
 
@@ -51,7 +52,7 @@ export async function createHouseholdInvite(
     },
   })
 
-  return prisma.householdInvite.create({
+  const invite = await prisma.householdInvite.create({
     data: {
       householdId,
       createdByMemberId,
@@ -59,6 +60,10 @@ export async function createHouseholdInvite(
       expiresAt: new Date(now.getTime() + HOUSEHOLD_INVITE_TTL_MS),
     },
   })
+
+  await bumpHouseholdRevision(prisma, householdId)
+
+  return invite
 }
 
 export async function countActiveHouseholdMembers(

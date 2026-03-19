@@ -77,6 +77,11 @@ export type BonusPurchase = Prisma.BonusPurchaseModel
  */
 export type HouseholdInvite = Prisma.HouseholdInviteModel
 /**
+ * Model ActionRateLimit
+ * 
+ */
+export type ActionRateLimit = Prisma.ActionRateLimitModel
+/**
  * Model MonthlyReport
  * 
  */

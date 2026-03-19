@@ -1,6 +1,14 @@
 import { authenticateTelegramRequest } from '@/lib/auth'
+import { jsonRateLimited } from '@/lib/api-response'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { countActiveHouseholdMembers, MAX_HOUSEHOLD_MEMBERS } from '@/lib/household'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
+import { normalizeInviteCode } from '@/shared/lib/household'
+import {
+  INVITE_CODE_MAX_LENGTH,
+  INVITE_CODE_MIN_LENGTH,
+} from '@/shared/lib/validation'
 import { NextResponse } from 'next/server'
 
 type JoinHouseholdPayload = {
@@ -19,11 +27,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Already in household' }, { status: 400 })
   }
 
-  const body = (await request.json()) as JoinHouseholdPayload
-  const normalizedCode = body.code?.trim().toUpperCase()
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'household-join',
+      scope: String(auth.user.id),
+      limit: 10,
+      windowMs: 10 * 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
+  const body = (await request.json().catch(() => ({}))) as JoinHouseholdPayload
+  const normalizedCode = body.code ? normalizeInviteCode(body.code) : ''
 
   if (!normalizedCode) {
     return NextResponse.json({ ok: false, error: 'Missing invite code' }, { status: 400 })
+  }
+
+  if (
+    normalizedCode.length < INVITE_CODE_MIN_LENGTH ||
+    normalizedCode.length > INVITE_CODE_MAX_LENGTH
+  ) {
+    return NextResponse.json({ ok: false, error: 'Invalid invite code' }, { status: 400 })
   }
 
   const invite = await prisma.householdInvite.findUnique({
@@ -61,6 +91,8 @@ export async function POST(request: Request) {
       role: 'member',
     },
   })
+
+  await bumpHouseholdRevision(prisma, invite.householdId)
 
   return NextResponse.json({
     ok: true,

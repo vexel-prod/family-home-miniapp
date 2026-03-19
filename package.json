@@ -10,11 +10,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@prisma/adapter-neon": "^7.5.0",
     "@prisma/client": "^7.5.0",
-    "next": "16.1.1",
-    "@neondatabase/serverless": "^1.0.2",
+    "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^12.23.12",
+    "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

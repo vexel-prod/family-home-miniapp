@@ -35,7 +35,7 @@ export async function getMemberProfileSnapshot(
   prisma: PrismaClient,
   memberId: string,
 ): Promise<MemberProfileSnapshot> {
-  const [member, taskTransactions, transactionAggregate] = await Promise.all([
+  const [member, recentTaskTransactions] = await Promise.all([
     prisma.member.findUnique({
       where: { id: memberId },
       select: {
@@ -43,6 +43,90 @@ export async function getMemberProfileSnapshot(
         experiencePoints: true,
         level: true,
         bonusBalanceUnits: true,
+        completedTasksCount: true,
+        fastTasksCount: true,
+        overdueTasksCount: true,
+      },
+    }),
+    prisma.bonusTransaction.findMany({
+      where: {
+        memberId,
+        kind: {
+          in: ['task-complete', 'task-complete-together'],
+        },
+        taskId: {
+          not: null,
+        },
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      take: 8,
+      select: {
+        taskId: true,
+        task: {
+          select: {
+            id: true,
+            title: true,
+            createdAt: true,
+            completedAt: true,
+            deadlineAt: true,
+          },
+        },
+      },
+    }),
+  ])
+
+  if (!member) {
+    throw new Error(`Member not found: ${memberId}`)
+  }
+
+  const recentEvents: MemberProfileTaskEvent[] = []
+
+  for (const transaction of recentTaskTransactions) {
+    if (!transaction.task?.completedAt) {
+      continue
+    }
+
+    const { expDelta, variant } = getTaskExpResult(transaction.task)
+    recentEvents.push({
+      id: transaction.task.id,
+      title: transaction.task.title,
+      completedAt: transaction.task.completedAt.toISOString(),
+      expDelta,
+      variant,
+    })
+  }
+
+  const totalExp = member.experiencePoints
+  const currentLevel = member.level
+  const levelBonusUnits = getLevelBonusUnits(currentLevel)
+  const bonusBalanceUnits = member.bonusBalanceUnits
+  const currentLevelThreshold = getLevelThreshold(currentLevel)
+  const nextLevel = currentLevel + 1
+  const nextLevelThreshold = getLevelThreshold(nextLevel)
+
+  return {
+    totalExp,
+    currentLevel,
+    bonusBalanceUnits,
+    currentLevelThreshold,
+    nextLevel,
+    nextLevelThreshold,
+    expIntoCurrentLevel: totalExp - currentLevelThreshold,
+    expToNextLevel: nextLevelThreshold - totalExp,
+    completedTasksCount: member.completedTasksCount,
+    fastTasksCount: member.fastTasksCount,
+    overdueTasksCount: member.overdueTasksCount,
+    levelBonusUnits,
+    recentEvents,
+  }
+}
+
+async function recalculateMemberProfile(prisma: PrismaClient, memberId: string) {
+  const [member, taskTransactions, transactionAggregate] = await Promise.all([
+    prisma.member.findUnique({
+      where: { id: memberId },
+      select: {
+        id: true,
       },
     }),
     prisma.bonusTransaction.findMany({
@@ -57,7 +141,6 @@ export async function getMemberProfileSnapshot(
       },
       orderBy: [{ createdAt: 'desc' }],
       select: {
-        taskId: true,
         task: {
           select: {
             id: true,
@@ -86,13 +169,14 @@ export async function getMemberProfileSnapshot(
   let totalExp = 0
   let fastTasksCount = 0
   let overdueTasksCount = 0
-  const recentEvents: MemberProfileTaskEvent[] = []
+  let completedTasksCount = 0
 
   for (const transaction of taskTransactions) {
     if (!transaction.task?.completedAt) {
       continue
     }
 
+    completedTasksCount += 1
     const { expDelta, variant } = getTaskExpResult(transaction.task)
     totalExp += expDelta
 
@@ -103,61 +187,30 @@ export async function getMemberProfileSnapshot(
     if (variant === 'overdue') {
       overdueTasksCount += 1
     }
-
-    if (recentEvents.length < 8) {
-      recentEvents.push({
-        id: transaction.task.id,
-        title: transaction.task.title,
-        completedAt: transaction.task.completedAt.toISOString(),
-        expDelta,
-        variant,
-      })
-    }
   }
 
   const currentLevel = getCurrentLevel(totalExp)
   const levelBonusUnits = getLevelBonusUnits(currentLevel)
   const bonusBalanceUnits = (transactionAggregate._sum.amountUnits ?? 0) + levelBonusUnits
-  const currentLevelThreshold = getLevelThreshold(currentLevel)
-  const nextLevel = currentLevel + 1
-  const nextLevelThreshold = getLevelThreshold(nextLevel)
 
-  if (
-    member.experiencePoints !== totalExp ||
-    member.level !== currentLevel ||
-    member.bonusBalanceUnits !== bonusBalanceUnits
-  ) {
-    await prisma.member.update({
-      where: { id: memberId },
-      data: {
-        experiencePoints: totalExp,
-        level: currentLevel,
-        bonusBalanceUnits,
-      },
-    })
-  }
-
-  return {
-    totalExp,
-    currentLevel,
-    bonusBalanceUnits,
-    currentLevelThreshold,
-    nextLevel,
-    nextLevelThreshold,
-    expIntoCurrentLevel: totalExp - currentLevelThreshold,
-    expToNextLevel: nextLevelThreshold - totalExp,
-    completedTasksCount: taskTransactions.length,
-    fastTasksCount,
-    overdueTasksCount,
-    levelBonusUnits,
-    recentEvents,
-  }
+  await prisma.member.update({
+    where: { id: memberId },
+    data: {
+      experiencePoints: totalExp,
+      level: currentLevel,
+      bonusBalanceUnits,
+      completedTasksCount,
+      fastTasksCount,
+      overdueTasksCount,
+    },
+  })
 }
 
 export async function syncHouseholdProfiles(prisma: PrismaClient, householdId: string) {
   const members = await prisma.member.findMany({
     where: {
       householdId,
+      isActive: true,
     },
     select: {
       id: true,
@@ -165,6 +218,6 @@ export async function syncHouseholdProfiles(prisma: PrismaClient, householdId: s
   })
 
   for (const member of members) {
-    await getMemberProfileSnapshot(prisma, member.id)
+    await recalculateMemberProfile(prisma, member.id)
   }
 }

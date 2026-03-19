@@ -58,6 +58,7 @@ export const ModelName = {
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
   HouseholdInvite: 'HouseholdInvite',
+  ActionRateLimit: 'ActionRateLimit',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -80,6 +81,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const HouseholdScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  revision: 'revision',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -102,6 +104,9 @@ export const MemberScalarFieldEnum = {
   experiencePoints: 'experiencePoints',
   level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
+  completedTasksCount: 'completedTasksCount',
+  fastTasksCount: 'fastTasksCount',
+  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -197,6 +202,20 @@ export const HouseholdInviteScalarFieldEnum = {
 } as const
 
 export type HouseholdInviteScalarFieldEnum = (typeof HouseholdInviteScalarFieldEnum)[keyof typeof HouseholdInviteScalarFieldEnum]
+
+
+export const ActionRateLimitScalarFieldEnum = {
+  key: 'key',
+  action: 'action',
+  scope: 'scope',
+  hits: 'hits',
+  windowStartedAt: 'windowStartedAt',
+  blockedUntil: 'blockedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ActionRateLimitScalarFieldEnum = (typeof ActionRateLimitScalarFieldEnum)[keyof typeof ActionRateLimitScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {

@@ -1,5 +1,7 @@
 import { createMonthlyReportIfNeeded, processTaskDeadlineEvents } from '@/lib/bonus-ledger'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { notifyHousehold } from '@/lib/household-notify'
+import { getElapsedMs, logApiEvent } from '@/lib/observability'
 import { getPrisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
@@ -24,42 +26,82 @@ function canSendMonthlyReport(now = new Date()) {
 }
 
 export async function GET(request: Request) {
+  const startedAt = Date.now()
   const expectedSecret = process.env.CRON_SECRET
   const providedSecret = request.headers.get('x-cron-secret')
 
   if (expectedSecret && providedSecret !== expectedSecret) {
+    logApiEvent('warn', {
+      route: '/api/cron/household',
+      method: 'GET',
+      status: 403,
+      durationMs: getElapsedMs(startedAt),
+    })
+
     return NextResponse.json({ ok: false, error: 'Forbidden' }, { status: 403 })
   }
 
   const prisma = getPrisma()
-  await processTaskDeadlineEvents(prisma)
+  try {
+    await processTaskDeadlineEvents(prisma)
 
-  if (canSendMonthlyReport()) {
-    const households = await prisma.household.findMany({
-      select: { id: true },
-    })
+    let reportsSent = 0
+    let householdsScanned = 0
 
-    const previousMonthKey = getPreviousMonthKey()
+    if (canSendMonthlyReport()) {
+      const households = await prisma.household.findMany({
+        select: { id: true },
+      })
 
-    for (const household of households) {
-      const report = await createMonthlyReportIfNeeded(prisma, household.id, previousMonthKey)
+      householdsScanned = households.length
+      const previousMonthKey = getPreviousMonthKey()
 
-      if (!report.sentAt) {
-        await notifyHousehold(
-          prisma,
-          household.id,
-          `Household\n\n${report.title}\n\n${report.reportBody}`,
-        )
+      for (const household of households) {
+        const report = await createMonthlyReportIfNeeded(prisma, household.id, previousMonthKey)
 
-        await prisma.monthlyReport.update({
-          where: { id: report.id },
-          data: {
-            sentAt: new Date(),
-          },
-        })
+        if (!report.sentAt) {
+          await notifyHousehold(
+            prisma,
+            household.id,
+            `Household\n\n${report.title}\n\n${report.reportBody}`,
+          )
+
+          await prisma.monthlyReport.update({
+            where: { id: report.id },
+            data: {
+              sentAt: new Date(),
+            },
+          })
+
+          await bumpHouseholdRevision(prisma, household.id)
+          reportsSent += 1
+        }
       }
     }
-  }
 
-  return NextResponse.json({ ok: true })
+    const response = NextResponse.json({ ok: true })
+
+    logApiEvent('info', {
+      route: '/api/cron/household',
+      method: 'GET',
+      status: 200,
+      durationMs: getElapsedMs(startedAt),
+      meta: {
+        reportsSent,
+        householdsScanned,
+      },
+    })
+
+    return response
+  } catch (error) {
+    logApiEvent('error', {
+      route: '/api/cron/household',
+      method: 'GET',
+      status: 500,
+      durationMs: getElapsedMs(startedAt),
+      error: error instanceof Error ? error.message : 'cron-household-failed',
+    })
+
+    throw error
+  }
 }
