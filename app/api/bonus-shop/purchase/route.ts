@@ -1,8 +1,11 @@
 import { authorizeRequest } from '@/lib/auth'
-import { getMemberProfileSnapshot } from '@/lib/household-profile'
+import { jsonRateLimited } from '@/lib/api-response'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
+import { getMemberProfileSnapshot, syncHouseholdProfiles } from '@/lib/household-profile'
 import { notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
-import { BONUS_REWARDS, formatPoints, getMonthKey } from '@/shared/lib/bonus-shop'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
+import { formatPoints, getMonthKey } from '@/shared/lib/bonus-shop'
 import { NextResponse } from 'next/server'
 
 type PurchasePayload = {
@@ -17,10 +20,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = (await request.json()) as PurchasePayload
-  const reward = BONUS_REWARDS.find(item => item.key === body.rewardKey)
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'bonus-purchase',
+      scope: auth.member.id,
+      limit: 20,
+      windowMs: 10 * 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
 
-  if (!reward) {
+    throw error
+  }
+
+  const body = (await request.json().catch(() => ({}))) as PurchasePayload
+  const reward = body.rewardKey
+    ? await prisma.bonusReward.findUnique({
+        where: {
+          id: body.rewardKey,
+        },
+      })
+    : null
+
+  if (!reward || reward.householdId !== auth.member.householdId || reward.isArchived) {
     return NextResponse.json({ ok: false, error: 'Reward not found' }, { status: 404 })
   }
 
@@ -38,7 +62,7 @@ export async function POST(request: Request) {
       householdId: auth.member.householdId,
       memberId: auth.member.id,
       monthKey,
-      rewardKey: reward.key,
+      rewardKey: reward.id,
       rewardTitle: reward.title,
       costUnits: reward.costUnits,
     },
@@ -55,6 +79,9 @@ export async function POST(request: Request) {
       note: `Покупка бонуса "${reward.title}"`,
     },
   })
+
+  await syncHouseholdProfiles(prisma, auth.member.householdId)
+  await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   await notifyHousehold(
     prisma,

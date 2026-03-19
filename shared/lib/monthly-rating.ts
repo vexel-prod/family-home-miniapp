@@ -1,5 +1,5 @@
-import type { HouseholdTask, MonthlyLeaderboardEntry } from '@/shared/types/family'
-import { BONUS_REWARDS, POINT_UNITS } from '@/shared/lib/bonus-shop'
+import type { BonusReward, HouseholdTask, MonthlyLeaderboardEntry } from '@/shared/types/family'
+import { POINT_UNITS } from '@/shared/lib/bonus-shop'
 
 const MOSCOW_UTC_OFFSET_HOURS = 3
 
@@ -35,11 +35,6 @@ export type MonthlyRatingSummary = {
   }>
 }
 
-const MILESTONES = BONUS_REWARDS.map(reward => ({
-  target: reward.costUnits / POINT_UNITS,
-  label: reward.title,
-}))
-
 function getMoscowMonthStart(date = new Date()) {
   const formatter = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Europe/Moscow',
@@ -71,6 +66,7 @@ export function isTaskInCurrentMoscowMonth(task: HouseholdTask, now = new Date()
 export function buildMonthlyRatingSummary(
   leaderboardEntries: MonthlyLeaderboardEntry[],
   teamBonusPoints: number,
+  rewards: BonusReward[],
   currentUserName?: string,
 ): MonthlyRatingSummary {
   const leaderboard = [...leaderboardEntries].sort((left, right) => {
@@ -96,8 +92,12 @@ export function buildMonthlyRatingSummary(
       )
     : -1
   const currentUser = currentUserIndex >= 0 ? leaderboard[currentUserIndex] : undefined
+  const milestones = rewards.map(reward => ({
+    label: reward.title,
+    target: reward.costUnits / POINT_UNITS,
+  }))
   const nextMilestone = currentUser
-    ? MILESTONES.find(milestone => currentUser.points < milestone.target)
+    ? milestones.find(milestone => currentUser.points < milestone.target)
     : undefined
 
   return {
@@ -123,6 +123,6 @@ export function buildMonthlyRatingSummary(
             : undefined,
         }
       : undefined,
-    milestones: MILESTONES,
+    milestones,
   }
 }

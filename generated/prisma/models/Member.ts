@@ -30,12 +30,18 @@ export type MemberAvgAggregateOutputType = {
   experiencePoints: number | null
   level: number | null
   bonusBalanceUnits: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
 }
 
 export type MemberSumAggregateOutputType = {
   experiencePoints: number | null
   level: number | null
   bonusBalanceUnits: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
 }
 
 export type MemberMinAggregateOutputType = {
@@ -53,6 +59,9 @@ export type MemberMinAggregateOutputType = {
   experiencePoints: number | null
   level: number | null
   bonusBalanceUnits: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +81,9 @@ export type MemberMaxAggregateOutputType = {
   experiencePoints: number | null
   level: number | null
   bonusBalanceUnits: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -91,6 +103,9 @@ export type MemberCountAggregateOutputType = {
   experiencePoints: number
   level: number
   bonusBalanceUnits: number
+  completedTasksCount: number
+  fastTasksCount: number
+  overdueTasksCount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -101,12 +116,18 @@ export type MemberAvgAggregateInputType = {
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
 }
 
 export type MemberSumAggregateInputType = {
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
 }
 
 export type MemberMinAggregateInputType = {
@@ -124,6 +145,9 @@ export type MemberMinAggregateInputType = {
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -143,6 +167,9 @@ export type MemberMaxAggregateInputType = {
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -162,6 +189,9 @@ export type MemberCountAggregateInputType = {
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -268,6 +298,9 @@ export type MemberGroupByOutputType = {
   experiencePoints: number
   level: number
   bonusBalanceUnits: number
+  completedTasksCount: number
+  fastTasksCount: number
+  overdueTasksCount: number
   createdAt: Date
   updatedAt: Date
   _count: MemberCountAggregateOutputType | null
@@ -310,12 +343,17 @@ export type MemberWhereInput = {
   experiencePoints?: Prisma.IntFilter<"Member"> | number
   level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
+  completedTasksCount?: Prisma.IntFilter<"Member"> | number
+  fastTasksCount?: Prisma.IntFilter<"Member"> | number
+  overdueTasksCount?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
   bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
   createdInvites?: Prisma.HouseholdInviteListRelationFilter
+  createdBonusRewards?: Prisma.BonusRewardListRelationFilter
+  createdFamilyGoals?: Prisma.FamilyGoalListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -333,12 +371,17 @@ export type MemberOrderByWithRelationInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   household?: Prisma.HouseholdOrderByWithRelationInput
   bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
   bonusPurchases?: Prisma.BonusPurchaseOrderByRelationAggregateInput
   createdInvites?: Prisma.HouseholdInviteOrderByRelationAggregateInput
+  createdBonusRewards?: Prisma.BonusRewardOrderByRelationAggregateInput
+  createdFamilyGoals?: Prisma.FamilyGoalOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -359,12 +402,17 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   experiencePoints?: Prisma.IntFilter<"Member"> | number
   level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
+  completedTasksCount?: Prisma.IntFilter<"Member"> | number
+  fastTasksCount?: Prisma.IntFilter<"Member"> | number
+  overdueTasksCount?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
   bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
   createdInvites?: Prisma.HouseholdInviteListRelationFilter
+  createdBonusRewards?: Prisma.BonusRewardListRelationFilter
+  createdFamilyGoals?: Prisma.FamilyGoalListRelationFilter
 }, "id" | "telegramUserId" | "chatId">
 
 export type MemberOrderByWithAggregationInput = {
@@ -382,6 +430,9 @@ export type MemberOrderByWithAggregationInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
@@ -409,6 +460,9 @@ export type MemberScalarWhereWithAggregatesInput = {
   experiencePoints?: Prisma.IntWithAggregatesFilter<"Member"> | number
   level?: Prisma.IntWithAggregatesFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  completedTasksCount?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  fastTasksCount?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  overdueTasksCount?: Prisma.IntWithAggregatesFilter<"Member"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
 }
@@ -427,12 +481,17 @@ export type MemberCreateInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -450,11 +509,16 @@ export type MemberUncheckedCreateInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -471,12 +535,17 @@ export type MemberUpdateInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -494,11 +563,16 @@ export type MemberUncheckedUpdateInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -516,6 +590,9 @@ export type MemberCreateManyInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -534,6 +611,9 @@ export type MemberUpdateManyMutationInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -553,6 +633,9 @@ export type MemberUncheckedUpdateManyInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -582,6 +665,9 @@ export type MemberCountOrderByAggregateInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -590,6 +676,9 @@ export type MemberAvgOrderByAggregateInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
 }
 
 export type MemberMaxOrderByAggregateInput = {
@@ -607,6 +696,9 @@ export type MemberMaxOrderByAggregateInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -626,6 +718,9 @@ export type MemberMinOrderByAggregateInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -634,6 +729,9 @@ export type MemberSumOrderByAggregateInput = {
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
 }
 
 export type MemberScalarRelationFilter = {
@@ -695,14 +793,6 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type MemberCreateNestedOneWithoutBonusTransactionsInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutBonusTransactionsInput, Prisma.MemberUncheckedCreateWithoutBonusTransactionsInput>
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutBonusTransactionsInput
@@ -729,6 +819,34 @@ export type MemberUpdateOneRequiredWithoutBonusPurchasesNestedInput = {
   upsert?: Prisma.MemberUpsertWithoutBonusPurchasesInput
   connect?: Prisma.MemberWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutBonusPurchasesInput, Prisma.MemberUpdateWithoutBonusPurchasesInput>, Prisma.MemberUncheckedUpdateWithoutBonusPurchasesInput>
+}
+
+export type MemberCreateNestedOneWithoutCreatedBonusRewardsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedBonusRewardsInput, Prisma.MemberUncheckedCreateWithoutCreatedBonusRewardsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedBonusRewardsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutCreatedBonusRewardsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedBonusRewardsInput, Prisma.MemberUncheckedCreateWithoutCreatedBonusRewardsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedBonusRewardsInput
+  upsert?: Prisma.MemberUpsertWithoutCreatedBonusRewardsInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutCreatedBonusRewardsInput, Prisma.MemberUpdateWithoutCreatedBonusRewardsInput>, Prisma.MemberUncheckedUpdateWithoutCreatedBonusRewardsInput>
+}
+
+export type MemberCreateNestedOneWithoutCreatedFamilyGoalsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedFamilyGoalsInput, Prisma.MemberUncheckedCreateWithoutCreatedFamilyGoalsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedFamilyGoalsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutCreatedFamilyGoalsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedFamilyGoalsInput, Prisma.MemberUncheckedCreateWithoutCreatedFamilyGoalsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedFamilyGoalsInput
+  upsert?: Prisma.MemberUpsertWithoutCreatedFamilyGoalsInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutCreatedFamilyGoalsInput, Prisma.MemberUpdateWithoutCreatedFamilyGoalsInput>, Prisma.MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput>
 }
 
 export type MemberCreateNestedOneWithoutCreatedInvitesInput = {
@@ -759,11 +877,16 @@ export type MemberCreateWithoutHouseholdInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutHouseholdInput = {
@@ -780,11 +903,16 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutHouseholdInput = {
@@ -831,6 +959,9 @@ export type MemberScalarWhereInput = {
   experiencePoints?: Prisma.IntFilter<"Member"> | number
   level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
+  completedTasksCount?: Prisma.IntFilter<"Member"> | number
+  fastTasksCount?: Prisma.IntFilter<"Member"> | number
+  overdueTasksCount?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
 }
@@ -849,11 +980,16 @@ export type MemberCreateWithoutBonusTransactionsInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
@@ -871,10 +1007,15 @@ export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusTransactionsInput = {
@@ -907,11 +1048,16 @@ export type MemberUpdateWithoutBonusTransactionsInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
@@ -929,10 +1075,15 @@ export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberCreateWithoutBonusPurchasesInput = {
@@ -949,11 +1100,16 @@ export type MemberCreateWithoutBonusPurchasesInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
@@ -971,10 +1127,15 @@ export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusPurchasesInput = {
@@ -1007,11 +1168,16 @@ export type MemberUpdateWithoutBonusPurchasesInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
@@ -1029,10 +1195,255 @@ export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+}
+
+export type MemberCreateWithoutCreatedBonusRewardsInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+}
+
+export type MemberUncheckedCreateWithoutCreatedBonusRewardsInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+}
+
+export type MemberCreateOrConnectWithoutCreatedBonusRewardsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedBonusRewardsInput, Prisma.MemberUncheckedCreateWithoutCreatedBonusRewardsInput>
+}
+
+export type MemberUpsertWithoutCreatedBonusRewardsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedBonusRewardsInput, Prisma.MemberUncheckedUpdateWithoutCreatedBonusRewardsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedBonusRewardsInput, Prisma.MemberUncheckedCreateWithoutCreatedBonusRewardsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutCreatedBonusRewardsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedBonusRewardsInput, Prisma.MemberUncheckedUpdateWithoutCreatedBonusRewardsInput>
+}
+
+export type MemberUpdateWithoutCreatedBonusRewardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutCreatedBonusRewardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+}
+
+export type MemberCreateWithoutCreatedFamilyGoalsInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+}
+
+export type MemberUncheckedCreateWithoutCreatedFamilyGoalsInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+}
+
+export type MemberCreateOrConnectWithoutCreatedFamilyGoalsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedFamilyGoalsInput, Prisma.MemberUncheckedCreateWithoutCreatedFamilyGoalsInput>
+}
+
+export type MemberUpsertWithoutCreatedFamilyGoalsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedFamilyGoalsInput, Prisma.MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedFamilyGoalsInput, Prisma.MemberUncheckedCreateWithoutCreatedFamilyGoalsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutCreatedFamilyGoalsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedFamilyGoalsInput, Prisma.MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput>
+}
+
+export type MemberUpdateWithoutCreatedFamilyGoalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedInvitesInput = {
@@ -1049,11 +1460,16 @@ export type MemberCreateWithoutCreatedInvitesInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
@@ -1071,10 +1487,15 @@ export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedInvitesInput = {
@@ -1107,11 +1528,16 @@ export type MemberUpdateWithoutCreatedInvitesInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
@@ -1129,10 +1555,15 @@ export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberCreateManyHouseholdInput = {
@@ -1149,6 +1580,9 @@ export type MemberCreateManyHouseholdInput = {
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1167,11 +1601,16 @@ export type MemberUpdateWithoutHouseholdInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutHouseholdInput = {
@@ -1188,11 +1627,16 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
@@ -1209,6 +1653,9 @@ export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1222,12 +1669,16 @@ export type MemberCountOutputType = {
   bonusTransactions: number
   bonusPurchases: number
   createdInvites: number
+  createdBonusRewards: number
+  createdFamilyGoals: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bonusTransactions?: boolean | MemberCountOutputTypeCountBonusTransactionsArgs
   bonusPurchases?: boolean | MemberCountOutputTypeCountBonusPurchasesArgs
   createdInvites?: boolean | MemberCountOutputTypeCountCreatedInvitesArgs
+  createdBonusRewards?: boolean | MemberCountOutputTypeCountCreatedBonusRewardsArgs
+  createdFamilyGoals?: boolean | MemberCountOutputTypeCountCreatedFamilyGoalsArgs
 }
 
 /**
@@ -1261,6 +1712,20 @@ export type MemberCountOutputTypeCountCreatedInvitesArgs<ExtArgs extends runtime
   where?: Prisma.HouseholdInviteWhereInput
 }
 
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountCreatedBonusRewardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BonusRewardWhereInput
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountCreatedFamilyGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FamilyGoalWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1277,12 +1742,17 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
   bonusPurchases?: boolean | Prisma.Member$bonusPurchasesArgs<ExtArgs>
   createdInvites?: boolean | Prisma.Member$createdInvitesArgs<ExtArgs>
+  createdBonusRewards?: boolean | Prisma.Member$createdBonusRewardsArgs<ExtArgs>
+  createdFamilyGoals?: boolean | Prisma.Member$createdFamilyGoalsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -1301,6 +1771,9 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -1321,6 +1794,9 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -1341,16 +1817,21 @@ export type MemberSelectScalar = {
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "role" | "isActive" | "joinedAt" | "leftAt" | "experiencePoints" | "level" | "bonusBalanceUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "role" | "isActive" | "joinedAt" | "leftAt" | "experiencePoints" | "level" | "bonusBalanceUnits" | "completedTasksCount" | "fastTasksCount" | "overdueTasksCount" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
   bonusPurchases?: boolean | Prisma.Member$bonusPurchasesArgs<ExtArgs>
   createdInvites?: boolean | Prisma.Member$createdInvitesArgs<ExtArgs>
+  createdBonusRewards?: boolean | Prisma.Member$createdBonusRewardsArgs<ExtArgs>
+  createdFamilyGoals?: boolean | Prisma.Member$createdFamilyGoalsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1367,6 +1848,8 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
     bonusPurchases: Prisma.$BonusPurchasePayload<ExtArgs>[]
     createdInvites: Prisma.$HouseholdInvitePayload<ExtArgs>[]
+    createdBonusRewards: Prisma.$BonusRewardPayload<ExtArgs>[]
+    createdFamilyGoals: Prisma.$FamilyGoalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1383,6 +1866,9 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     experiencePoints: number
     level: number
     bonusBalanceUnits: number
+    completedTasksCount: number
+    fastTasksCount: number
+    overdueTasksCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["member"]>
@@ -1783,6 +2269,8 @@ export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.T
   bonusTransactions<T extends Prisma.Member$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bonusPurchases<T extends Prisma.Member$bonusPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$bonusPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdInvites<T extends Prisma.Member$createdInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdBonusRewards<T extends Prisma.Member$createdBonusRewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdBonusRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdFamilyGoals<T extends Prisma.Member$createdFamilyGoalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdFamilyGoalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FamilyGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1826,6 +2314,9 @@ export interface MemberFieldRefs {
   readonly experiencePoints: Prisma.FieldRef<"Member", 'Int'>
   readonly level: Prisma.FieldRef<"Member", 'Int'>
   readonly bonusBalanceUnits: Prisma.FieldRef<"Member", 'Int'>
+  readonly completedTasksCount: Prisma.FieldRef<"Member", 'Int'>
+  readonly fastTasksCount: Prisma.FieldRef<"Member", 'Int'>
+  readonly overdueTasksCount: Prisma.FieldRef<"Member", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Member", 'DateTime'>
 }
@@ -2298,6 +2789,54 @@ export type Member$createdInvitesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.HouseholdInviteScalarFieldEnum | Prisma.HouseholdInviteScalarFieldEnum[]
+}
+
+/**
+ * Member.createdBonusRewards
+ */
+export type Member$createdBonusRewardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BonusReward
+   */
+  select?: Prisma.BonusRewardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BonusReward
+   */
+  omit?: Prisma.BonusRewardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BonusRewardInclude<ExtArgs> | null
+  where?: Prisma.BonusRewardWhereInput
+  orderBy?: Prisma.BonusRewardOrderByWithRelationInput | Prisma.BonusRewardOrderByWithRelationInput[]
+  cursor?: Prisma.BonusRewardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BonusRewardScalarFieldEnum | Prisma.BonusRewardScalarFieldEnum[]
+}
+
+/**
+ * Member.createdFamilyGoals
+ */
+export type Member$createdFamilyGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FamilyGoal
+   */
+  select?: Prisma.FamilyGoalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FamilyGoal
+   */
+  omit?: Prisma.FamilyGoalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FamilyGoalInclude<ExtArgs> | null
+  where?: Prisma.FamilyGoalWhereInput
+  orderBy?: Prisma.FamilyGoalOrderByWithRelationInput | Prisma.FamilyGoalOrderByWithRelationInput[]
+  cursor?: Prisma.FamilyGoalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FamilyGoalScalarFieldEnum | Prisma.FamilyGoalScalarFieldEnum[]
 }
 
 /**

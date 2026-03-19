@@ -1,4 +1,6 @@
 import type { PrismaClient } from '@/generated/prisma/client'
+import { syncActiveSpiritualGoal } from '@/lib/family-goal'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { syncHouseholdProfiles } from '@/lib/household-profile'
 import {
   DEADLINE_PENALTY_DELAY_MS,
@@ -48,6 +50,27 @@ export async function clearTaskBonusTransactions(
   prisma: PrismaClient,
   taskId: string,
 ) {
+  const [task, togetherTransactions] = await Promise.all([
+    prisma.householdTask.findUnique({
+      where: { id: taskId },
+      select: {
+        householdId: true,
+        createdAt: true,
+        completedAt: true,
+      },
+    }),
+    prisma.bonusTransaction.findMany({
+      where: {
+        taskId,
+        kind: 'task-complete-together',
+      },
+      select: {
+        id: true,
+      },
+      take: 1,
+    }),
+  ])
+
   await prisma.bonusTransaction.deleteMany({
     where: {
       taskId,
@@ -56,6 +79,24 @@ export async function clearTaskBonusTransactions(
       },
     },
   })
+
+  if (task?.completedAt && togetherTransactions.length) {
+    const togetherUnits = getTaskAwardUnits({
+      createdAt: task.createdAt,
+      completedAt: task.completedAt,
+    })
+
+    await prisma.household.update({
+      where: { id: task.householdId },
+      data: {
+        sharedGoalUnits: {
+          decrement: togetherUnits,
+        },
+      },
+    })
+
+    await syncActiveSpiritualGoal(prisma, task.householdId)
+  }
 }
 
 export async function awardTaskCompletionBonuses(
@@ -81,31 +122,38 @@ export async function awardTaskCompletionBonuses(
 
   if (together) {
     const members = await prisma.member.findMany({
-      where: { householdId: task.householdId },
+      where: { householdId: task.householdId, isActive: true },
       orderBy: [{ createdAt: 'asc' }],
       select: { id: true },
     })
 
-    const memberShares = splitUnitsEvenly(
-      awardUnits,
-      members.map(member => member.id),
-    )
-
-    if (!memberShares.length) {
+    if (!members.length) {
       return
     }
 
-    await prisma.bonusTransaction.createMany({
-      data: memberShares.map(share => ({
-        householdId: task.householdId,
-        memberId: share.memberId,
-        taskId: task.id,
-        monthKey,
-        kind: 'task-complete-together',
-        amountUnits: share.units,
-        note: `Совместно выполнена задача "${task.title}"`,
-      })),
-    })
+    await prisma.$transaction([
+      prisma.bonusTransaction.createMany({
+        data: members.map(member => ({
+          householdId: task.householdId,
+          memberId: member.id,
+          taskId: task.id,
+          monthKey,
+          kind: 'task-complete-together',
+          amountUnits: 0,
+          note: `Совместно выполнена задача "${task.title}"`,
+        })),
+      }),
+      prisma.household.update({
+        where: { id: task.householdId },
+        data: {
+          sharedGoalUnits: {
+            increment: awardUnits,
+          },
+        },
+      }),
+    ])
+
+    await syncActiveSpiritualGoal(prisma, task.householdId)
 
     return
   }
@@ -172,33 +220,38 @@ export async function backfillCurrentMonthTaskBonuses(
 
     if (task.completedByName === 'Сделано вместе') {
       const members = await prisma.member.findMany({
-        where: { householdId: task.householdId },
+        where: { householdId: task.householdId, isActive: true },
         orderBy: [{ createdAt: 'asc' }],
         select: { id: true },
       })
 
-      const shares = splitUnitsEvenly(
-        getTaskAwardUnits({
-          createdAt: task.createdAt,
-          completedAt: task.completedAt,
-        }),
-        members.map(member => member.id),
-      )
-
-      if (shares.length) {
+      if (members.length) {
         await prisma.bonusTransaction.createMany({
-          data: shares.map(share => ({
+          data: members.map(member => ({
             householdId: task.householdId,
-            memberId: share.memberId,
+            memberId: member.id,
             taskId: task.id,
             monthKey,
             kind: 'task-complete-together',
-            amountUnits: share.units,
+            amountUnits: 0,
             note: `Backfill: совместно выполнена задача "${task.title}"`,
           })),
         })
 
-        createdTransactions += shares.length
+        await prisma.household.update({
+          where: { id: task.householdId },
+          data: {
+            sharedGoalUnits: {
+              increment: getTaskAwardUnits({
+                createdAt: task.createdAt,
+                completedAt: task.completedAt,
+              }),
+            },
+          },
+        })
+
+        await syncActiveSpiritualGoal(prisma, task.householdId)
+        createdTransactions += members.length
       }
 
       continue
@@ -416,6 +469,7 @@ export async function processTaskDeadlineEvents(
         ])
 
         await syncHouseholdProfiles(prisma, task.householdId)
+        await bumpHouseholdRevision(prisma, task.householdId)
       }
 
       const memberNames = members.map(getMemberDisplayName).join(', ')
@@ -448,6 +502,8 @@ export async function processTaskDeadlineEvents(
         lastDeadlineReminderAt: now,
       },
     })
+
+    await bumpHouseholdRevision(prisma, task.householdId)
 
     await notifyHousehold(
       prisma,
@@ -540,7 +596,7 @@ export async function createMonthlyReportIfNeeded(
     )
   }
 
-  return prisma.monthlyReport.create({
+  const report = await prisma.monthlyReport.create({
     data: {
       householdId,
       monthKey,
@@ -548,4 +604,8 @@ export async function createMonthlyReportIfNeeded(
       reportBody: lines.join('\n'),
     },
   })
+
+  await bumpHouseholdRevision(prisma, householdId)
+
+  return report
 }

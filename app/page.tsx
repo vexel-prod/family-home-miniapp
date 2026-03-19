@@ -29,8 +29,10 @@ import {
 import { formatPoints } from '@/shared/lib/bonus-shop'
 import { getActorName, getTelegramInitData, getTelegramUser } from '@/shared/lib/telegram'
 import type {
+  BonusReward,
   BonusPurchase,
   BootstrapResponse,
+  FamilyGoal,
   FetchOptions,
   HouseholdProfile,
   HouseholdSummary,
@@ -51,6 +53,35 @@ type TaskMutationResponse = {
 type ShoppingMutationResponse = {
   ok: boolean
   shoppingItem: ShoppingItem
+}
+
+type ApiErrorPayload = {
+  error?: string
+  retryAfterSeconds?: number
+}
+
+async function readApiErrorPayload(response: Response) {
+  return (await response.json().catch(() => null)) as ApiErrorPayload | null
+}
+
+function formatRetryAfterLabel(retryAfterSeconds?: number) {
+  if (!retryAfterSeconds || retryAfterSeconds <= 0) {
+    return 'через пару секунд'
+  }
+
+  if (retryAfterSeconds < 60) {
+    return `через ${retryAfterSeconds} сек.`
+  }
+
+  return `через ${Math.ceil(retryAfterSeconds / 60)} мин.`
+}
+
+function getApiErrorMessage(payload: ApiErrorPayload | null, fallbackMessage: string) {
+  if (payload?.error === 'Too many requests') {
+    return `Слишком много запросов. Попробуй снова ${formatRetryAfterLabel(payload.retryAfterSeconds)}.`
+  }
+
+  return fallbackMessage
 }
 
 function toDeadlineParts(value?: string | null) {
@@ -152,6 +183,8 @@ export default function Page() {
   const [appState, setAppState] = useState<'loading' | 'onboarding' | 'active'>('loading')
   const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
   const [household, setHousehold] = useState<HouseholdSummary | null>(null)
+  const [bonusRewards, setBonusRewards] = useState<BonusReward[]>([])
+  const [familyGoal, setFamilyGoal] = useState<FamilyGoal | null>(null)
   const [currentUserProfile, setCurrentUserProfile] = useState<HouseholdProfile>({
     totalExp: 0,
     currentLevel: 0,
@@ -191,6 +224,15 @@ export default function Page() {
   const [createHouseholdName, setCreateHouseholdName] = useState('')
   const [joinHouseholdCode, setJoinHouseholdCode] = useState('')
   const [customInviteCode, setCustomInviteCode] = useState('')
+  const [rewardTitle, setRewardTitle] = useState('')
+  const [rewardDescription, setRewardDescription] = useState('')
+  const [rewardCost, setRewardCost] = useState('')
+  const [goalKind, setGoalKind] = useState<'spiritual' | 'material'>('spiritual')
+  const [goalTitle, setGoalTitle] = useState('')
+  const [goalDescription, setGoalDescription] = useState('')
+  const [goalTargetValue, setGoalTargetValue] = useState('')
+  const [goalCurrentValue, setGoalCurrentValue] = useState('')
+  const [goalUnitLabel, setGoalUnitLabel] = useState('')
   const [onboardingStatus, setOnboardingStatus] = useState('')
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [taskCreateStatus, setTaskCreateStatus] = useState('')
@@ -205,6 +247,7 @@ export default function Page() {
   const monthlyRatingSummary = buildMonthlyRatingSummary(
     monthlyLeaderboardEntries,
     monthlyTeamBonusPoints,
+    bonusRewards,
     getActorName(buyer),
   )
 
@@ -365,7 +408,12 @@ export default function Page() {
         )
 
         if (!response.ok) {
-          throw new Error('bootstrap failed')
+          throw new Error(
+            getApiErrorMessage(
+              await readApiErrorPayload(response),
+              'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
+            ),
+          )
         }
 
         const payload = (await response.json()) as BootstrapResponse
@@ -379,6 +427,8 @@ export default function Page() {
           setParticipantNames([])
           setCurrentUserBonusBalanceUnits(0)
           setHousehold(null)
+          setBonusRewards([])
+          setFamilyGoal(null)
           setCurrentUserProfile({
             totalExp: 0,
             currentLevel: 0,
@@ -397,6 +447,15 @@ export default function Page() {
           setBonusPurchases([])
           setMonthlyReports([])
           setShoppingItems([])
+          setRewardTitle('')
+          setRewardDescription('')
+          setRewardCost('')
+          setGoalKind('spiritual')
+          setGoalTitle('')
+          setGoalDescription('')
+          setGoalTargetValue('')
+          setGoalCurrentValue('')
+          setGoalUnitLabel('')
           setModal(null)
           return
         }
@@ -410,14 +469,26 @@ export default function Page() {
         setParticipantNames(payload.participantNames)
         setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
         setHousehold(payload.household)
+        setBonusRewards(payload.bonusRewards)
+        setFamilyGoal(payload.familyGoal)
         setCustomInviteCode(payload.household.activeInvite?.code ?? '')
         setCurrentUserProfile(payload.currentUserProfile)
         setBonusPurchases(payload.bonusPurchases)
         setMonthlyReports(payload.monthlyReports)
         setShoppingItems(payload.activeShoppingItems)
-      } catch {
+        setGoalKind(payload.familyGoal?.kind ?? 'spiritual')
+        setGoalTitle(payload.familyGoal?.title ?? '')
+        setGoalDescription(payload.familyGoal?.description ?? '')
+        setGoalTargetValue(payload.familyGoal ? String(payload.familyGoal.targetValue) : '')
+        setGoalCurrentValue(
+          payload.familyGoal?.kind === 'material' ? String(payload.familyGoal.currentValue) : '',
+        )
+        setGoalUnitLabel(payload.familyGoal?.kind === 'material' ? payload.familyGoal.unitLabel ?? '' : '')
+      } catch (loadError) {
         setError(
-          'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
+          loadError instanceof Error
+            ? loadError.message
+            : 'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
         )
       } finally {
         bootstrapRequestInFlight.current = false
@@ -455,6 +526,7 @@ export default function Page() {
 
     let disposed = false
     let reconnectTimeoutId: number | null = null
+    let reconnectDelayMs = 2000
 
     const refreshData = () => {
       startTransition(() => {
@@ -469,7 +541,9 @@ export default function Page() {
 
       eventSourceRef.current = eventSource
 
-      eventSource.onopen = () => {}
+      eventSource.onopen = () => {
+        reconnectDelayMs = 2000
+      }
 
       eventSource.addEventListener('household-updated', () => {
         refreshData()
@@ -479,9 +553,11 @@ export default function Page() {
         eventSource.close()
 
         if (!disposed) {
+          const currentDelay = reconnectDelayMs
+          reconnectDelayMs = Math.min(reconnectDelayMs * 2, 30000)
           reconnectTimeoutId = window.setTimeout(() => {
             connectToEventStream()
-          }, 2000)
+          }, currentDelay)
         }
       }
     }
@@ -603,7 +679,9 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('task create failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), `Ошибка добавления задачи: ${title}`),
+        )
       }
 
       const payload = (await response.json()) as TaskMutationResponse
@@ -616,9 +694,11 @@ export default function Page() {
       setModal('household')
       setToast(`Задача добавлена: ${title}`)
       upsertOpenTask(payload.task)
-    } catch {
-      setError(`Ошибка добавления задачи: ${title}`)
-      setTaskCreateStatus(`Ошибка: не удалось добавить "${title}"`)
+    } catch (taskCreateError) {
+      const message =
+        taskCreateError instanceof Error ? taskCreateError.message : `Ошибка добавления задачи: ${title}`
+      setError(message)
+      setTaskCreateStatus(message.startsWith('Слишком много') ? message : `Ошибка: не удалось добавить "${title}"`)
     } finally {
       setBusyKey(null)
     }
@@ -650,7 +730,12 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('shopping create failed')
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            `Ошибка добавления покупки: ${title}`,
+          ),
+        )
       }
 
       const payload = (await response.json()) as ShoppingMutationResponse
@@ -663,9 +748,15 @@ export default function Page() {
       setModal('shopping-list')
       setToast(`Покупка добавлена: ${title}`)
       upsertShoppingItem(payload.shoppingItem)
-    } catch {
-      setError(`Ошибка добавления покупки: ${title}`)
-      setShoppingCreateStatus(`Ошибка: не удалось добавить "${title}"`)
+    } catch (shoppingCreateError) {
+      const message =
+        shoppingCreateError instanceof Error
+          ? shoppingCreateError.message
+          : `Ошибка добавления покупки: ${title}`
+      setError(message)
+      setShoppingCreateStatus(
+        message.startsWith('Слишком много') ? message : `Ошибка: не удалось добавить "${title}"`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -685,7 +776,14 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('task update failed')
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            together
+              ? `Ошибка: не удалось отметить как сделано вместе "${task.title}"`
+              : `Ошибка закрытия задачи: ${task.title}`,
+          ),
+        )
       }
 
       const payload = (await response.json()) as TaskMutationResponse
@@ -694,11 +792,13 @@ export default function Page() {
       setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
       applyTaskUpdate(payload.task)
       void loadData({ silent: true })
-    } catch {
+    } catch (taskUpdateError) {
       setError(
-        together
-          ? `Ошибка: не удалось отметить как сделано вместе "${task.title}"`
-          : `Ошибка закрытия задачи: ${task.title}`,
+        taskUpdateError instanceof Error
+          ? taskUpdateError.message
+          : together
+            ? `Ошибка: не удалось отметить как сделано вместе "${task.title}"`
+            : `Ошибка закрытия задачи: ${task.title}`,
       )
     } finally {
       setBusyKey(null)
@@ -715,15 +815,21 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('task delete failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), `Ошибка удаления задачи: ${task.title}`),
+        )
       }
 
       closeTaskModals()
       setToast(`Задача удалена: ${task.title}`)
       removeTaskFromLists(task.id)
       void loadData({ silent: true })
-    } catch {
-      setError(`Ошибка удаления задачи: ${task.title}`)
+    } catch (taskDeleteError) {
+      setError(
+        taskDeleteError instanceof Error
+          ? taskDeleteError.message
+          : `Ошибка удаления задачи: ${task.title}`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -763,7 +869,9 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('task replace failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), `Ошибка обновления задачи: ${title}`),
+        )
       }
 
       const payload = (await response.json()) as TaskMutationResponse
@@ -772,8 +880,12 @@ export default function Page() {
       setToast(`Задача обновлена: ${title}`)
       applyTaskUpdate(payload.task)
       void loadData({ silent: true })
-    } catch {
-      setError(`Ошибка обновления задачи: ${title}`)
+    } catch (taskReplaceError) {
+      setError(
+        taskReplaceError instanceof Error
+          ? taskReplaceError.message
+          : `Ошибка обновления задачи: ${title}`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -791,7 +903,12 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('bonus purchase failed')
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            'Не удалось купить бонус. Проверь баланс и попробуй еще раз.',
+          ),
+        )
       }
 
       const payload = (await response.json()) as {
@@ -804,8 +921,167 @@ export default function Page() {
       setBonusPurchases(current => [payload.purchase, ...current])
       setToast(`Куплен бонус: ${payload.purchase.rewardTitle}`)
       void loadData({ silent: true })
-    } catch {
-      setError('Не удалось купить бонус. Проверь баланс и попробуй еще раз.')
+    } catch (purchaseError) {
+      setError(
+        purchaseError instanceof Error
+          ? purchaseError.message
+          : 'Не удалось купить бонус. Проверь баланс и попробуй еще раз.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function createBonusReward() {
+    if (!rewardTitle.trim() || !rewardCost.trim()) {
+      setError('Заполни название награды и ее стоимость.')
+      return
+    }
+
+    setBusyKey('create-reward')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/bonus-shop/rewards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: rewardTitle.trim(),
+          description: rewardDescription.trim(),
+          costPoints: Number(rewardCost),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось добавить ништяк в магазин.'),
+        )
+      }
+
+      setRewardTitle('')
+      setRewardDescription('')
+      setRewardCost('')
+      setToast('Ништяк добавлен в магазин')
+      await loadData({ silent: true })
+    } catch (rewardError) {
+      setError(
+        rewardError instanceof Error ? rewardError.message : 'Не удалось добавить ништяк в магазин.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function deleteBonusReward(rewardId: string) {
+    const shouldDelete = window.confirm('Удалить этот ништяк из магазина?')
+
+    if (!shouldDelete) {
+      return
+    }
+
+    setBusyKey(`delete-reward-${rewardId}`)
+    setError('')
+
+    try {
+      const response = await telegramFetch(`/api/bonus-shop/rewards/${rewardId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось удалить ништяк.'),
+        )
+      }
+
+      setToast('Ништяк удален из магазина')
+      await loadData({ silent: true })
+    } catch (rewardDeleteError) {
+      setError(
+        rewardDeleteError instanceof Error ? rewardDeleteError.message : 'Не удалось удалить ништяк.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function saveFamilyGoal() {
+    if (!goalTitle.trim() || !goalTargetValue.trim()) {
+      setError('Заполни название цели и целевое значение.')
+      return
+    }
+
+    if (goalKind === 'material' && !goalUnitLabel.trim()) {
+      setError('Для материальной цели укажи единицу измерения.')
+      return
+    }
+
+    setBusyKey('save-family-goal')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/family-goal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: goalKind,
+          title: goalTitle.trim(),
+          description: goalDescription.trim(),
+          targetValue: Number(goalTargetValue),
+          currentValue: goalKind === 'material' ? Number(goalCurrentValue || '0') : 0,
+          unitLabel: goalKind === 'material' ? goalUnitLabel.trim() : null,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось сохранить семейную цель.'),
+        )
+      }
+
+      setToast('Семейная цель сохранена')
+      await loadData({ silent: true })
+    } catch (goalError) {
+      setError(
+        goalError instanceof Error ? goalError.message : 'Не удалось сохранить семейную цель.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function clearFamilyGoal() {
+    const shouldClear = window.confirm('Убрать текущую семейную цель?')
+
+    if (!shouldClear) {
+      return
+    }
+
+    setBusyKey('clear-family-goal')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/family-goal/clear', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось убрать семейную цель.'),
+        )
+      }
+
+      setGoalKind('spiritual')
+      setGoalTitle('')
+      setGoalDescription('')
+      setGoalTargetValue('')
+      setGoalCurrentValue('')
+      setGoalUnitLabel('')
+      setToast('Семейная цель убрана')
+      await loadData({ silent: true })
+    } catch (goalClearError) {
+      setError(
+        goalClearError instanceof Error ? goalClearError.message : 'Не удалось убрать семейную цель.',
+      )
     } finally {
       setBusyKey(null)
     }
@@ -825,7 +1101,12 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('shopping update failed')
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            `Ошибка обновления покупки: ${item.title}`,
+          ),
+        )
       }
 
       const payload = (await response.json()) as ShoppingMutationResponse
@@ -834,8 +1115,12 @@ export default function Page() {
       setToast(`Покупка отмечена: ${item.title}`)
       removeShoppingItemFromList(payload.shoppingItem.id)
       void loadData({ silent: true })
-    } catch {
-      setError(`Ошибка обновления покупки: ${item.title}`)
+    } catch (shoppingUpdateError) {
+      setError(
+        shoppingUpdateError instanceof Error
+          ? shoppingUpdateError.message
+          : `Ошибка обновления покупки: ${item.title}`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -851,15 +1136,24 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('shopping delete failed')
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            `Ошибка удаления покупки: ${item.title}`,
+          ),
+        )
       }
 
       closeShoppingModals()
       setToast(`Покупка удалена: ${item.title}`)
       removeShoppingItemFromList(item.id)
       void loadData({ silent: true })
-    } catch {
-      setError(`Ошибка удаления покупки: ${item.title}`)
+    } catch (shoppingDeleteError) {
+      setError(
+        shoppingDeleteError instanceof Error
+          ? shoppingDeleteError.message
+          : `Ошибка удаления покупки: ${item.title}`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -894,7 +1188,12 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('shopping replace failed')
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            `Ошибка обновления покупки: ${title}`,
+          ),
+        )
       }
 
       const payload = (await response.json()) as ShoppingMutationResponse
@@ -903,8 +1202,12 @@ export default function Page() {
       setToast(`Покупка обновлена: ${title}`)
       upsertShoppingItem(payload.shoppingItem)
       void loadData({ silent: true })
-    } catch {
-      setError(`Ошибка обновления покупки: ${title}`)
+    } catch (shoppingReplaceError) {
+      setError(
+        shoppingReplaceError instanceof Error
+          ? shoppingReplaceError.message
+          : `Ошибка обновления покупки: ${title}`,
+      )
     } finally {
       setBusyKey(null)
     }
@@ -925,14 +1228,20 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('household create failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось создать семью. Попробуй еще раз.'),
+        )
       }
 
       setCreateHouseholdName('')
       await loadData({ silent: true })
       setToast('Семья создана')
-    } catch {
-      setError('Не удалось создать семью. Попробуй еще раз.')
+    } catch (createError) {
+      setError(
+        createError instanceof Error
+          ? createError.message
+          : 'Не удалось создать семью. Попробуй еще раз.',
+      )
     } finally {
       setBusyKey(null)
     }
@@ -960,7 +1269,7 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { error?: string } | null
+        const payload = (await response.json().catch(() => null)) as ApiErrorPayload | null
 
         if (payload?.error === 'Household is full') {
           throw new Error('Ошибка: семья уже заполнена.')
@@ -980,6 +1289,12 @@ export default function Page() {
 
         if (payload?.error === 'Invite not found') {
           throw new Error('Ошибка: инвайт-код не найден.')
+        }
+
+        if (payload?.error === 'Too many requests') {
+          throw new Error(
+            `Ошибка: слишком много попыток входа. Попробуй снова ${formatRetryAfterLabel(payload.retryAfterSeconds)}.`,
+          )
         }
 
         throw new Error(payload?.error || 'join failed')
@@ -1031,13 +1346,17 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('invite failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось обновить инвайт-код.'),
+        )
       }
 
       await loadData({ silent: true })
       setToast('Инвайт-код обновлен')
-    } catch {
-      setError('Не удалось обновить инвайт-код.')
+    } catch (inviteError) {
+      setError(
+        inviteError instanceof Error ? inviteError.message : 'Не удалось обновить инвайт-код.',
+      )
     } finally {
       setBusyKey(null)
     }
@@ -1062,14 +1381,20 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { error?: string } | null
+        const payload = (await response.json().catch(() => null)) as ApiErrorPayload | null
 
         if (payload?.error === 'Invite code already taken') {
           throw new Error('Этот код уже занят другой семьей.')
         }
 
-        if (payload?.error === 'Invite code too short') {
-          throw new Error('Код должен быть не короче 6 символов.')
+        if (payload?.error === 'Invalid invite code') {
+          throw new Error('Код должен быть от 6 до 16 символов и содержать только латиницу и цифры.')
+        }
+
+        if (payload?.error === 'Too many requests') {
+          throw new Error(
+            `Слишком много запросов. Попробуй снова ${formatRetryAfterLabel(payload.retryAfterSeconds)}.`,
+          )
         }
 
         throw new Error('custom invite failed')
@@ -1111,14 +1436,16 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('leave failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось выйти из семьи.'),
+        )
       }
 
       closeModalWithGuard()
       await loadData({ silent: true })
       setToast(isLastMember ? 'Семья удалена безвозвратно' : 'Ты покинул семью')
-    } catch {
-      setError('Не удалось выйти из семьи.')
+    } catch (leaveError) {
+      setError(leaveError instanceof Error ? leaveError.message : 'Не удалось выйти из семьи.')
     } finally {
       setBusyKey(null)
     }
@@ -1143,13 +1470,17 @@ export default function Page() {
       })
 
       if (!response.ok) {
-        throw new Error('remove failed')
+        throw new Error(
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось удалить участника.'),
+        )
       }
 
       await loadData({ silent: true })
       setToast('Участник удален из семьи')
-    } catch {
-      setError('Не удалось удалить участника.')
+    } catch (removeError) {
+      setError(
+        removeError instanceof Error ? removeError.message : 'Не удалось удалить участника.',
+      )
     } finally {
       setBusyKey(null)
     }
@@ -1308,12 +1639,36 @@ export default function Page() {
           {modal === 'bonus-shop' ? (
             <BonusShopModal
               balanceUnits={currentUserBonusBalanceUnits}
+              rewards={bonusRewards}
+              familyGoal={familyGoal}
               purchases={bonusPurchases}
               reports={monthlyReports}
               busyRewardKey={
                 busyKey?.startsWith('buy-reward-') ? busyKey.replace('buy-reward-', '') : null
               }
+              rewardTitle={rewardTitle}
+              rewardDescription={rewardDescription}
+              rewardCost={rewardCost}
+              goalKind={goalKind}
+              goalTitle={goalTitle}
+              goalDescription={goalDescription}
+              goalTargetValue={goalTargetValue}
+              goalCurrentValue={goalCurrentValue}
+              goalUnitLabel={goalUnitLabel}
               onBuy={rewardKey => void buyBonusReward(rewardKey)}
+              onRewardTitleChange={setRewardTitle}
+              onRewardDescriptionChange={setRewardDescription}
+              onRewardCostChange={setRewardCost}
+              onCreateReward={() => void createBonusReward()}
+              onDeleteReward={rewardId => void deleteBonusReward(rewardId)}
+              onGoalKindChange={setGoalKind}
+              onGoalTitleChange={setGoalTitle}
+              onGoalDescriptionChange={setGoalDescription}
+              onGoalTargetValueChange={setGoalTargetValue}
+              onGoalCurrentValueChange={setGoalCurrentValue}
+              onGoalUnitLabelChange={setGoalUnitLabel}
+              onSaveGoal={() => void saveFamilyGoal()}
+              onClearGoal={() => void clearFamilyGoal()}
               onClose={closeModalWithGuard}
             />
           ) : null}

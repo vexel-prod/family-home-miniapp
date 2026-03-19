@@ -11,10 +11,14 @@ datasource db {
 model Household {
   id            String          @id @default(cuid())
   name          String
+  revision      Int             @default(0)
+  sharedGoalUnits Int           @default(0)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   members       Member[]
   invites       HouseholdInvite[]
+  bonusRewards  BonusReward[]
+  familyGoals   FamilyGoal[]
   tasks         HouseholdTask[]
   shoppingItems ShoppingItem[]
   bonusTransactions BonusTransaction[]
@@ -37,12 +41,17 @@ model Member {
   experiencePoints Int     @default(0)
   level          Int       @default(0)
   bonusBalanceUnits Int    @default(0)
+  completedTasksCount Int  @default(0)
+  fastTasksCount   Int     @default(0)
+  overdueTasksCount Int    @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
   bonusTransactions BonusTransaction[]
   bonusPurchases BonusPurchase[]
   createdInvites HouseholdInvite[] @relation("InviteCreator")
+  createdBonusRewards BonusReward[] @relation("RewardCreator")
+  createdFamilyGoals FamilyGoal[]  @relation("GoalCreator")
 
   @@index([householdId, isActive])
 }
@@ -130,6 +139,42 @@ model BonusPurchase {
   @@index([householdId, monthKey, memberId])
 }
 
+model BonusReward {
+  id                String    @id @default(cuid())
+  householdId       String
+  createdByMemberId String
+  title             String
+  description       String?
+  costUnits         Int
+  isArchived        Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  createdByMember   Member    @relation("RewardCreator", fields: [createdByMemberId], references: [id], onDelete: Cascade)
+
+  @@index([householdId, isArchived, createdAt])
+}
+
+model FamilyGoal {
+  id                String    @id @default(cuid())
+  householdId       String
+  createdByMemberId String
+  kind              String
+  title             String
+  description       String?
+  targetValue       Int
+  currentValue      Int       @default(0)
+  unitLabel         String?
+  isActive          Boolean   @default(true)
+  completedAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  createdByMember   Member    @relation("GoalCreator", fields: [createdByMemberId], references: [id], onDelete: Cascade)
+
+  @@index([householdId, isActive, createdAt])
+}
+
 model HouseholdInvite {
   id                 String    @id @default(cuid())
   householdId        String
@@ -144,6 +189,20 @@ model HouseholdInvite {
   createdByMember    Member    @relation("InviteCreator", fields: [createdByMemberId], references: [id], onDelete: Cascade)
 
   @@index([householdId, expiresAt])
+}
+
+model ActionRateLimit {
+  key             String   @id
+  action          String
+  scope           String
+  hits            Int      @default(0)
+  windowStartedAt DateTime
+  blockedUntil    DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([action, scope])
+  @@index([blockedUntil])
 }
 
 model MonthlyReport {

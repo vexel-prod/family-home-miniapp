@@ -1,7 +1,17 @@
 import { authorizeRequest } from '@/lib/auth'
 import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@/shared/lib/bonus-shop'
+import { jsonRateLimited } from '@/lib/api-response'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
+import {
+  sanitizeOptionalText,
+  TASK_NOTE_MAX_LENGTH,
+  TASK_TITLE_MAX_LENGTH,
+  validateLength,
+  validateRequiredText,
+} from '@/shared/lib/validation'
 import { NextResponse } from 'next/server'
 
 type CreateTaskPayload = {
@@ -39,15 +49,37 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = (await request.json()) as CreateTaskPayload
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'task-create',
+      scope: auth.member.id,
+      limit: 40,
+      windowMs: 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
+  const body = (await request.json().catch(() => ({}))) as CreateTaskPayload
 
   const actorName =
     [auth.user.first_name, auth.user.last_name].filter(Boolean).join(' ').trim() ||
     auth.user.username ||
     auth.member.firstName
 
-  if (!body.title?.trim()) {
+  const title = validateRequiredText(body.title ?? null, TASK_TITLE_MAX_LENGTH)
+  const note = sanitizeOptionalText(body.note)
+
+  if (!title) {
     return NextResponse.json({ ok: false, error: 'Missing task data' }, { status: 400 })
+  }
+
+  if (note && !validateLength(note, TASK_NOTE_MAX_LENGTH)) {
+    return NextResponse.json({ ok: false, error: 'Task note is too long' }, { status: 400 })
   }
 
   const deadline = parseDeadline(body.deadlineAt)
@@ -59,14 +91,16 @@ export async function POST(request: Request) {
   const task = await prisma.householdTask.create({
     data: {
       householdId: auth.member.householdId,
-      title: body.title.trim(),
-      note: body.note?.trim() || null,
+      title,
+      note,
       deadlineAt: deadline,
       addedByName: actorName,
       addedByUsername: auth.user.username ?? null,
       addedByTelegramId: String(auth.user.id),
     },
   })
+
+  await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   await notifyHousehold(
     prisma,

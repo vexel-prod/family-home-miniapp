@@ -110,13 +110,31 @@ export async function authenticateTelegramRequest(
     }
   }
 
+  const nextChatId = String(user.id)
+  const nextFirstName = user.first_name || member.firstName
+  const nextLastName = user.last_name ?? member.lastName
+  const nextUsername = user.username ?? member.username
+
+  const shouldUpdateMember =
+    member.chatId !== nextChatId ||
+    member.firstName !== nextFirstName ||
+    member.lastName !== nextLastName ||
+    member.username !== nextUsername
+
+  if (!shouldUpdateMember) {
+    return {
+      user,
+      member,
+    }
+  }
+
   const updatedMember = await prisma.member.update({
     where: { id: member.id },
     data: {
-      chatId: String(user.id),
-      firstName: user.first_name || member.firstName,
-      lastName: user.last_name ?? member.lastName,
-      username: user.username ?? member.username,
+      chatId: nextChatId,
+      firstName: nextFirstName,
+      lastName: nextLastName,
+      username: nextUsername,
     },
   })
 

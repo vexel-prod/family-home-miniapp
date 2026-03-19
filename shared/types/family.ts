@@ -47,6 +47,25 @@ export type BonusPurchase = {
   createdAt: string
 }
 
+export type BonusReward = {
+  id: string
+  title: string
+  description: string | null
+  costUnits: number
+  createdByMemberId: string
+}
+
+export type FamilyGoal = {
+  id: string
+  kind: "spiritual" | "material"
+  title: string
+  description: string | null
+  targetValue: number
+  currentValue: number
+  unitLabel: string | null
+  isCompleted: boolean
+}
+
 export type HouseholdMember = {
   id: string
   firstName: string
@@ -134,6 +153,8 @@ export type BootstrapActiveResponse = {
   currentUserBonusBalanceUnits: number
   currentUserProfile: HouseholdProfile
   household: HouseholdSummary
+  bonusRewards: BonusReward[]
+  familyGoal: FamilyGoal | null
   bonusPurchases: BonusPurchase[]
   monthlyReports: MonthlyReport[]
   activeShoppingItems: ShoppingItem[]

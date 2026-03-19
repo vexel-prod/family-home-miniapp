@@ -1,11 +1,18 @@
 import { authorizeRequest } from '@/lib/auth'
+import { jsonRateLimited } from '@/lib/api-response'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import {
   createHouseholdInvite,
   getActiveHouseholdInvite,
   HOUSEHOLD_INVITE_TTL_MS,
 } from '@/lib/household'
 import { getPrisma } from '@/lib/prisma'
+import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
 import { normalizeInviteCode } from '@/shared/lib/household'
+import {
+  INVITE_CODE_MAX_LENGTH,
+  INVITE_CODE_MIN_LENGTH,
+} from '@/shared/lib/validation'
 import { NextResponse } from 'next/server'
 
 type CreateInvitePayload = {
@@ -45,11 +52,29 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Forbidden' }, { status: 403 })
   }
 
+  try {
+    await enforceRateLimit(prisma, {
+      action: 'household-invite',
+      scope: auth.member.id,
+      limit: 20,
+      windowMs: 60 * 60 * 1000,
+    })
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return jsonRateLimited(error.retryAfterSeconds)
+    }
+
+    throw error
+  }
+
   const body = (await request.json().catch(() => ({}))) as CreateInvitePayload
   const customCode = body.code ? normalizeInviteCode(body.code) : ''
 
-  if (body.code && customCode.length < 6) {
-    return NextResponse.json({ ok: false, error: 'Invite code too short' }, { status: 400 })
+  if (
+    body.code &&
+    (customCode.length < INVITE_CODE_MIN_LENGTH || customCode.length > INVITE_CODE_MAX_LENGTH)
+  ) {
+    return NextResponse.json({ ok: false, error: 'Invalid invite code' }, { status: 400 })
   }
 
   if (customCode) {
@@ -95,6 +120,8 @@ export async function POST(request: Request) {
         expiresAt: new Date(Date.now() + HOUSEHOLD_INVITE_TTL_MS),
       },
     })
+
+    await bumpHouseholdRevision(prisma, auth.member.householdId)
 
     return NextResponse.json({
       ok: true,

@@ -57,7 +57,10 @@ export const ModelName = {
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
+  BonusReward: 'BonusReward',
+  FamilyGoal: 'FamilyGoal',
   HouseholdInvite: 'HouseholdInvite',
+  ActionRateLimit: 'ActionRateLimit',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -80,6 +83,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const HouseholdScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  revision: 'revision',
+  sharedGoalUnits: 'sharedGoalUnits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -102,6 +107,9 @@ export const MemberScalarFieldEnum = {
   experiencePoints: 'experiencePoints',
   level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
+  completedTasksCount: 'completedTasksCount',
+  fastTasksCount: 'fastTasksCount',
+  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -184,6 +192,40 @@ export const BonusPurchaseScalarFieldEnum = {
 export type BonusPurchaseScalarFieldEnum = (typeof BonusPurchaseScalarFieldEnum)[keyof typeof BonusPurchaseScalarFieldEnum]
 
 
+export const BonusRewardScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  createdByMemberId: 'createdByMemberId',
+  title: 'title',
+  description: 'description',
+  costUnits: 'costUnits',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BonusRewardScalarFieldEnum = (typeof BonusRewardScalarFieldEnum)[keyof typeof BonusRewardScalarFieldEnum]
+
+
+export const FamilyGoalScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  createdByMemberId: 'createdByMemberId',
+  kind: 'kind',
+  title: 'title',
+  description: 'description',
+  targetValue: 'targetValue',
+  currentValue: 'currentValue',
+  unitLabel: 'unitLabel',
+  isActive: 'isActive',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FamilyGoalScalarFieldEnum = (typeof FamilyGoalScalarFieldEnum)[keyof typeof FamilyGoalScalarFieldEnum]
+
+
 export const HouseholdInviteScalarFieldEnum = {
   id: 'id',
   householdId: 'householdId',
@@ -197,6 +239,20 @@ export const HouseholdInviteScalarFieldEnum = {
 } as const
 
 export type HouseholdInviteScalarFieldEnum = (typeof HouseholdInviteScalarFieldEnum)[keyof typeof HouseholdInviteScalarFieldEnum]
+
+
+export const ActionRateLimitScalarFieldEnum = {
+  key: 'key',
+  action: 'action',
+  scope: 'scope',
+  hits: 'hits',
+  windowStartedAt: 'windowStartedAt',
+  blockedUntil: 'blockedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ActionRateLimitScalarFieldEnum = (typeof ActionRateLimitScalarFieldEnum)[keyof typeof ActionRateLimitScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {

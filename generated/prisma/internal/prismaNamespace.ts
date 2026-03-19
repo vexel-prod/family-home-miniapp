@@ -390,7 +390,10 @@ export const ModelName = {
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
+  BonusReward: 'BonusReward',
+  FamilyGoal: 'FamilyGoal',
   HouseholdInvite: 'HouseholdInvite',
+  ActionRateLimit: 'ActionRateLimit',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -407,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "householdInvite" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -855,6 +858,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BonusReward: {
+      payload: Prisma.$BonusRewardPayload<ExtArgs>
+      fields: Prisma.BonusRewardFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BonusRewardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BonusRewardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>
+        }
+        findFirst: {
+          args: Prisma.BonusRewardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BonusRewardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>
+        }
+        findMany: {
+          args: Prisma.BonusRewardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>[]
+        }
+        create: {
+          args: Prisma.BonusRewardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>
+        }
+        createMany: {
+          args: Prisma.BonusRewardCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BonusRewardCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>[]
+        }
+        delete: {
+          args: Prisma.BonusRewardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>
+        }
+        update: {
+          args: Prisma.BonusRewardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>
+        }
+        deleteMany: {
+          args: Prisma.BonusRewardDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BonusRewardUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BonusRewardUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>[]
+        }
+        upsert: {
+          args: Prisma.BonusRewardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BonusRewardPayload>
+        }
+        aggregate: {
+          args: Prisma.BonusRewardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBonusReward>
+        }
+        groupBy: {
+          args: Prisma.BonusRewardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BonusRewardGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BonusRewardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BonusRewardCountAggregateOutputType> | number
+        }
+      }
+    }
+    FamilyGoal: {
+      payload: Prisma.$FamilyGoalPayload<ExtArgs>
+      fields: Prisma.FamilyGoalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FamilyGoalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FamilyGoalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>
+        }
+        findFirst: {
+          args: Prisma.FamilyGoalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FamilyGoalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>
+        }
+        findMany: {
+          args: Prisma.FamilyGoalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>[]
+        }
+        create: {
+          args: Prisma.FamilyGoalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>
+        }
+        createMany: {
+          args: Prisma.FamilyGoalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FamilyGoalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>[]
+        }
+        delete: {
+          args: Prisma.FamilyGoalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>
+        }
+        update: {
+          args: Prisma.FamilyGoalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>
+        }
+        deleteMany: {
+          args: Prisma.FamilyGoalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FamilyGoalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FamilyGoalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>[]
+        }
+        upsert: {
+          args: Prisma.FamilyGoalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FamilyGoalPayload>
+        }
+        aggregate: {
+          args: Prisma.FamilyGoalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFamilyGoal>
+        }
+        groupBy: {
+          args: Prisma.FamilyGoalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FamilyGoalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FamilyGoalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FamilyGoalCountAggregateOutputType> | number
+        }
+      }
+    }
     HouseholdInvite: {
       payload: Prisma.$HouseholdInvitePayload<ExtArgs>
       fields: Prisma.HouseholdInviteFieldRefs
@@ -926,6 +1077,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HouseholdInviteCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HouseholdInviteCountAggregateOutputType> | number
+        }
+      }
+    }
+    ActionRateLimit: {
+      payload: Prisma.$ActionRateLimitPayload<ExtArgs>
+      fields: Prisma.ActionRateLimitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ActionRateLimitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ActionRateLimitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        findFirst: {
+          args: Prisma.ActionRateLimitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ActionRateLimitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        findMany: {
+          args: Prisma.ActionRateLimitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>[]
+        }
+        create: {
+          args: Prisma.ActionRateLimitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        createMany: {
+          args: Prisma.ActionRateLimitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ActionRateLimitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>[]
+        }
+        delete: {
+          args: Prisma.ActionRateLimitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        update: {
+          args: Prisma.ActionRateLimitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        deleteMany: {
+          args: Prisma.ActionRateLimitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ActionRateLimitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ActionRateLimitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>[]
+        }
+        upsert: {
+          args: Prisma.ActionRateLimitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionRateLimitPayload>
+        }
+        aggregate: {
+          args: Prisma.ActionRateLimitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateActionRateLimit>
+        }
+        groupBy: {
+          args: Prisma.ActionRateLimitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActionRateLimitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ActionRateLimitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActionRateLimitCountAggregateOutputType> | number
         }
       }
     }
@@ -1045,6 +1270,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const HouseholdScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  revision: 'revision',
+  sharedGoalUnits: 'sharedGoalUnits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1067,6 +1294,9 @@ export const MemberScalarFieldEnum = {
   experiencePoints: 'experiencePoints',
   level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
+  completedTasksCount: 'completedTasksCount',
+  fastTasksCount: 'fastTasksCount',
+  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1149,6 +1379,40 @@ export const BonusPurchaseScalarFieldEnum = {
 export type BonusPurchaseScalarFieldEnum = (typeof BonusPurchaseScalarFieldEnum)[keyof typeof BonusPurchaseScalarFieldEnum]
 
 
+export const BonusRewardScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  createdByMemberId: 'createdByMemberId',
+  title: 'title',
+  description: 'description',
+  costUnits: 'costUnits',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BonusRewardScalarFieldEnum = (typeof BonusRewardScalarFieldEnum)[keyof typeof BonusRewardScalarFieldEnum]
+
+
+export const FamilyGoalScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  createdByMemberId: 'createdByMemberId',
+  kind: 'kind',
+  title: 'title',
+  description: 'description',
+  targetValue: 'targetValue',
+  currentValue: 'currentValue',
+  unitLabel: 'unitLabel',
+  isActive: 'isActive',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FamilyGoalScalarFieldEnum = (typeof FamilyGoalScalarFieldEnum)[keyof typeof FamilyGoalScalarFieldEnum]
+
+
 export const HouseholdInviteScalarFieldEnum = {
   id: 'id',
   householdId: 'householdId',
@@ -1162,6 +1426,20 @@ export const HouseholdInviteScalarFieldEnum = {
 } as const
 
 export type HouseholdInviteScalarFieldEnum = (typeof HouseholdInviteScalarFieldEnum)[keyof typeof HouseholdInviteScalarFieldEnum]
+
+
+export const ActionRateLimitScalarFieldEnum = {
+  key: 'key',
+  action: 'action',
+  scope: 'scope',
+  hits: 'hits',
+  windowStartedAt: 'windowStartedAt',
+  blockedUntil: 'blockedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ActionRateLimitScalarFieldEnum = (typeof ActionRateLimitScalarFieldEnum)[keyof typeof ActionRateLimitScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {
@@ -1223,6 +1501,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1240,20 +1532,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1371,7 +1649,10 @@ export type GlobalOmitConfig = {
   shoppingItem?: Prisma.ShoppingItemOmit
   bonusTransaction?: Prisma.BonusTransactionOmit
   bonusPurchase?: Prisma.BonusPurchaseOmit
+  bonusReward?: Prisma.BonusRewardOmit
+  familyGoal?: Prisma.FamilyGoalOmit
   householdInvite?: Prisma.HouseholdInviteOmit
+  actionRateLimit?: Prisma.ActionRateLimitOmit
   monthlyReport?: Prisma.MonthlyReportOmit
 }
 

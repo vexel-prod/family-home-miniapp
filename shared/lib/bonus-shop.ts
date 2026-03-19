@@ -7,29 +7,18 @@ export const BASE_TASK_UNITS = 3 * POINT_UNITS
 export const FAST_TASK_MULTIPLIER = 1.5
 export const OVERDUE_PENALTY_MULTIPLIER = 1.5
 
-export const BONUS_REWARDS = [
-  {
-    key: 'skip-task',
-    title: 'Пропуск одной задачи',
-    description: 'Можно снять с себя одну бытовую задачу по согласованию.',
-    costUnits: 60 * POINT_UNITS,
-    accentClassName: 'from-[#f8d36b] to-[#f5b85d]',
-  },
-  {
-    key: 'skip-dog-walk',
-    title: 'Пропуск прогулки с собакой',
-    description: 'Один раз в этом месяце прогулка переходит второму участнику.',
-    costUnits: 120 * POINT_UNITS,
-    accentClassName: 'from-[#8fd4b0] to-[#66b98f]',
-  },
-  {
-    key: 'three-wishes',
-    title: 'Три любых желания',
-    description: 'Победитель месяца получает право на три бытовых желания.',
-    costUnits: 180 * POINT_UNITS,
-    accentClassName: 'from-[#f29fd4] to-[#dd79b9]',
-  },
+const BONUS_REWARD_ACCENTS = [
+  'from-[#f8d36b] to-[#f5b85d]',
+  'from-[#8fd4b0] to-[#66b98f]',
+  'from-[#f29fd4] to-[#dd79b9]',
+  'from-[#7ec7f5] to-[#5ea9e1]',
+  'from-[#f6a97b] to-[#ee8452]',
 ]
+
+export function getBonusRewardAccentClassName(seed: string) {
+  const hash = [...seed].reduce((sum, char, index) => sum + char.charCodeAt(0) * (index + 1), 0)
+  return BONUS_REWARD_ACCENTS[Math.abs(hash) % BONUS_REWARD_ACCENTS.length]
+}
 
 export function formatPoints(units: number) {
   const value = units / POINT_UNITS

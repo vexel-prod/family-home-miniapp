@@ -1,4 +1,5 @@
 import { authorizeRequest } from '@/lib/auth'
+import { bumpHouseholdRevision } from '@/lib/household-revision'
 import { getPrisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
@@ -54,6 +55,8 @@ export async function POST(request: Request) {
         },
       })
     }
+
+    await bumpHouseholdRevision(tx, auth.member.householdId)
   })
 
   return NextResponse.json({ ok: true })
