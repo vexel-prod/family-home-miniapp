@@ -62,6 +62,29 @@ export function getTaskPenaltyUnits() {
   return Math.round(BASE_TASK_UNITS * OVERDUE_PENALTY_MULTIPLIER)
 }
 
+export function getDisplayedTaskRewardUnits({
+  createdAt,
+  completedAt,
+  completedByName,
+  participantCount,
+}: {
+  createdAt: Date
+  completedAt: Date
+  completedByName?: string | null
+  participantCount?: number
+}) {
+  const awardUnits = getTaskAwardUnits({
+    createdAt,
+    completedAt,
+  })
+
+  if (completedByName === 'Сделано вместе' && participantCount && participantCount > 0) {
+    return awardUnits / participantCount
+  }
+
+  return awardUnits
+}
+
 export function getMonthKey(date: Date) {
   const formatter = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Europe/Moscow',

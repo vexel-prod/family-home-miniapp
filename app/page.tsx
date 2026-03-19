@@ -13,6 +13,7 @@ import { ShoppingFormModal } from '@/features/shopping/components/shopping-form-
 import { ShoppingListModal } from '@/features/shopping/components/shopping-list-modal'
 import { TaskActionsModal } from '@/features/tasks/components/task-actions-modal'
 import { TaskFormModal } from '@/features/tasks/components/task-form-modal'
+import { LastCompletedTaskModal } from '@/features/tasks/components/last-completed-task-modal'
 import { TaskJournalModal } from '@/features/tasks/components/task-journal-modal'
 import { TaskListModal } from '@/features/tasks/components/task-list-modal'
 import { buildMonthlyRatingSummary } from '@/shared/lib/monthly-rating'
@@ -142,6 +143,7 @@ export default function Page() {
   const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
   const [monthlyLeaderboardEntries, setMonthlyLeaderboardEntries] = useState<MonthlyLeaderboardEntry[]>([])
   const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
+  const [participantNames, setParticipantNames] = useState<string[]>([])
   const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
   const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([])
@@ -237,7 +239,7 @@ export default function Page() {
   }
 
   function openMainModal(
-    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'leaderboard' | 'bonus-shop'>,
+    nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'last-completed-task' | 'leaderboard' | 'bonus-shop'>,
   ) {
     if (!canOpenModal()) {
       return
@@ -345,6 +347,7 @@ export default function Page() {
         setCompletedTasks(payload.completedTasks)
         setMonthlyLeaderboardEntries(payload.monthlyLeaderboardEntries)
         setMonthlyTeamBonusPoints(payload.monthlyTeamBonusPoints)
+        setParticipantNames(payload.participantNames)
         setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
         setBonusPurchases(payload.bonusPurchases)
         setMonthlyReports(payload.monthlyReports)
@@ -924,6 +927,15 @@ export default function Page() {
           {modal === 'task-journal' ? (
             <TaskJournalModal
               tasks={sortedCompletedTasks}
+              participantCount={participantNames.length}
+              onClose={closeModalWithGuard}
+            />
+          ) : null}
+
+          {modal === 'last-completed-task' ? (
+            <LastCompletedTaskModal
+              task={sortedCompletedTasks[0] ?? null}
+              participantCount={participantNames.length}
               onClose={closeModalWithGuard}
             />
           ) : null}
@@ -1030,6 +1042,7 @@ export default function Page() {
           }
           balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} баллов`}
           onOpenJournal={() => openMainModal('task-journal')}
+          onOpenLastCompleted={() => openMainModal('last-completed-task')}
           onOpenLeaderboard={() => openMainModal('leaderboard')}
           onOpenBonusShop={() => openMainModal('bonus-shop')}
         />

@@ -93,6 +93,7 @@ export type ModalKey =
   | "task-actions"
   | "task-replace"
   | "task-journal"
+  | "last-completed-task"
   | "leaderboard"
   | "bonus-shop"
   | "shopping-list"

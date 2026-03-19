@@ -1,15 +1,17 @@
 import { AppButton } from '@/components/ui/app-button'
 import { ModalPanel } from '@/components/ui/app-modal'
 import { StatusPill } from '@/components/ui/status-pill'
+import { formatPoints, getDisplayedTaskRewardUnits } from '@/shared/lib/bonus-shop'
 import { formatRelativeDate } from '@/shared/lib/format'
 import type { HouseholdTask } from '@/shared/types/family'
 
 type TaskJournalModalProps = {
   tasks: HouseholdTask[]
+  participantCount: number
   onClose: () => void
 }
 
-export function TaskJournalModal({ tasks, onClose }: TaskJournalModalProps) {
+export function TaskJournalModal({ tasks, participantCount, onClose }: TaskJournalModalProps) {
   return (
     <ModalPanel
       wide
@@ -41,6 +43,14 @@ export function TaskJournalModal({ tasks, onClose }: TaskJournalModalProps) {
                   {task.note ? (
                     <p className='text-sm leading-6 text-white/70'>{task.note}</p>
                   ) : null}
+                  <div className='text-xs text-white/45'>
+                    Начислено: {formatPoints(getDisplayedTaskRewardUnits({
+                      createdAt: new Date(task.createdAt),
+                      completedAt: new Date(task.completedAt ?? task.createdAt),
+                      completedByName: task.completedByName,
+                      participantCount,
+                    }))} балла
+                  </div>
                   <div className='text-xs text-white/45'>
                     Закрыл(а) {task.completedByName ?? 'неизвестно'} •{' '}
                     {task.completedAt ? formatRelativeDate(task.completedAt) : 'без даты'}

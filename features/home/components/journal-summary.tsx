@@ -9,6 +9,7 @@ type JournalSummaryProps = {
   lastCompletedAt: string
   balanceLabel: string
   onOpenJournal: () => void
+  onOpenLastCompleted: () => void
   onOpenLeaderboard: () => void
   onOpenBonusShop: () => void
 }
@@ -20,6 +21,7 @@ export function JournalSummary({
   lastCompletedAt,
   balanceLabel,
   onOpenJournal,
+  onOpenLastCompleted,
   onOpenLeaderboard,
   onOpenBonusShop,
 }: JournalSummaryProps) {
@@ -45,12 +47,16 @@ export function JournalSummary({
           </div>
         </button>
 
-        <div className='rounded-md border border-white/10 bg-white/8 p-5 shadow-(--shadow-card)'>
+        <button
+          type='button'
+          className='rounded-xl border border-white/10 bg-white/8 p-5 text-left text-white transition-transform duration-150 hover:scale-[0.99] shadow-(--shadow-card)'
+          onClick={onOpenLastCompleted}
+        >
           <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
             Последнее закрытие:
           </div>
           <div className='mt-3 text-lg font-bold text-white'>{lastCompletedAt}</div>
-        </div>
+        </button>
         <button
           type='button'
           className='rounded-xl border border-white/10 bg-white/8 p-5 text-left text-white transition-transform duration-150 hover:scale-[0.99] shadow-(--shadow-card)'
