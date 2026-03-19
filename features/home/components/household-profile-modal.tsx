@@ -36,19 +36,16 @@ function getProgressPercent(profile: HouseholdProfile) {
   return Math.max(0, Math.min(100, (profile.expIntoCurrentLevel / levelRange) * 100))
 }
 
-function getVariantLabel(
-  variant: HouseholdProfile['recentEvents'][number]['variant'],
-  expDelta: number,
-) {
+function getVariantLabel(variant: HouseholdProfile['recentEvents'][number]['variant']) {
   if (variant === 'fast') {
-    return `Быстрое выполнение: +${expDelta} exp`
+    return `Быстрое выполнение: `
   }
 
   if (variant === 'overdue') {
-    return `${expDelta} exp за просрочку`
+    return `Просрочка: `
   }
 
-  return `Базовое выполнение: +${expDelta} exp`
+  return `Базовое выполнение: `
 }
 
 export function HouseholdProfileModal({
@@ -92,7 +89,7 @@ export function HouseholdProfileModal({
               key={tab.key}
               type='button'
               onClick={() => setActiveTab(tab.key)}
-              className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+              className={`rounded-md border px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
                 activeTab === tab.key
                   ? 'border-transparent bg-white text-(--color-page-text) shadow-(--shadow-card)'
                   : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
@@ -176,24 +173,22 @@ export function HouseholdProfileModal({
 
         {activeTab === 'family' ? (
           <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/6'>
-            <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
-              Семья
-            </div>
-
             <div className='min-h-0 flex-1 overflow-y-auto p-4'>
               <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
                 <div>
-                  <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Семья</div>
                   <div className='mt-2 text-2xl font-(--font-family-heading) text-white'>
                     {household.name}
                   </div>
                   <div className='mt-2 text-sm text-white/65'>
-                    Текущая роль: {household.currentUserRole === 'head' ? 'глава семьи' : 'участник'}
+                    Текущая роль:{' '}
+                    {household.currentUserRole === 'head' ? 'глава семьи' : 'участник'}
                   </div>
                 </div>
 
                 <div className='rounded-md border border-white/10 bg-black/15 px-4 py-3 text-right'>
-                  <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Инвайт-код</div>
+                  <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
+                    Инвайт-код
+                  </div>
                   <div className='mt-2 text-2xl font-semibold text-white'>
                     {household.activeInvite?.code ?? 'Нет кода'}
                   </div>
@@ -263,12 +258,10 @@ export function HouseholdProfileModal({
                     className='flex flex-col gap-3 rounded-md border border-white/10 bg-black/15 p-4 sm:flex-row sm:items-center sm:justify-between'
                   >
                     <div>
-                      <div className='text-sm font-semibold text-white'>
-                        {member.displayName}
-                        {member.isCurrentUser ? ' • это ты' : ''}
-                      </div>
+                      <div className='text-sm font-semibold text-white'>{member.displayName}</div>
                       <div className='mt-2 text-xs text-white/45'>
-                        {member.role === 'head' ? 'Глава семьи' : 'Участник'} • в семье {formatRelativeDate(member.joinedAt)}
+                        {member.role === 'head' ? 'Глава семьи' : 'Участник'} — в семье с{' '}
+                        {formatRelativeDate(member.joinedAt)}
                       </div>
                     </div>
 
@@ -279,7 +272,9 @@ export function HouseholdProfileModal({
                         disabled={busyAction !== null}
                         onClick={() => onRemoveMember(member.id)}
                       >
-                        {busyAction === `remove-member-${member.id}` ? 'Удаляю...' : 'Удалить из семьи'}
+                        {busyAction === `remove-member-${member.id}`
+                          ? 'Удаляю...'
+                          : 'Удалить из семьи'}
                       </AppButton>
                     ) : null}
                   </div>
@@ -290,50 +285,41 @@ export function HouseholdProfileModal({
         ) : null}
 
         {activeTab === 'history' ? (
-          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/6'>
-            <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
-              Последние изменения опыта
-            </div>
-
-            <div className='min-h-0 flex-1 overflow-y-auto p-4'>
-              {profile.recentEvents.length ? (
-                <div className='space-y-3'>
-                  {profile.recentEvents.map(event => (
-                    <div
-                      key={event.id}
-                      className='rounded-xl border border-white/10 bg-black/15 p-4'
-                    >
-                      <div className='flex items-start justify-between gap-4'>
-                        <div>
-                          <div className='text-sm font-semibold text-white'>{event.title}</div>
-                          <div className='mt-2 text-sm text-white/65'>
-                            {getVariantLabel(event.variant, event.expDelta)}
-                          </div>
+          <>
+            {profile.recentEvents.length ? (
+              <div className='flex flex-col gap-4'>
+                {profile.recentEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className='rounded-md border border-white/10 bg-black/15 p-4'
+                  >
+                    <div className='flex items-start justify-between gap-4'>
+                      <div>
+                        <div className='text-sm font-semibold text-white'>{event.title}</div>
+                        <div className='mt-2 text-sm text-white/65'>
+                          {getVariantLabel(event.variant)}
+                          <span
+                            className={`${event.expDelta > 0 ? 'text-emerald-300' : 'text-rose-400'} font-black`}
+                          >
+                            {event.expDelta > 0 ? '+' : '-'}
+                            {event.expDelta}
+                          </span>
+                          exp
                         </div>
-                        <div
-                          className={`rounded-full px-3 py-1 text-sm font-semibold ${
-                            event.expDelta >= 0
-                              ? 'bg-emerald-400/12 text-emerald-100'
-                              : 'bg-rose-400/12 text-rose-100'
-                          }`}
-                        >
-                          {event.expDelta > 0 ? '+' : ''}
-                          {event.expDelta} exp
-                        </div>
-                      </div>
-                      <div className='mt-3 text-xs text-white/45'>
-                        {formatRelativeDate(event.completedAt)}
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-                  Как только появятся выполненные задачи, здесь начнет копиться опыт.
-                </div>
-              )}
-            </div>
-          </div>
+                    <div className='mt-3 text-xs text-white/45'>
+                      {formatRelativeDate(event.completedAt)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                Как только появятся выполненные задачи, здесь начнет копиться опыт.
+              </div>
+            )}
+          </>
         ) : null}
       </div>
 

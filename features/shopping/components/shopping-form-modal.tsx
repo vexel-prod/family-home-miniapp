@@ -56,41 +56,40 @@ export function ShoppingFormModal({
             onChange={event => onTitleChange(event.target.value)}
           />
 
-          <div className='flex rounded-md border border-white/10 bg-white/6 p-1'>
+          <div className='grid grid-cols-3 gap-1 rounded-md border border-white/10 bg-white/6 p-1'>
             <button
               type='button'
-              onClick={() => onUrgencyChange('soon')}
-              className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                urgency === 'soon'
-                  ? 'bg-(--color-brand-home)/10 text-[#111827] shadow-(--shadow-card)'
+              onClick={() => onUrgencyChange('without')}
+              className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-1 text-center text-xs font-semibold transition-colors duration-150 ${
+                urgency === 'without'
+                  ? 'bg-(--color-brand-shopping)/60 text-(--color-panel) shadow-(--shadow-card)'
                   : 'text-white/70'
               }`}
             >
-              ⚠️
+              не срочно
+            </button>
+            <button
+              type='button'
+              onClick={() => onUrgencyChange('soon')}
+              className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-1 text-center text-xs font-semibold transition-colors duration-150 ${
+                urgency === 'soon'
+                  ? 'bg-(--color-brand-home)/60 text-[#111827] shadow-(--shadow-card)'
+                  : 'text-white/70'
+              }`}
+            >
+              заканчивается
             </button>
 
             <button
               type='button'
               onClick={() => onUrgencyChange('out')}
-              className={`w-full rounded-xl px-6 py-3 text-sm font-semibold transition-colors duration-150 ${
+              className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-1 text-center text-xs font-semibold transition-colors duration-150 ${
                 urgency === 'out'
-                  ? 'bg-(--color-danger-soft) text-(--color-danger-text) shadow-(--shadow-card)'
+                  ? 'bg-(--color-danger)/60 text-(--color-danger-text) shadow-(--shadow-card)'
                   : 'text-white/70'
               }`}
             >
-              ❌
-            </button>
-
-            <button
-              type='button'
-              onClick={() => onUrgencyChange('without')}
-              className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                urgency === 'without'
-                  ? 'bg-(--color-success-soft) text-(--color-success-text) shadow-(--shadow-card)'
-                  : 'text-white/70'
-              }`}
-            >
-              ♾️
+              закончилось
             </button>
           </div>
 

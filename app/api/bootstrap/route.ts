@@ -6,7 +6,6 @@ import { getMonthlyLeaderboardStats } from '@/lib/bonus-ledger'
 import { getElapsedMs, logApiEvent } from '@/lib/observability'
 import { getPrisma } from '@/lib/prisma'
 import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
-import { getMonthKey } from '@/shared/lib/bonus-shop'
 import { NextResponse } from 'next/server'
 
 function getCurrentMoscowMonthRange() {
@@ -93,13 +92,13 @@ export async function GET(request: Request) {
     const { start, end } = getCurrentMoscowMonthRange()
 
     const currentUserProfile = await getMemberProfileSnapshot(prisma, auth.member.id)
-    const monthKey = getMonthKey(new Date())
 
     const [
       openTasks,
       completedTasks,
       monthlyCompletedTasks,
       activeShoppingItems,
+      purchasedShoppingItems,
       monthlyStats,
       bonusRewards,
       householdGoalState,
@@ -132,6 +131,11 @@ export async function GET(request: Request) {
         where: { householdId: auth.member.householdId, status: 'active' },
         orderBy: [{ urgency: 'asc' }, { createdAt: 'desc' }],
       }),
+      prisma.shoppingItem.findMany({
+        where: { householdId: auth.member.householdId, status: 'purchased' },
+        orderBy: [{ purchasedAt: 'desc' }, { updatedAt: 'desc' }],
+        take: 30,
+      }),
       getMonthlyLeaderboardStats(prisma, auth.member.householdId),
       prisma.bonusReward.findMany({
         where: {
@@ -158,9 +162,9 @@ export async function GET(request: Request) {
       prisma.bonusPurchase.findMany({
         where: {
           householdId: auth.member.householdId,
-          monthKey,
         },
         orderBy: [{ createdAt: 'desc' }],
+        take: 50,
       }),
       prisma.monthlyReport.findMany({
         where: { householdId: auth.member.householdId },
@@ -207,6 +211,7 @@ export async function GET(request: Request) {
       bonusPurchases,
       monthlyReports,
       activeShoppingItems,
+      purchasedShoppingItems,
     })
 
     logApiEvent('info', {
@@ -222,6 +227,7 @@ export async function GET(request: Request) {
         openTasks: openTasks.length,
         completedTasks: completedTasks.length,
         shoppingItems: activeShoppingItems.length,
+        purchasedShoppingItems: purchasedShoppingItems.length,
       },
     })
 

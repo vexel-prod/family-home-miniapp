@@ -205,6 +205,17 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
     )
   }
 
+  if (body.action === 'reopen') {
+    await notifyHousehold(
+      prisma,
+      auth.member.householdId,
+      `Household\n\n` +
+        `${actorName} вернул(а) задачу в активный список\n` +
+        `Задача: ${updatedTask.title}\n` +
+        `Дедлайн: ${formatMoscowDeadlineLabel(updatedTask.deadlineAt)}`,
+    )
+  }
+
   return NextResponse.json({ ok: true, task: updatedTask })
 }
 
@@ -253,6 +264,19 @@ export async function DELETE(request: Request, context: { params: Promise<{ task
   })
 
   await bumpHouseholdRevision(prisma, auth.member.householdId)
+
+  const actorName =
+    [auth.user.first_name, auth.user.last_name].filter(Boolean).join(' ').trim() ||
+    auth.user.username ||
+    auth.member.firstName
+
+  await notifyHousehold(
+    prisma,
+    auth.member.householdId,
+    `Household\n\n` +
+      `${actorName} удалил(а) задачу\n` +
+      `Задача: ${task.title}`,
+  )
 
   return NextResponse.json({ ok: true })
 }

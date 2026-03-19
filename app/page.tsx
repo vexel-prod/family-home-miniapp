@@ -21,15 +21,15 @@ import { TaskFormModal } from '@/features/tasks/components/task-form-modal'
 import { LastCompletedTaskModal } from '@/features/tasks/components/last-completed-task-modal'
 import { TaskJournalModal } from '@/features/tasks/components/task-journal-modal'
 import { TaskListModal } from '@/features/tasks/components/task-list-modal'
+import { formatPoints } from '@/shared/lib/bonus-shop'
 import { buildMonthlyRatingSummary } from '@/shared/lib/monthly-rating'
 import { normalizeInviteCode } from '@/shared/lib/household'
 import {
-  formatRelativeDate,
   sortCompletedTasks,
+  sortPurchasedShoppingItems,
   sortShoppingItems,
   sortTasks,
 } from '@/shared/lib/format'
-import { formatPoints } from '@/shared/lib/bonus-shop'
 import { getActorName, getTelegramInitData, getTelegramUser } from '@/shared/lib/telegram'
 import type {
   BonusReward,
@@ -171,6 +171,29 @@ function buildDeadlineIso(day: string, time: string) {
   return nextValue.toISOString()
 }
 
+const FALLBACK_HOUSEHOLD_SUMMARY: HouseholdSummary = {
+  id: 'preview-household',
+  name: 'Household',
+  members: [
+    {
+      id: 'preview-member',
+      firstName: 'Пользователь',
+      lastName: null,
+      username: null,
+      displayName: 'Пользователь',
+      role: 'head',
+      isCurrentUser: true,
+      joinedAt: new Date().toISOString(),
+    },
+  ],
+  activeInvite: {
+    code: 'HOUSE777',
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
+  },
+  currentUserMemberId: 'preview-member',
+  currentUserRole: 'head',
+}
+
 export default function Page() {
   const bootstrapRequestInFlight = useRef(false)
   const eventSourceRef = useRef<EventSource | null>(null)
@@ -206,6 +229,7 @@ export default function Page() {
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
   const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
+  const [purchasedShoppingItems, setPurchasedShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
   const [taskTitle, setTaskTitle] = useState('')
@@ -248,6 +272,7 @@ export default function Page() {
   const sortedTasks = sortTasks(openTasks)
   const sortedCompletedTasks = sortCompletedTasks(completedTasks)
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
+  const sortedPurchasedShoppingItems = sortPurchasedShoppingItems(purchasedShoppingItems)
   const monthlyRatingSummary = buildMonthlyRatingSummary(
     monthlyLeaderboardEntries,
     monthlyTeamBonusPoints,
@@ -315,11 +340,6 @@ export default function Page() {
     nextModal: Extract<ModalKey, 'household' | 'shopping-list' | 'task-journal' | 'last-completed-task' | 'leaderboard' | 'bonus-shop' | 'profile'>,
   ) {
     if (!canOpenModal()) {
-      return
-    }
-
-    if (nextModal === 'profile' && !household) {
-      setError('Личный кабинет пока недоступен. Обнови экран и попробуй снова.')
       return
     }
 
@@ -526,6 +546,7 @@ export default function Page() {
           setBonusPurchases([])
           setMonthlyReports([])
           setShoppingItems([])
+          setPurchasedShoppingItems([])
           setRewardTitle('')
           setRewardDescription('')
           setRewardCost('')
@@ -555,6 +576,7 @@ export default function Page() {
         setBonusPurchases(payload.bonusPurchases)
         setMonthlyReports(payload.monthlyReports)
         setShoppingItems(payload.activeShoppingItems)
+        setPurchasedShoppingItems(payload.purchasedShoppingItems)
         setGoalKind(payload.familyGoal?.kind ?? 'spiritual')
         setGoalTitle(payload.familyGoal?.title ?? '')
         setGoalDescription(payload.familyGoal?.description ?? '')
@@ -1208,6 +1230,7 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка отмечена: ${item.title}`)
       removeShoppingItemFromList(payload.shoppingItem.id)
+      setPurchasedShoppingItems(current => sortPurchasedShoppingItems([payload.shoppingItem, ...current]))
       void loadData({ silent: true })
     } catch (shoppingUpdateError) {
       setError(
@@ -1710,6 +1733,7 @@ export default function Page() {
           {modal === 'task-journal' ? (
             <TaskJournalModal
               tasks={sortedCompletedTasks}
+              purchasedItems={sortedPurchasedShoppingItems}
               participantCount={participantNames.length}
               onClose={closeModalWithGuard}
             />
@@ -1794,11 +1818,11 @@ export default function Page() {
             />
           ) : null}
 
-          {modal === 'profile' && household ? (
+          {modal === 'profile' ? (
             <HouseholdProfileModal
               actorName={getActorName(buyer)}
               profile={currentUserProfile}
-              household={household}
+              household={household ?? FALLBACK_HOUSEHOLD_SUMMARY}
               customInviteCode={customInviteCode}
               busyAction={busyKey}
               onCustomInviteCodeChange={value => setCustomInviteCode(normalizeInviteCode(value))}
@@ -1884,18 +1908,12 @@ export default function Page() {
 
         <JournalSummary
           completedTasksCount={completedTasks.length}
-          leaderName={monthlyRatingSummary.leadingName}
           leaderPoints={monthlyRatingSummary.leadingPoints}
-          lastCompletedAt={
-            sortedCompletedTasks[0]?.completedAt
-              ? formatRelativeDate(sortedCompletedTasks[0].completedAt)
-              : 'Пока пусто'
-          }
           balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} баллов`}
           profileLevel={currentUserProfile.currentLevel}
+          profileExp={currentUserProfile.expIntoCurrentLevel}
           profileExpToNextLevel={currentUserProfile.expToNextLevel}
           onOpenJournal={() => openMainModal('task-journal')}
-          onOpenLastCompleted={() => openMainModal('last-completed-task')}
           onOpenLeaderboard={() => openMainModal('leaderboard')}
           onOpenBonusShop={() => openMainModal('bonus-shop')}
           onOpenProfile={() => openMainModal('profile')}

@@ -93,7 +93,6 @@ export async function POST(request: Request) {
       `Статус: ${shoppingItem.urgency === 'out' ? 'закончилось' : shoppingItem.urgency === 'without' ? 'без срока' : 'заканчивается'}` +
       `${shoppingItem.quantityLabel ? `\nКоличество: ${shoppingItem.quantityLabel}` : ''}` +
       `${shoppingItem.note ? `\nКомментарий: ${shoppingItem.note}` : ''}`,
-    auth.member.id,
   )
 
   return NextResponse.json({ ok: true, shoppingItem })

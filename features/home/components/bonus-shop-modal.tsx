@@ -61,19 +61,13 @@ export function BonusShopModal({
       wide
       tall
     >
+      <div className='p-4 border-b border-white/10'>
+        <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
+          Доступный баланс: {formatPoints(balanceUnits)}
+        </h2>
+      </div>
       <div className='border-b border-white/10 p-4 sm:p-6'>
-        <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
-          <div>
-            <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
-              Доступный баланс: {formatPoints(balanceUnits)}
-            </h2>
-          </div>
-          <div className='max-w-sm rounded-md bg-white/5 px-4 py-3 text-sm text-white/70 sm:text-right'>
-            Бонусы действуют только до конца текущего месяца
-          </div>
-        </div>
-
-        <div className='mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap'>
+        <div className='grid grid-cols-2 gap-2 sm:flex sm:flex-wrap'>
           {tabs.map(tab => (
             <button
               key={tab.key}
@@ -175,7 +169,7 @@ export function BonusShopModal({
                           className={`bg-linear-to-r ${getBonusRewardAccentClassName(reward.id)} p-5 text-(--color-page-text)`}
                         >
                           <div className='text-xs uppercase tracking-[0.24em] text-black/55'>
-                            Семейный ништяк
+                            Ништячок
                           </div>
                           <div className='mt-3 text-2xl font-semibold'>{reward.title}</div>
                           <div className='mt-2 max-w-xl text-sm text-black/70'>
@@ -193,7 +187,7 @@ export function BonusShopModal({
                             </div>
                           </div>
 
-                          <div className='flex flex-wrap justify-end gap-2 sm:max-w-[22rem]'>
+                          <div className='flex flex-wrap justify-end gap-2 sm:max-w-88'>
                             <AppButton
                               tone={canBuy ? 'home' : 'secondary'}
                               disabled={!canBuy}
@@ -228,7 +222,7 @@ export function BonusShopModal({
                 </div>
               ) : (
                 <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-                  Магазин пока пуст.
+                  Магазин пока пуст
                 </div>
               )}
             </div>
@@ -261,7 +255,7 @@ export function BonusShopModal({
                 </div>
               ) : (
                 <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-                  Пока нет покупок в этом месяце.
+                  Пока нет покупок
                 </div>
               )}
             </div>
@@ -271,7 +265,7 @@ export function BonusShopModal({
         {activeTab === 'reports' ? (
           <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
             <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
-              Месячные отчеты
+              ежемесячные отчеты
             </div>
 
             <div className='min-h-0 flex-1 overflow-y-auto p-4'>
@@ -296,7 +290,7 @@ export function BonusShopModal({
                 </div>
               ) : (
                 <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-                  Отчеты появятся после закрытия месяца.
+                  Отчеты появятся в конце месяца
                 </div>
               )}
             </div>

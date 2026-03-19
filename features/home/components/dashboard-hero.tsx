@@ -35,7 +35,7 @@ export function DashboardHero({
           <div className='flex flex-col gap-6'>
             <TypingText
               key={actorName}
-              typedText={`Привет, ${actorName}`}
+              typedText={`Привет, ${actorName} 👋`}
             />
           </div>
         </div>

@@ -116,7 +116,6 @@ export async function PATCH(request: Request, context: { params: Promise<{ itemI
         `Статус: ${updatedItem.urgency === 'out' ? 'закончилось' : updatedItem.urgency === 'without' ? 'без срока' : 'заканчивается'}` +
         `${updatedItem.quantityLabel ? `\nКоличество: ${updatedItem.quantityLabel}` : ''}` +
         `${updatedItem.note ? `\nКомментарий: ${updatedItem.note}` : ''}`,
-      auth.member.id,
     )
 
     return NextResponse.json({ ok: true, shoppingItem: updatedItem })
@@ -148,7 +147,17 @@ export async function PATCH(request: Request, context: { params: Promise<{ itemI
         `${actorName} отметил(а) покупку как выполненную\n` +
         `Позиция: ${updatedItem.title}\n` +
         `Статус: куплено`,
-      auth.member.id,
+    )
+  }
+
+  if (body.action === 'restore') {
+    await notifyHousehold(
+      prisma,
+      auth.member.householdId,
+      `Household\n\n` +
+        `${actorName} вернул(а) покупку в активный список\n` +
+        `Позиция: ${updatedItem.title}\n` +
+        `Статус: снова активна`,
     )
   }
 
@@ -197,6 +206,19 @@ export async function DELETE(request: Request, context: { params: Promise<{ item
   })
 
   await bumpHouseholdRevision(prisma, auth.member.householdId)
+
+  const actorName =
+    [auth.user.first_name, auth.user.last_name].filter(Boolean).join(' ').trim() ||
+    auth.user.username ||
+    auth.member.firstName
+
+  await notifyHousehold(
+    prisma,
+    auth.member.householdId,
+    `Household\n\n` +
+      `${actorName} удалил(а) покупку\n` +
+      `Позиция: ${item.title}`,
+  )
 
   return NextResponse.json({ ok: true })
 }

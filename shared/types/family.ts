@@ -134,10 +134,13 @@ export type MonthlyReport = {
 export type ShoppingItem = {
   id: string
   title: string
+  status: "active" | "purchased"
   urgency: "soon" | "out" | "without"
   quantityLabel: string | null
   note: string | null
   addedByName: string
+  purchasedAt?: string | null
+  purchasedByName?: string | null
   createdAt: string
 }
 
@@ -158,6 +161,7 @@ export type BootstrapActiveResponse = {
   bonusPurchases: BonusPurchase[]
   monthlyReports: MonthlyReport[]
   activeShoppingItems: ShoppingItem[]
+  purchasedShoppingItems: ShoppingItem[]
 }
 
 export type BootstrapOnboardingResponse = {

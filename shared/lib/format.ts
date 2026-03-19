@@ -47,3 +47,12 @@ export function sortShoppingItems(items: ShoppingItem[]) {
     return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
   })
 }
+
+export function sortPurchasedShoppingItems(items: ShoppingItem[]) {
+  return [...items].sort((left, right) => {
+    const rightPurchasedAt = right.purchasedAt ? new Date(right.purchasedAt).getTime() : 0
+    const leftPurchasedAt = left.purchasedAt ? new Date(left.purchasedAt).getTime() : 0
+
+    return rightPurchasedAt - leftPurchasedAt
+  })
+}

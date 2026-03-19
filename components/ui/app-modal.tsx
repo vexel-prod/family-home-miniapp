@@ -9,7 +9,7 @@ type AppModalProps = {
 
 export function ModalOverlay({ children }: AppModalProps) {
   return (
-    <div className='fixed inset-0 z-50 flex flex-col justify-center overflow-hidden bg-(--overlay-backdrop) px-4 pb-4 pt-[max(env(safe-area-inset-top),8rem)] backdrop-blur-md md:justify-center md:px-5 md:pb-5 md:pt-[max(env(safe-area-inset-top),5rem)]'>
+    <div className='fixed inset-0 z-50 flex flex-col justify-center overflow-hidden bg-(--overlay-backdrop) px-4 pb-4 pt-20 backdrop-blur-md'>
       {children}
     </div>
   )
@@ -23,7 +23,7 @@ type ModalPanelProps = {
 
 export function ModalPanel({ children, wide = false, tall = false }: ModalPanelProps) {
   const classNames = [
-    'flex w-full flex-col overflow-hidden rounded-md border border-white/10 bg-[var(--color-panel)] text-[var(--color-panel-text)] shadow-[var(--shadow-panel)] backdrop-blur-xl',
+    'flex w-full flex-col overflow-hidden rounded-md border border-white/10 bg-[var(--color-panel)] text-[var(--color-panel-text)] shadow-[var(--shadow-panel)] backdrop-blur-[2px]',
     wide ? 'mx-auto max-w-5xl' : 'mx-auto max-w-2xl',
   ]
 
@@ -35,8 +35,8 @@ export function ModalPanel({ children, wide = false, tall = false }: ModalPanelP
       className={classNames.filter(Boolean).join(' ')}
       style={{
         maxHeight: tall
-          ? 'calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 2rem)'
-          : 'calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 2.5rem)',
+          ? 'calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 1rem)'
+          : 'calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 1.25rem)',
       }}
     >
       {children}
