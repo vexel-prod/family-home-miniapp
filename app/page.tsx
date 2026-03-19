@@ -6,6 +6,7 @@ import { ModalOverlay } from '@/components/ui/app-modal'
 import { NoticeToast } from '@/components/ui/notice-toast'
 import { BonusShopModal } from '@/features/home/components/bonus-shop-modal'
 import { DashboardHero } from '@/features/home/components/dashboard-hero'
+import { HouseholdOnboarding } from '@/features/home/components/household-onboarding'
 import { HouseholdProfileModal } from '@/features/home/components/household-profile-modal'
 import { JournalSummary } from '@/features/home/components/journal-summary'
 import { MonthlyRatingModal } from '@/features/home/components/monthly-rating-modal'
@@ -18,6 +19,7 @@ import { LastCompletedTaskModal } from '@/features/tasks/components/last-complet
 import { TaskJournalModal } from '@/features/tasks/components/task-journal-modal'
 import { TaskListModal } from '@/features/tasks/components/task-list-modal'
 import { buildMonthlyRatingSummary } from '@/shared/lib/monthly-rating'
+import { normalizeInviteCode } from '@/shared/lib/household'
 import {
   formatRelativeDate,
   sortCompletedTasks,
@@ -31,6 +33,7 @@ import type {
   BootstrapResponse,
   FetchOptions,
   HouseholdProfile,
+  HouseholdSummary,
   HouseholdTask,
   MonthlyLeaderboardEntry,
   ModalKey,
@@ -146,7 +149,9 @@ export default function Page() {
   const [monthlyLeaderboardEntries, setMonthlyLeaderboardEntries] = useState<MonthlyLeaderboardEntry[]>([])
   const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
   const [participantNames, setParticipantNames] = useState<string[]>([])
+  const [appState, setAppState] = useState<'loading' | 'onboarding' | 'active'>('loading')
   const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
+  const [household, setHousehold] = useState<HouseholdSummary | null>(null)
   const [currentUserProfile, setCurrentUserProfile] = useState<HouseholdProfile>({
     totalExp: 0,
     currentLevel: 0,
@@ -183,6 +188,10 @@ export default function Page() {
   const [replaceQuantity, setReplaceQuantity] = useState('')
   const [replaceNote, setReplaceNote] = useState('')
   const [replaceUrgency, setReplaceUrgency] = useState<'soon' | 'out' | 'without'>('soon')
+  const [createHouseholdName, setCreateHouseholdName] = useState('')
+  const [joinHouseholdCode, setJoinHouseholdCode] = useState('')
+  const [customInviteCode, setCustomInviteCode] = useState('')
+  const [onboardingStatus, setOnboardingStatus] = useState('')
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [taskCreateStatus, setTaskCreateStatus] = useState('')
   const [toast, setToast] = useState('')
@@ -360,12 +369,48 @@ export default function Page() {
         }
 
         const payload = (await response.json()) as BootstrapResponse
+
+        if (payload.state === 'onboarding') {
+          setAppState('onboarding')
+          setOpenTasks([])
+          setCompletedTasks([])
+          setMonthlyLeaderboardEntries([])
+          setMonthlyTeamBonusPoints(0)
+          setParticipantNames([])
+          setCurrentUserBonusBalanceUnits(0)
+          setHousehold(null)
+          setCurrentUserProfile({
+            totalExp: 0,
+            currentLevel: 0,
+            bonusBalanceUnits: 0,
+            currentLevelThreshold: 0,
+            nextLevel: 1,
+            nextLevelThreshold: 100,
+            expIntoCurrentLevel: 0,
+            expToNextLevel: 100,
+            completedTasksCount: 0,
+            fastTasksCount: 0,
+            overdueTasksCount: 0,
+            levelBonusUnits: 0,
+            recentEvents: [],
+          })
+          setBonusPurchases([])
+          setMonthlyReports([])
+          setShoppingItems([])
+          setModal(null)
+          return
+        }
+
+        setAppState('active')
+        setOnboardingStatus('')
         setOpenTasks(payload.openTasks)
         setCompletedTasks(payload.completedTasks)
         setMonthlyLeaderboardEntries(payload.monthlyLeaderboardEntries)
         setMonthlyTeamBonusPoints(payload.monthlyTeamBonusPoints)
         setParticipantNames(payload.participantNames)
         setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
+        setHousehold(payload.household)
+        setCustomInviteCode(payload.household.activeInvite?.code ?? '')
         setCurrentUserProfile(payload.currentUserProfile)
         setBonusPurchases(payload.bonusPurchases)
         setMonthlyReports(payload.monthlyReports)
@@ -404,7 +449,7 @@ export default function Page() {
   }, [loadData])
 
   useEffect(() => {
-    if (!telegramInitData) {
+    if (!telegramInitData || appState !== 'active') {
       return
     }
 
@@ -465,7 +510,7 @@ export default function Page() {
       window.removeEventListener('focus', refreshOnFocus)
       document.removeEventListener('visibilitychange', refreshOnFocus)
     }
-  }, [telegramInitData, loadData])
+  }, [appState, telegramInitData, loadData])
 
   useEffect(() => {
     if (!toast) {
@@ -648,6 +693,7 @@ export default function Page() {
       closeTaskModals()
       setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
       applyTaskUpdate(payload.task)
+      void loadData({ silent: true })
     } catch {
       setError(
         together
@@ -675,6 +721,7 @@ export default function Page() {
       closeTaskModals()
       setToast(`Задача удалена: ${task.title}`)
       removeTaskFromLists(task.id)
+      void loadData({ silent: true })
     } catch {
       setError(`Ошибка удаления задачи: ${task.title}`)
     } finally {
@@ -724,6 +771,7 @@ export default function Page() {
       closeTaskModals()
       setToast(`Задача обновлена: ${title}`)
       applyTaskUpdate(payload.task)
+      void loadData({ silent: true })
     } catch {
       setError(`Ошибка обновления задачи: ${title}`)
     } finally {
@@ -755,6 +803,7 @@ export default function Page() {
       setCurrentUserBonusBalanceUnits(payload.balanceUnits)
       setBonusPurchases(current => [payload.purchase, ...current])
       setToast(`Куплен бонус: ${payload.purchase.rewardTitle}`)
+      void loadData({ silent: true })
     } catch {
       setError('Не удалось купить бонус. Проверь баланс и попробуй еще раз.')
     } finally {
@@ -784,6 +833,7 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка отмечена: ${item.title}`)
       removeShoppingItemFromList(payload.shoppingItem.id)
+      void loadData({ silent: true })
     } catch {
       setError(`Ошибка обновления покупки: ${item.title}`)
     } finally {
@@ -807,6 +857,7 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка удалена: ${item.title}`)
       removeShoppingItemFromList(item.id)
+      void loadData({ silent: true })
     } catch {
       setError(`Ошибка удаления покупки: ${item.title}`)
     } finally {
@@ -851,11 +902,300 @@ export default function Page() {
       closeShoppingModals()
       setToast(`Покупка обновлена: ${title}`)
       upsertShoppingItem(payload.shoppingItem)
+      void loadData({ silent: true })
     } catch {
       setError(`Ошибка обновления покупки: ${title}`)
     } finally {
       setBusyKey(null)
     }
+  }
+
+  async function createHousehold() {
+    setBusyKey('create-household')
+    setError('')
+    setOnboardingStatus('')
+
+    try {
+      const response = await telegramFetch('/api/household/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: createHouseholdName.trim(),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('household create failed')
+      }
+
+      setCreateHouseholdName('')
+      await loadData({ silent: true })
+      setToast('Семья создана')
+    } catch {
+      setError('Не удалось создать семью. Попробуй еще раз.')
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function joinHousehold() {
+    const code = joinHouseholdCode.trim().toUpperCase()
+
+    if (!code) {
+      setOnboardingStatus('Ошибка: введи инвайт-код семьи.')
+      return
+    }
+
+    setBusyKey('join-household')
+    setError('')
+    setOnboardingStatus('')
+
+    try {
+      const response = await telegramFetch('/api/household/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code,
+        }),
+      })
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null
+
+        if (payload?.error === 'Household is full') {
+          throw new Error('Ошибка: семья уже заполнена.')
+        }
+
+        if (payload?.error === 'Already in household') {
+          throw new Error('Ошибка: ты уже состоишь в семье.')
+        }
+
+        if (payload?.error === 'Invite expired') {
+          throw new Error('Ошибка: срок действия инвайт-кода истек.')
+        }
+
+        if (payload?.error === 'Invite revoked') {
+          throw new Error('Ошибка: этот инвайт-код больше не действует.')
+        }
+
+        if (payload?.error === 'Invite not found') {
+          throw new Error('Ошибка: инвайт-код не найден.')
+        }
+
+        throw new Error(payload?.error || 'join failed')
+      }
+
+      setJoinHouseholdCode('')
+      await loadData({ silent: true })
+      setToast('Ты присоединился к семье')
+    } catch (joinError) {
+      const message = joinError instanceof Error ? joinError.message : ''
+      setOnboardingStatus(
+        message.startsWith('Ошибка:')
+          ? message
+          : 'Ошибка: не удалось войти по коду. Проверь код и попробуй еще раз.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function copyInviteCode() {
+    const code = household?.activeInvite?.code
+
+    if (!code) {
+      setError('Сейчас нет активного инвайт-кода.')
+      return
+    }
+
+    setBusyKey('copy-invite')
+    setError('')
+
+    try {
+      await navigator.clipboard.writeText(code)
+      setToast(`Инвайт-код скопирован: ${code}`)
+    } catch {
+      setError('Не удалось скопировать код. Попробуй вручную.')
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function reissueInvite() {
+    setBusyKey('reissue-invite')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/household/invite', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        throw new Error('invite failed')
+      }
+
+      await loadData({ silent: true })
+      setToast('Инвайт-код обновлен')
+    } catch {
+      setError('Не удалось обновить инвайт-код.')
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function createCustomInvite() {
+    const code = normalizeInviteCode(customInviteCode)
+
+    if (code.length < 6) {
+      setError('Код должен быть не короче 6 символов.')
+      return
+    }
+
+    setBusyKey('custom-invite')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/household/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      })
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null
+
+        if (payload?.error === 'Invite code already taken') {
+          throw new Error('Этот код уже занят другой семьей.')
+        }
+
+        if (payload?.error === 'Invite code too short') {
+          throw new Error('Код должен быть не короче 6 символов.')
+        }
+
+        throw new Error('custom invite failed')
+      }
+
+      await loadData({ silent: true })
+      setToast(`Инвайт-код сохранен: ${code}`)
+    } catch (customInviteError) {
+      setError(
+        customInviteError instanceof Error
+          ? customInviteError.message
+          : 'Не удалось сохранить свой инвайт-код.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function leaveHousehold() {
+    const isLastMember = household?.members.length === 1
+    const shouldLeave = window.confirm(
+      isLastMember
+        ? 'ВЫ ТОЧНО УВЕРЕНЫ? ДЕЙСТВИЕ БЕЗВОЗВРАТНО! Семья, задачи, покупки, рейтинг и прогресс будут удалены навсегда.'
+        : household?.currentUserRole === 'head'
+        ? 'Выйти из семьи? Если в семье остались люди, глава перейдет следующему участнику автоматически.'
+        : 'Покинуть семью? После выхода ты потеряешь доступ к этой семье и ее данным.',
+    )
+
+    if (!shouldLeave) {
+      return
+    }
+
+    setBusyKey('leave-household')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/household/leave', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        throw new Error('leave failed')
+      }
+
+      closeModalWithGuard()
+      await loadData({ silent: true })
+      setToast(isLastMember ? 'Семья удалена безвозвратно' : 'Ты покинул семью')
+    } catch {
+      setError('Не удалось выйти из семьи.')
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  async function removeHouseholdMember(memberId: string) {
+    const member = household?.members.find(currentMember => currentMember.id === memberId)
+    const shouldRemove = window.confirm(
+      `Удалить ${member?.displayName ?? 'участника'} из семьи? Он потеряет доступ к этой семье.`,
+    )
+
+    if (!shouldRemove) {
+      return
+    }
+
+    setBusyKey(`remove-member-${memberId}`)
+    setError('')
+
+    try {
+      const response = await telegramFetch(`/api/household/members/${memberId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('remove failed')
+      }
+
+      await loadData({ silent: true })
+      setToast('Участник удален из семьи')
+    } catch {
+      setError('Не удалось удалить участника.')
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
+  if (appState === 'onboarding') {
+    return (
+      <main className='min-h-screen bg-(--color-page-bg) text-(--color-page-text)'>
+        <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
+          {toast ? (
+            <NoticeToast
+              tone='success'
+              label='Готово'
+              title={toast}
+              icon='✓'
+            />
+          ) : null}
+          {error ? (
+            <NoticeToast
+              tone='error'
+              label='Внимание'
+              title={error}
+              icon='!'
+            />
+          ) : null}
+        </div>
+
+        <HouseholdOnboarding
+          actorName={getActorName(buyer)}
+          createHouseholdName={createHouseholdName}
+          joinCode={joinHouseholdCode}
+          statusMessage={onboardingStatus}
+          busyAction={
+            busyKey === 'create-household'
+              ? 'create'
+              : busyKey === 'join-household'
+                ? 'join'
+                : null
+          }
+          onCreateHouseholdNameChange={setCreateHouseholdName}
+          onJoinCodeChange={setJoinHouseholdCode}
+          onCreateHousehold={() => void createHousehold()}
+          onJoinHousehold={() => void joinHousehold()}
+        />
+      </main>
+    )
   }
 
   return (
@@ -979,11 +1319,22 @@ export default function Page() {
           ) : null}
 
           {modal === 'profile' ? (
-            <HouseholdProfileModal
-              actorName={getActorName(buyer)}
-              profile={currentUserProfile}
-              onClose={closeModalWithGuard}
-            />
+            household ? (
+              <HouseholdProfileModal
+                actorName={getActorName(buyer)}
+                profile={currentUserProfile}
+                household={household}
+                customInviteCode={customInviteCode}
+                busyAction={busyKey}
+                onCustomInviteCodeChange={value => setCustomInviteCode(normalizeInviteCode(value))}
+                onCopyInvite={() => void copyInviteCode()}
+                onCreateCustomInvite={() => void createCustomInvite()}
+                onReissueInvite={() => void reissueInvite()}
+                onLeaveHousehold={() => void leaveHousehold()}
+                onRemoveMember={memberId => void removeHouseholdMember(memberId)}
+                onClose={closeModalWithGuard}
+              />
+            ) : null
           ) : null}
 
           {modal === 'shopping-list' ? (

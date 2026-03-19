@@ -93,7 +93,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
     await notifyHousehold(
       prisma,
       auth.member.householdId,
-      `Family Home Mini App\n\n` +
+      `Household\n\n` +
         `${actorName} обновил(а) задачу\n` +
         `Задача: ${updatedTask.title}\n` +
         `Новый дедлайн: ${formatMoscowDeadlineLabel(updatedTask.deadlineAt)}${updatedTask.note ? `\nКомментарий: ${updatedTask.note}` : ''}`,
@@ -159,7 +159,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
     await notifyHousehold(
       prisma,
       auth.member.householdId,
-      `Family Home Mini App\n\n` +
+      `Household\n\n` +
         `Задача выполнена: ${updatedTask.title}\n` +
         `Кто выполнил: ${body.action === 'complete-together' ? 'вместе' : actorName}\n` +
         `Когда: ${formatMoscowDateTime(updatedTask.completedAt)}\n` +

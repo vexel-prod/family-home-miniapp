@@ -47,14 +47,6 @@ export function getTelegramInitData() {
 export function getActorName(user?: TelegramUser) {
   if (!user) return 'Таинственный незнакомец'
 
-  if (user.id === 706355445) {
-    return 'Малышка 💖'
-  }
-
-  if (user.id === 5133992697) {
-    return 'Vexel'
-  }
-
   const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ').trim()
   if (fullName) return fullName
   if (user.username) return `@${user.username}`

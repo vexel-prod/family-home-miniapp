@@ -72,6 +72,11 @@ export type BonusTransaction = Prisma.BonusTransactionModel
  */
 export type BonusPurchase = Prisma.BonusPurchaseModel
 /**
+ * Model HouseholdInvite
+ * 
+ */
+export type HouseholdInvite = Prisma.HouseholdInviteModel
+/**
  * Model MonthlyReport
  * 
  */

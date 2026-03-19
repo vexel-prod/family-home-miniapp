@@ -47,6 +47,31 @@ export type BonusPurchase = {
   createdAt: string
 }
 
+export type HouseholdMember = {
+  id: string
+  firstName: string
+  lastName: string | null
+  username: string | null
+  displayName: string
+  role: "head" | "member"
+  isCurrentUser: boolean
+  joinedAt: string
+}
+
+export type HouseholdInvite = {
+  code: string
+  expiresAt: string
+}
+
+export type HouseholdSummary = {
+  id: string
+  name: string
+  members: HouseholdMember[]
+  activeInvite: HouseholdInvite | null
+  currentUserMemberId: string
+  currentUserRole: "head" | "member"
+}
+
 export type HouseholdProfileEvent = {
   id: string
   title: string
@@ -97,8 +122,9 @@ export type ShoppingItem = {
   createdAt: string
 }
 
-export type BootstrapResponse = {
+export type BootstrapActiveResponse = {
   ok: boolean
+  state: "active"
   openTasks: HouseholdTask[]
   completedTasks: HouseholdTask[]
   monthlyCompletedTasks: HouseholdTask[]
@@ -107,10 +133,18 @@ export type BootstrapResponse = {
   participantNames: string[]
   currentUserBonusBalanceUnits: number
   currentUserProfile: HouseholdProfile
+  household: HouseholdSummary
   bonusPurchases: BonusPurchase[]
   monthlyReports: MonthlyReport[]
   activeShoppingItems: ShoppingItem[]
 }
+
+export type BootstrapOnboardingResponse = {
+  ok: boolean
+  state: "onboarding"
+}
+
+export type BootstrapResponse = BootstrapActiveResponse | BootstrapOnboardingResponse
 
 export type ModalKey =
   | "household"

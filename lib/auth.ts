@@ -1,100 +1,113 @@
-import type { PrismaClient } from "@/generated/prisma/client";
-import { ensureDefaultHousehold } from "@/lib/household";
-import { createHmac, timingSafeEqual } from "node:crypto";
+import type { PrismaClient } from '@/generated/prisma/client'
+import { createHmac, timingSafeEqual } from 'node:crypto'
 
-type TelegramAuthUser = {
-  id: number;
-  first_name?: string;
-  last_name?: string;
-  username?: string;
-};
+export type TelegramAuthUser = {
+  id: number
+  first_name?: string
+  last_name?: string
+  username?: string
+}
 
-type AuthorizedMember = {
+export type AuthorizedMember = {
   member: {
-    id: string;
-    householdId: string;
-    telegramUserId: string;
-    chatId: string;
-    firstName: string;
-    lastName: string | null;
-    username: string | null;
-  };
-  user: TelegramAuthUser;
-};
+    id: string
+    householdId: string
+    telegramUserId: string | null
+    chatId: string | null
+    firstName: string
+    lastName: string | null
+    username: string | null
+    role: string
+    isActive: boolean
+  }
+  user: TelegramAuthUser
+}
+
+export type AuthenticatedTelegramUser = {
+  user: TelegramAuthUser
+  member: AuthorizedMember['member'] | null
+}
 
 function getHeaderInitData(request: Request) {
-  return request.headers.get("x-telegram-init-data")?.trim() ?? "";
+  return request.headers.get('x-telegram-init-data')?.trim() ?? ''
 }
 
 function getQueryInitData(request: Request) {
-  return new URL(request.url).searchParams.get("initData")?.trim() ?? "";
+  return new URL(request.url).searchParams.get('initData')?.trim() ?? ''
 }
 
 function validateTelegramInitData(rawInitData: string) {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const botToken = process.env.TELEGRAM_BOT_TOKEN
 
   if (!botToken) {
-    throw new Error("Missing TELEGRAM_BOT_TOKEN");
+    throw new Error('Missing TELEGRAM_BOT_TOKEN')
   }
 
   if (!rawInitData) {
-    return null;
+    return null
   }
 
-  const params = new URLSearchParams(rawInitData);
-  const hash = params.get("hash");
+  const params = new URLSearchParams(rawInitData)
+  const hash = params.get('hash')
 
   if (!hash) {
-    return null;
+    return null
   }
 
   const pairs = [...params.entries()]
-    .filter(([key]) => key !== "hash")
+    .filter(([key]) => key !== 'hash')
     .sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, value]) => `${key}=${value}`);
+    .map(([key, value]) => `${key}=${value}`)
 
-  const dataCheckString = pairs.join("\n");
-  const secretKey = createHmac("sha256", "WebAppData").update(botToken).digest();
-  const computedHash = createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
-  const expectedHash = Buffer.from(computedHash, "hex");
-  const receivedHash = Buffer.from(hash, "hex");
+  const dataCheckString = pairs.join('\n')
+  const secretKey = createHmac('sha256', 'WebAppData').update(botToken).digest()
+  const computedHash = createHmac('sha256', secretKey).update(dataCheckString).digest('hex')
+  const expectedHash = Buffer.from(computedHash, 'hex')
+  const receivedHash = Buffer.from(hash, 'hex')
 
   if (
     receivedHash.length !== expectedHash.length ||
     !timingSafeEqual(receivedHash, expectedHash)
   ) {
-    return null;
+    return null
   }
 
-  const rawUser = params.get("user");
+  const rawUser = params.get('user')
 
   if (!rawUser) {
-    return null;
+    return null
   }
 
   try {
-    return JSON.parse(rawUser) as TelegramAuthUser;
+    return JSON.parse(rawUser) as TelegramAuthUser
   } catch {
-    return null;
+    return null
   }
 }
 
-export async function authorizeRequest(request: Request, prisma: PrismaClient): Promise<AuthorizedMember | null> {
-  await ensureDefaultHousehold(prisma);
-
-  const initData = getHeaderInitData(request) || getQueryInitData(request);
-  const user = validateTelegramInitData(initData);
+export async function authenticateTelegramRequest(
+  request: Request,
+  prisma: PrismaClient,
+): Promise<AuthenticatedTelegramUser | null> {
+  const initData = getHeaderInitData(request) || getQueryInitData(request)
+  const user = validateTelegramInitData(initData)
 
   if (!user?.id) {
-    return null;
+    return null
   }
 
-  const member = await prisma.member.findUnique({
-    where: { telegramUserId: String(user.id) },
-  });
+  const member = await prisma.member.findFirst({
+    where: {
+      telegramUserId: String(user.id),
+      isActive: true,
+    },
+  })
 
   if (!member) {
-    return null;
+    return {
+      user,
+      member: null,
+    }
   }
 
   const updatedMember = await prisma.member.update({
@@ -105,10 +118,23 @@ export async function authorizeRequest(request: Request, prisma: PrismaClient): 
       lastName: user.last_name ?? member.lastName,
       username: user.username ?? member.username,
     },
-  });
+  })
 
   return {
-    member: updatedMember,
     user,
-  };
+    member: updatedMember,
+  }
+}
+
+export async function authorizeRequest(
+  request: Request,
+  prisma: PrismaClient,
+): Promise<AuthorizedMember | null> {
+  const auth = await authenticateTelegramRequest(request, prisma)
+
+  if (!auth?.member) {
+    return null
+  }
+
+  return auth as AuthorizedMember
 }

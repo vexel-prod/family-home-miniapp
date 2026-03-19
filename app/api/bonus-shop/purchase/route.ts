@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   await notifyHousehold(
     prisma,
     auth.member.householdId,
-    `Family Home Mini App\n\n` +
+    `Household\n\n` +
       `${auth.member.firstName} купил(а) бонус: ${reward.title}\n` +
       `Стоимость: ${formatPoints(reward.costUnits)} баллов`,
   )

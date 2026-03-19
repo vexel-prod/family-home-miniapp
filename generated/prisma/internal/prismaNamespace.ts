@@ -390,6 +390,7 @@ export const ModelName = {
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
+  HouseholdInvite: 'HouseholdInvite',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "householdInvite" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -854,6 +855,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HouseholdInvite: {
+      payload: Prisma.$HouseholdInvitePayload<ExtArgs>
+      fields: Prisma.HouseholdInviteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HouseholdInviteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HouseholdInviteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>
+        }
+        findFirst: {
+          args: Prisma.HouseholdInviteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HouseholdInviteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>
+        }
+        findMany: {
+          args: Prisma.HouseholdInviteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>[]
+        }
+        create: {
+          args: Prisma.HouseholdInviteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>
+        }
+        createMany: {
+          args: Prisma.HouseholdInviteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HouseholdInviteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>[]
+        }
+        delete: {
+          args: Prisma.HouseholdInviteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>
+        }
+        update: {
+          args: Prisma.HouseholdInviteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>
+        }
+        deleteMany: {
+          args: Prisma.HouseholdInviteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HouseholdInviteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HouseholdInviteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>[]
+        }
+        upsert: {
+          args: Prisma.HouseholdInviteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdInvitePayload>
+        }
+        aggregate: {
+          args: Prisma.HouseholdInviteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHouseholdInvite>
+        }
+        groupBy: {
+          args: Prisma.HouseholdInviteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HouseholdInviteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HouseholdInviteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HouseholdInviteCountAggregateOutputType> | number
+        }
+      }
+    }
     MonthlyReport: {
       payload: Prisma.$MonthlyReportPayload<ExtArgs>
       fields: Prisma.MonthlyReportFieldRefs
@@ -985,6 +1060,10 @@ export const MemberScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   username: 'username',
+  role: 'role',
+  isActive: 'isActive',
+  joinedAt: 'joinedAt',
+  leftAt: 'leftAt',
   experiencePoints: 'experiencePoints',
   level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
@@ -1070,6 +1149,21 @@ export const BonusPurchaseScalarFieldEnum = {
 export type BonusPurchaseScalarFieldEnum = (typeof BonusPurchaseScalarFieldEnum)[keyof typeof BonusPurchaseScalarFieldEnum]
 
 
+export const HouseholdInviteScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  createdByMemberId: 'createdByMemberId',
+  code: 'code',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HouseholdInviteScalarFieldEnum = (typeof HouseholdInviteScalarFieldEnum)[keyof typeof HouseholdInviteScalarFieldEnum]
+
+
 export const MonthlyReportScalarFieldEnum = {
   id: 'id',
   householdId: 'householdId',
@@ -1139,6 +1233,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1270,6 +1371,7 @@ export type GlobalOmitConfig = {
   shoppingItem?: Prisma.ShoppingItemOmit
   bonusTransaction?: Prisma.BonusTransactionOmit
   bonusPurchase?: Prisma.BonusPurchaseOmit
+  householdInvite?: Prisma.HouseholdInviteOmit
   monthlyReport?: Prisma.MonthlyReportOmit
 }
 

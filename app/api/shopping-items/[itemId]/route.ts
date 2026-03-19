@@ -1,6 +1,6 @@
 import { authorizeRequest } from '@/lib/auth'
+import { notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
-import { notifyPartner } from '@/lib/partner-notify'
 import { NextResponse } from 'next/server'
 
 type UpdateShoppingPayload = {
@@ -61,17 +61,17 @@ export async function PATCH(request: Request, context: { params: Promise<{ itemI
       },
     })
 
-    await notifyPartner({
-      actorName,
-      actorTelegramId: String(auth.user.id),
-      actorUsername: auth.user.username ?? null,
-      text:
-        `Раздел: ПОКУПКИ\n` +
-        `Позиция обновлена: ${updatedItem.title}\n` +
+    await notifyHousehold(
+      prisma,
+      auth.member.householdId,
+      `Household\n\n` +
+        `${actorName} обновил(а) покупку\n` +
+        `Позиция: ${updatedItem.title}\n` +
         `Статус: ${updatedItem.urgency === 'out' ? 'закончилось' : updatedItem.urgency === 'without' ? 'без срока' : 'заканчивается'}` +
         `${updatedItem.quantityLabel ? `\nКоличество: ${updatedItem.quantityLabel}` : ''}` +
         `${updatedItem.note ? `\nКомментарий: ${updatedItem.note}` : ''}`,
-    })
+      auth.member.id,
+    )
 
     return NextResponse.json({ ok: true, shoppingItem: updatedItem })
   }
@@ -93,12 +93,15 @@ export async function PATCH(request: Request, context: { params: Promise<{ itemI
   })
 
   if (body.action === 'purchase') {
-    await notifyPartner({
-      actorName,
-      actorTelegramId: String(auth.user.id),
-      actorUsername: auth.user.username ?? null,
-      text: `Раздел: ПОКУПКИ\n` + `Позиция закрыта: ${updatedItem.title}\n` + `Статус: куплено`,
-    })
+    await notifyHousehold(
+      prisma,
+      auth.member.householdId,
+      `Household\n\n` +
+        `${actorName} отметил(а) покупку как выполненную\n` +
+        `Позиция: ${updatedItem.title}\n` +
+        `Статус: куплено`,
+      auth.member.id,
+    )
   }
 
   return NextResponse.json({ ok: true, shoppingItem: updatedItem })

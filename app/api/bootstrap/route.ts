@@ -1,5 +1,6 @@
-import { authorizeRequest } from '@/lib/auth'
+import { authenticateTelegramRequest } from '@/lib/auth'
 import { getMemberProfileSnapshot } from '@/lib/household-profile'
+import { getHouseholdSummary } from '@/lib/household'
 import { getCurrentMemberBalanceUnits, getMonthlyLeaderboardStats } from '@/lib/bonus-ledger'
 import { getPrisma } from '@/lib/prisma'
 import { getMonthKey } from '@/shared/lib/bonus-shop'
@@ -27,10 +28,17 @@ function getCurrentMoscowMonthRange() {
 
 export async function GET(request: Request) {
   const prisma = getPrisma()
-  const auth = await authorizeRequest(request, prisma)
+  const auth = await authenticateTelegramRequest(request, prisma)
 
   if (!auth) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+  }
+
+  if (!auth.member) {
+    return NextResponse.json({
+      ok: true,
+      state: 'onboarding',
+    })
   }
 
   const { start, end } = getCurrentMoscowMonthRange()
@@ -47,6 +55,7 @@ export async function GET(request: Request) {
     bonusPurchases,
     monthlyReports,
     currentUserBonusBalanceUnits,
+    household,
   ] = await Promise.all([
     prisma.householdTask.findMany({
       where: { householdId: auth.member.householdId, status: 'open' },
@@ -86,10 +95,12 @@ export async function GET(request: Request) {
       take: 6,
     }),
     getCurrentMemberBalanceUnits(prisma, auth.member.id),
+    getHouseholdSummary(prisma, auth.member.householdId, auth.member.id),
   ])
 
   return NextResponse.json({
     ok: true,
+    state: 'active',
     openTasks,
     completedTasks,
     monthlyCompletedTasks,
@@ -98,6 +109,7 @@ export async function GET(request: Request) {
     monthlyTeamBonusPoints: monthlyStats.monthlyTeamBonusPoints,
     currentUserBonusBalanceUnits,
     currentUserProfile,
+    household,
     bonusPurchases,
     monthlyReports,
     activeShoppingItems,

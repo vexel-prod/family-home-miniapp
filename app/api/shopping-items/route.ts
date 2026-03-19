@@ -1,6 +1,6 @@
 import { authorizeRequest } from '@/lib/auth'
+import { notifyHousehold } from '@/lib/household-notify'
 import { getPrisma } from '@/lib/prisma'
-import { notifyPartner } from '@/lib/partner-notify'
 import { NextResponse } from 'next/server'
 
 type CreateShoppingPayload = {
@@ -41,17 +41,17 @@ export async function POST(request: Request) {
     },
   })
 
-  await notifyPartner({
-    actorName,
-    actorTelegramId: String(auth.user.id),
-    actorUsername: auth.user.username ?? null,
-    text:
-      `Раздел: ПОКУПКИ\n` +
+  await notifyHousehold(
+    prisma,
+    auth.member.householdId,
+    `Household\n\n` +
+      `${actorName} добавил(а) покупку\n` +
       `Позиция: ${shoppingItem.title}\n` +
       `Статус: ${shoppingItem.urgency === 'out' ? 'закончилось' : shoppingItem.urgency === 'without' ? 'без срока' : 'заканчивается'}` +
       `${shoppingItem.quantityLabel ? `\nКоличество: ${shoppingItem.quantityLabel}` : ''}` +
       `${shoppingItem.note ? `\nКомментарий: ${shoppingItem.note}` : ''}`,
-  })
+    auth.member.id,
+  )
 
   return NextResponse.json({ ok: true, shoppingItem })
 }

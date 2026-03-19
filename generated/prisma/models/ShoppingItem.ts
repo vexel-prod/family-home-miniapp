@@ -350,12 +350,12 @@ export type ShoppingItemCreateInput = {
   purchasedByName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  household?: Prisma.HouseholdCreateNestedOneWithoutShoppingItemsInput
+  household: Prisma.HouseholdCreateNestedOneWithoutShoppingItemsInput
 }
 
 export type ShoppingItemUncheckedCreateInput = {
   id?: string
-  householdId?: string
+  householdId: string
   title: string
   status?: string
   urgency?: string
@@ -406,7 +406,7 @@ export type ShoppingItemUncheckedUpdateInput = {
 
 export type ShoppingItemCreateManyInput = {
   id?: string
-  householdId?: string
+  householdId: string
   title: string
   status?: string
   urgency?: string

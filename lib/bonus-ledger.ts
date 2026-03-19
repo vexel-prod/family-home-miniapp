@@ -423,7 +423,7 @@ export async function processTaskDeadlineEvents(
       await notifyHousehold(
         prisma,
         task.householdId,
-        `Family Home Mini App\n\n` +
+        `Household\n\n` +
           `Задача просрочена больше чем на час: ${task.title}\n` +
           `Дедлайн был: ${formatMoscowDeadlineLabel(task.deadlineAt)}\n` +
           `Штраф применен ко всем участникам: -${formatPoints(penaltyUnits)} балла суммарно\n` +
@@ -452,7 +452,7 @@ export async function processTaskDeadlineEvents(
     await notifyHousehold(
       prisma,
       task.householdId,
-      `Family Home Mini App\n\n` +
+      `Household\n\n` +
         `Горят сроки по задаче: ${task.title}\n` +
         `Нужно завершить до: ${formatMoscowDeadlineLabel(task.deadlineAt)}\n` +
         `Если задача провисит еще час после дедлайна, всем участникам будет начислен штраф.`,

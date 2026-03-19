@@ -9,11 +9,12 @@ datasource db {
 }
 
 model Household {
-  id            String          @id
+  id            String          @id @default(cuid())
   name          String
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   members       Member[]
+  invites       HouseholdInvite[]
   tasks         HouseholdTask[]
   shoppingItems ShoppingItem[]
   bonusTransactions BonusTransaction[]
@@ -24,11 +25,15 @@ model Household {
 model Member {
   id             String    @id @default(cuid())
   householdId    String
-  telegramUserId String    @unique
-  chatId         String    @unique
+  telegramUserId String?   @unique
+  chatId         String?   @unique
   firstName      String
   lastName       String?
   username       String?
+  role           String    @default("member")
+  isActive       Boolean   @default(true)
+  joinedAt       DateTime  @default(now())
+  leftAt         DateTime?
   experiencePoints Int     @default(0)
   level          Int       @default(0)
   bonusBalanceUnits Int    @default(0)
@@ -37,13 +42,14 @@ model Member {
   household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
   bonusTransactions BonusTransaction[]
   bonusPurchases BonusPurchase[]
+  createdInvites HouseholdInvite[] @relation("InviteCreator")
 
-  @@index([householdId])
+  @@index([householdId, isActive])
 }
 
 model HouseholdTask {
   id                String    @id @default(cuid())
-  householdId       String    @default("default-household")
+  householdId       String
   title             String
   note              String?
   status            String    @default("open")
@@ -68,7 +74,7 @@ model HouseholdTask {
 
 model ShoppingItem {
   id                String    @id @default(cuid())
-  householdId       String    @default("default-household")
+  householdId       String
   title             String
   status            String    @default("active")
   urgency           String    @default("soon")
@@ -122,6 +128,22 @@ model BonusPurchase {
   transactions BonusTransaction[]
 
   @@index([householdId, monthKey, memberId])
+}
+
+model HouseholdInvite {
+  id                 String    @id @default(cuid())
+  householdId        String
+  createdByMemberId  String
+  code               String    @unique
+  expiresAt          DateTime
+  usedAt             DateTime?
+  revokedAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  household          Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  createdByMember    Member    @relation("InviteCreator", fields: [createdByMemberId], references: [id], onDelete: Cascade)
+
+  @@index([householdId, expiresAt])
 }
 
 model MonthlyReport {

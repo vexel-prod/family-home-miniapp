@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         await notifyHousehold(
           prisma,
           household.id,
-          `Family Home Mini App\n\n${report.title}\n\n${report.reportBody}`,
+          `Household\n\n${report.title}\n\n${report.reportBody}`,
         )
 
         await prisma.monthlyReport.update({

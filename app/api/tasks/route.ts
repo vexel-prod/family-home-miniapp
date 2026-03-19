@@ -71,7 +71,7 @@ export async function POST(request: Request) {
   await notifyHousehold(
     prisma,
     auth.member.householdId,
-    `Family Home Mini App\n\n` +
+    `Household\n\n` +
       `${actorName} добавил(а) задачу\n` +
       `Задача: ${task.title}\n` +
       `Сделать до: ${formatMoscowDeadlineLabel(task.deadlineAt)}${task.note ? `\nКомментарий: ${task.note}` : ''}`,

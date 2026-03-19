@@ -13,9 +13,17 @@ export async function notifyHousehold(
   prisma: PrismaClient,
   householdId: string,
   text: string,
+  excludeMemberId?: string,
 ) {
   const members = await prisma.member.findMany({
-    where: { householdId },
+    where: {
+      householdId,
+      isActive: true,
+      chatId: {
+        not: null,
+      },
+      ...(excludeMemberId ? { id: { not: excludeMemberId } } : {}),
+    },
     orderBy: [{ createdAt: 'asc' }],
     select: {
       chatId: true,
@@ -25,7 +33,7 @@ export async function notifyHousehold(
   await Promise.allSettled(
     members.map(member =>
       sendTelegramMessage({
-        chatId: member.chatId,
+        chatId: member.chatId ?? '',
         text,
       }),
     ),

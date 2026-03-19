@@ -3,7 +3,7 @@ import Script from 'next/script'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Family Home Mini App',
+  title: 'Household',
   description: 'Telegram Mini App для семейных задач по дому и общего списка покупок',
 }
 

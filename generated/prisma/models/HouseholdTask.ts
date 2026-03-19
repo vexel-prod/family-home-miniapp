@@ -428,13 +428,13 @@ export type HouseholdTaskCreateInput = {
   penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  household?: Prisma.HouseholdCreateNestedOneWithoutTasksInput
+  household: Prisma.HouseholdCreateNestedOneWithoutTasksInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateInput = {
   id?: string
-  householdId?: string
+  householdId: string
   title: string
   note?: string | null
   status?: string
@@ -497,7 +497,7 @@ export type HouseholdTaskUncheckedUpdateInput = {
 
 export type HouseholdTaskCreateManyInput = {
   id?: string
-  householdId?: string
+  householdId: string
   title: string
   note?: string | null
   status?: string
@@ -679,10 +679,6 @@ export type HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput = {
   deleteMany?: Prisma.HouseholdTaskScalarWhereInput | Prisma.HouseholdTaskScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type HouseholdTaskCreateNestedOneWithoutBonusTransactionsInput = {
   create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
   connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput
@@ -805,12 +801,12 @@ export type HouseholdTaskCreateWithoutBonusTransactionsInput = {
   penaltyAppliedUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  household?: Prisma.HouseholdCreateNestedOneWithoutTasksInput
+  household: Prisma.HouseholdCreateNestedOneWithoutTasksInput
 }
 
 export type HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput = {
   id?: string
-  householdId?: string
+  householdId: string
   title: string
   note?: string | null
   status?: string

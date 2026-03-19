@@ -175,6 +175,7 @@ export type HouseholdWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   members?: Prisma.MemberListRelationFilter
+  invites?: Prisma.HouseholdInviteListRelationFilter
   tasks?: Prisma.HouseholdTaskListRelationFilter
   shoppingItems?: Prisma.ShoppingItemListRelationFilter
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
@@ -188,6 +189,7 @@ export type HouseholdOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   members?: Prisma.MemberOrderByRelationAggregateInput
+  invites?: Prisma.HouseholdInviteOrderByRelationAggregateInput
   tasks?: Prisma.HouseholdTaskOrderByRelationAggregateInput
   shoppingItems?: Prisma.ShoppingItemOrderByRelationAggregateInput
   bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
@@ -204,6 +206,7 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   members?: Prisma.MemberListRelationFilter
+  invites?: Prisma.HouseholdInviteListRelationFilter
   tasks?: Prisma.HouseholdTaskListRelationFilter
   shoppingItems?: Prisma.ShoppingItemListRelationFilter
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
@@ -232,11 +235,12 @@ export type HouseholdScalarWhereWithAggregatesInput = {
 }
 
 export type HouseholdCreateInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
@@ -245,11 +249,12 @@ export type HouseholdCreateInput = {
 }
 
 export type HouseholdUncheckedCreateInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
@@ -263,6 +268,7 @@ export type HouseholdUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
@@ -276,6 +282,7 @@ export type HouseholdUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -284,7 +291,7 @@ export type HouseholdUncheckedUpdateInput = {
 }
 
 export type HouseholdCreateManyInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -408,6 +415,20 @@ export type HouseholdUpdateOneRequiredWithoutBonusPurchasesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutBonusPurchasesInput, Prisma.HouseholdUpdateWithoutBonusPurchasesInput>, Prisma.HouseholdUncheckedUpdateWithoutBonusPurchasesInput>
 }
 
+export type HouseholdCreateNestedOneWithoutInvitesInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutInvitesInput, Prisma.HouseholdUncheckedCreateWithoutInvitesInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutInvitesInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+}
+
+export type HouseholdUpdateOneRequiredWithoutInvitesNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutInvitesInput, Prisma.HouseholdUncheckedCreateWithoutInvitesInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutInvitesInput
+  upsert?: Prisma.HouseholdUpsertWithoutInvitesInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutInvitesInput, Prisma.HouseholdUpdateWithoutInvitesInput>, Prisma.HouseholdUncheckedUpdateWithoutInvitesInput>
+}
+
 export type HouseholdCreateNestedOneWithoutMonthlyReportsInput = {
   create?: Prisma.XOR<Prisma.HouseholdCreateWithoutMonthlyReportsInput, Prisma.HouseholdUncheckedCreateWithoutMonthlyReportsInput>
   connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutMonthlyReportsInput
@@ -423,10 +444,11 @@ export type HouseholdUpdateOneRequiredWithoutMonthlyReportsNestedInput = {
 }
 
 export type HouseholdCreateWithoutMembersInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
@@ -435,10 +457,11 @@ export type HouseholdCreateWithoutMembersInput = {
 }
 
 export type HouseholdUncheckedCreateWithoutMembersInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
@@ -467,6 +490,7 @@ export type HouseholdUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
@@ -479,6 +503,7 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -487,11 +512,12 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
 }
 
 export type HouseholdCreateWithoutTasksInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
@@ -499,11 +525,12 @@ export type HouseholdCreateWithoutTasksInput = {
 }
 
 export type HouseholdUncheckedCreateWithoutTasksInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
@@ -532,6 +559,7 @@ export type HouseholdUpdateWithoutTasksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
@@ -544,6 +572,7 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -551,11 +580,12 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
 }
 
 export type HouseholdCreateWithoutShoppingItemsInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
@@ -563,11 +593,12 @@ export type HouseholdCreateWithoutShoppingItemsInput = {
 }
 
 export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
@@ -596,6 +627,7 @@ export type HouseholdUpdateWithoutShoppingItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
@@ -608,6 +640,7 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -615,11 +648,12 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
 }
 
 export type HouseholdCreateWithoutBonusTransactionsInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
@@ -627,11 +661,12 @@ export type HouseholdCreateWithoutBonusTransactionsInput = {
 }
 
 export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
@@ -660,6 +695,7 @@ export type HouseholdUpdateWithoutBonusTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
@@ -672,6 +708,7 @@ export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -679,11 +716,12 @@ export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
 }
 
 export type HouseholdCreateWithoutBonusPurchasesInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
@@ -691,11 +729,12 @@ export type HouseholdCreateWithoutBonusPurchasesInput = {
 }
 
 export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
-  id: string
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
@@ -724,6 +763,7 @@ export type HouseholdUpdateWithoutBonusPurchasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
@@ -736,14 +776,15 @@ export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
-export type HouseholdCreateWithoutMonthlyReportsInput = {
-  id: string
+export type HouseholdCreateWithoutInvitesInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -752,14 +793,84 @@ export type HouseholdCreateWithoutMonthlyReportsInput = {
   shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
 }
 
-export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
-  id: string
+export type HouseholdUncheckedCreateWithoutInvitesInput = {
+  id?: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdCreateOrConnectWithoutInvitesInput = {
+  where: Prisma.HouseholdWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutInvitesInput, Prisma.HouseholdUncheckedCreateWithoutInvitesInput>
+}
+
+export type HouseholdUpsertWithoutInvitesInput = {
+  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutInvitesInput, Prisma.HouseholdUncheckedUpdateWithoutInvitesInput>
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutInvitesInput, Prisma.HouseholdUncheckedCreateWithoutInvitesInput>
+  where?: Prisma.HouseholdWhereInput
+}
+
+export type HouseholdUpdateToOneWithWhereWithoutInvitesInput = {
+  where?: Prisma.HouseholdWhereInput
+  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutInvitesInput, Prisma.HouseholdUncheckedUpdateWithoutInvitesInput>
+}
+
+export type HouseholdUpdateWithoutInvitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdUncheckedUpdateWithoutInvitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdCreateWithoutMonthlyReportsInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
   tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
   shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
@@ -788,6 +899,7 @@ export type HouseholdUpdateWithoutMonthlyReportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
@@ -800,6 +912,7 @@ export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -813,6 +926,7 @@ export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
 
 export type HouseholdCountOutputType = {
   members: number
+  invites: number
   tasks: number
   shoppingItems: number
   bonusTransactions: number
@@ -822,6 +936,7 @@ export type HouseholdCountOutputType = {
 
 export type HouseholdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | HouseholdCountOutputTypeCountMembersArgs
+  invites?: boolean | HouseholdCountOutputTypeCountInvitesArgs
   tasks?: boolean | HouseholdCountOutputTypeCountTasksArgs
   shoppingItems?: boolean | HouseholdCountOutputTypeCountShoppingItemsArgs
   bonusTransactions?: boolean | HouseholdCountOutputTypeCountBonusTransactionsArgs
@@ -844,6 +959,13 @@ export type HouseholdCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
  */
 export type HouseholdCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MemberWhereInput
+}
+
+/**
+ * HouseholdCountOutputType without action
+ */
+export type HouseholdCountOutputTypeCountInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HouseholdInviteWhereInput
 }
 
 /**
@@ -888,6 +1010,7 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   updatedAt?: boolean
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
+  invites?: boolean | Prisma.Household$invitesArgs<ExtArgs>
   tasks?: boolean | Prisma.Household$tasksArgs<ExtArgs>
   shoppingItems?: boolean | Prisma.Household$shoppingItemsArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Household$bonusTransactionsArgs<ExtArgs>
@@ -920,6 +1043,7 @@ export type HouseholdSelectScalar = {
 export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
 export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
+  invites?: boolean | Prisma.Household$invitesArgs<ExtArgs>
   tasks?: boolean | Prisma.Household$tasksArgs<ExtArgs>
   shoppingItems?: boolean | Prisma.Household$shoppingItemsArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Household$bonusTransactionsArgs<ExtArgs>
@@ -934,6 +1058,7 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Household"
   objects: {
     members: Prisma.$MemberPayload<ExtArgs>[]
+    invites: Prisma.$HouseholdInvitePayload<ExtArgs>[]
     tasks: Prisma.$HouseholdTaskPayload<ExtArgs>[]
     shoppingItems: Prisma.$ShoppingItemPayload<ExtArgs>[]
     bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
@@ -1340,6 +1465,7 @@ readonly fields: HouseholdFieldRefs;
 export interface Prisma__HouseholdClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   members<T extends Prisma.Household$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invites<T extends Prisma.Household$invitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.Household$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shoppingItems<T extends Prisma.Household$shoppingItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$shoppingItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShoppingItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bonusTransactions<T extends Prisma.Household$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1792,6 +1918,30 @@ export type Household$membersArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.MemberScalarFieldEnum | Prisma.MemberScalarFieldEnum[]
+}
+
+/**
+ * Household.invites
+ */
+export type Household$invitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HouseholdInvite
+   */
+  select?: Prisma.HouseholdInviteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HouseholdInvite
+   */
+  omit?: Prisma.HouseholdInviteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HouseholdInviteInclude<ExtArgs> | null
+  where?: Prisma.HouseholdInviteWhereInput
+  orderBy?: Prisma.HouseholdInviteOrderByWithRelationInput | Prisma.HouseholdInviteOrderByWithRelationInput[]
+  cursor?: Prisma.HouseholdInviteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HouseholdInviteScalarFieldEnum | Prisma.HouseholdInviteScalarFieldEnum[]
 }
 
 /**

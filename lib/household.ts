@@ -1,55 +1,139 @@
-import type { PrismaClient } from "@/generated/prisma/client";
+import type { PrismaClient } from '@/generated/prisma/client'
+import { randomBytes } from 'node:crypto'
+import { getMemberDisplayName } from '@/lib/household-notify'
 
-const DEFAULT_HOUSEHOLD_ID = "default-household";
+export const HOUSEHOLD_INVITE_TTL_MS = 24 * 60 * 60 * 1000
+export const MAX_HOUSEHOLD_MEMBERS = 6
 
-function getConfiguredUserIds() {
-  const primaryUserId =
-    process.env.TELEGRAM_PRIMARY_USER_ID ?? process.env.TELEGRAM_PRIMARY_CHAT_ID;
-  const secondaryUserId =
-    process.env.TELEGRAM_SECONDARY_USER_ID ?? process.env.TELEGRAM_SECONDARY_CHAT_ID;
+export function buildDefaultHouseholdName(firstName?: string) {
+  const safeName = firstName?.trim()
 
-  return { primaryUserId, secondaryUserId };
-}
-
-export async function ensureDefaultHousehold(prisma: PrismaClient) {
-  const { primaryUserId, secondaryUserId } = getConfiguredUserIds();
-
-  if (!primaryUserId || !secondaryUserId) {
-    throw new Error(
-      "Missing TELEGRAM_PRIMARY_USER_ID/TELEGRAM_PRIMARY_CHAT_ID or TELEGRAM_SECONDARY_USER_ID/TELEGRAM_SECONDARY_CHAT_ID",
-    );
+  if (!safeName) {
+    return 'My Household'
   }
 
-  await prisma.household.upsert({
-    where: { id: DEFAULT_HOUSEHOLD_ID },
-    update: {},
-    create: {
-      id: DEFAULT_HOUSEHOLD_ID,
-      name: "Family Home",
-    },
-  });
-
-  await prisma.member.upsert({
-    where: { telegramUserId: primaryUserId },
-    update: {},
-    create: {
-      householdId: DEFAULT_HOUSEHOLD_ID,
-      telegramUserId: primaryUserId,
-      chatId: primaryUserId,
-      firstName: "Primary",
-    },
-  });
-
-  await prisma.member.upsert({
-    where: { telegramUserId: secondaryUserId },
-    update: {},
-    create: {
-      householdId: DEFAULT_HOUSEHOLD_ID,
-      telegramUserId: secondaryUserId,
-      chatId: secondaryUserId,
-      firstName: "Secondary",
-    },
-  });
+  return `${safeName} Household`
 }
 
-export { DEFAULT_HOUSEHOLD_ID, getConfiguredUserIds };
+export function generateInviteCode() {
+  return randomBytes(5).toString('base64url').replace(/[^A-Za-z0-9]/g, '').slice(0, 8).toUpperCase()
+}
+
+export async function getActiveHouseholdInvite(prisma: PrismaClient, householdId: string, now = new Date()) {
+  return prisma.householdInvite.findFirst({
+    where: {
+      householdId,
+      revokedAt: null,
+      expiresAt: {
+        gt: now,
+      },
+    },
+    orderBy: [{ createdAt: 'desc' }],
+  })
+}
+
+export async function createHouseholdInvite(
+  prisma: PrismaClient,
+  householdId: string,
+  createdByMemberId: string,
+  now = new Date(),
+) {
+  await prisma.householdInvite.updateMany({
+    where: {
+      householdId,
+      revokedAt: null,
+      expiresAt: {
+        gt: now,
+      },
+    },
+    data: {
+      revokedAt: now,
+    },
+  })
+
+  return prisma.householdInvite.create({
+    data: {
+      householdId,
+      createdByMemberId,
+      code: generateInviteCode(),
+      expiresAt: new Date(now.getTime() + HOUSEHOLD_INVITE_TTL_MS),
+    },
+  })
+}
+
+export async function countActiveHouseholdMembers(
+  prisma: PrismaClient,
+  householdId: string,
+) {
+  return prisma.member.count({
+    where: {
+      householdId,
+      isActive: true,
+    },
+  })
+}
+
+export async function getHouseholdSummary(
+  prisma: PrismaClient,
+  householdId: string,
+  currentUserMemberId: string,
+) {
+  const [household, members, activeInvite] = await Promise.all([
+    prisma.household.findUnique({
+      where: { id: householdId },
+      select: {
+        id: true,
+        name: true,
+      },
+    }),
+    prisma.member.findMany({
+      where: {
+        householdId,
+        isActive: true,
+      },
+      orderBy: [{ joinedAt: 'asc' }],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        username: true,
+        role: true,
+        joinedAt: true,
+      },
+    }),
+    getActiveHouseholdInvite(prisma, householdId),
+  ])
+
+  if (!household) {
+    return null
+  }
+
+  const currentMember = members.find(member => member.id === currentUserMemberId)
+
+  if (!currentMember) {
+    return null
+  }
+
+  return {
+    id: household.id,
+    name: household.name,
+    members: members.map(member => ({
+      id: member.id,
+      firstName: member.firstName,
+      lastName: member.lastName,
+      username: member.username,
+      role: member.role === 'head' ? 'head' as const : 'member' as const,
+      isCurrentUser: member.id === currentUserMemberId,
+      joinedAt: member.joinedAt.toISOString(),
+      displayName: getMemberDisplayName(member),
+    })),
+    activeInvite: activeInvite
+      ? {
+          code: activeInvite.code,
+          expiresAt: activeInvite.expiresAt.toISOString(),
+        }
+      : null,
+    currentUserMemberId,
+    currentUserRole: currentMember.role === 'head' ? 'head' as const : 'member' as const,
+  }
+}

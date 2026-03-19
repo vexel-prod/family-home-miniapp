@@ -46,6 +46,10 @@ export type MemberMinAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   username: string | null
+  role: string | null
+  isActive: boolean | null
+  joinedAt: Date | null
+  leftAt: Date | null
   experiencePoints: number | null
   level: number | null
   bonusBalanceUnits: number | null
@@ -61,6 +65,10 @@ export type MemberMaxAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   username: string | null
+  role: string | null
+  isActive: boolean | null
+  joinedAt: Date | null
+  leftAt: Date | null
   experiencePoints: number | null
   level: number | null
   bonusBalanceUnits: number | null
@@ -76,6 +84,10 @@ export type MemberCountAggregateOutputType = {
   firstName: number
   lastName: number
   username: number
+  role: number
+  isActive: number
+  joinedAt: number
+  leftAt: number
   experiencePoints: number
   level: number
   bonusBalanceUnits: number
@@ -105,6 +117,10 @@ export type MemberMinAggregateInputType = {
   firstName?: true
   lastName?: true
   username?: true
+  role?: true
+  isActive?: true
+  joinedAt?: true
+  leftAt?: true
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
@@ -120,6 +136,10 @@ export type MemberMaxAggregateInputType = {
   firstName?: true
   lastName?: true
   username?: true
+  role?: true
+  isActive?: true
+  joinedAt?: true
+  leftAt?: true
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
@@ -135,6 +155,10 @@ export type MemberCountAggregateInputType = {
   firstName?: true
   lastName?: true
   username?: true
+  role?: true
+  isActive?: true
+  joinedAt?: true
+  leftAt?: true
   experiencePoints?: true
   level?: true
   bonusBalanceUnits?: true
@@ -232,11 +256,15 @@ export type MemberGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type MemberGroupByOutputType = {
   id: string
   householdId: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId: string | null
+  chatId: string | null
   firstName: string
   lastName: string | null
   username: string | null
+  role: string
+  isActive: boolean
+  joinedAt: Date
+  leftAt: Date | null
   experiencePoints: number
   level: number
   bonusBalanceUnits: number
@@ -270,11 +298,15 @@ export type MemberWhereInput = {
   NOT?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
   id?: Prisma.StringFilter<"Member"> | string
   householdId?: Prisma.StringFilter<"Member"> | string
-  telegramUserId?: Prisma.StringFilter<"Member"> | string
-  chatId?: Prisma.StringFilter<"Member"> | string
+  telegramUserId?: Prisma.StringNullableFilter<"Member"> | string | null
+  chatId?: Prisma.StringNullableFilter<"Member"> | string | null
   firstName?: Prisma.StringFilter<"Member"> | string
   lastName?: Prisma.StringNullableFilter<"Member"> | string | null
   username?: Prisma.StringNullableFilter<"Member"> | string | null
+  role?: Prisma.StringFilter<"Member"> | string
+  isActive?: Prisma.BoolFilter<"Member"> | boolean
+  joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
+  leftAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   experiencePoints?: Prisma.IntFilter<"Member"> | number
   level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
@@ -283,16 +315,21 @@ export type MemberWhereInput = {
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
   bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
+  createdInvites?: Prisma.HouseholdInviteListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
-  telegramUserId?: Prisma.SortOrder
-  chatId?: Prisma.SortOrder
+  telegramUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  chatId?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  joinedAt?: Prisma.SortOrder
+  leftAt?: Prisma.SortOrderInput | Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
@@ -301,6 +338,7 @@ export type MemberOrderByWithRelationInput = {
   household?: Prisma.HouseholdOrderByWithRelationInput
   bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
   bonusPurchases?: Prisma.BonusPurchaseOrderByRelationAggregateInput
+  createdInvites?: Prisma.HouseholdInviteOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -314,6 +352,10 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   firstName?: Prisma.StringFilter<"Member"> | string
   lastName?: Prisma.StringNullableFilter<"Member"> | string | null
   username?: Prisma.StringNullableFilter<"Member"> | string | null
+  role?: Prisma.StringFilter<"Member"> | string
+  isActive?: Prisma.BoolFilter<"Member"> | boolean
+  joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
+  leftAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   experiencePoints?: Prisma.IntFilter<"Member"> | number
   level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
@@ -322,16 +364,21 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
   bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
+  createdInvites?: Prisma.HouseholdInviteListRelationFilter
 }, "id" | "telegramUserId" | "chatId">
 
 export type MemberOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
-  telegramUserId?: Prisma.SortOrder
-  chatId?: Prisma.SortOrder
+  telegramUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  chatId?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  joinedAt?: Prisma.SortOrder
+  leftAt?: Prisma.SortOrderInput | Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
@@ -350,11 +397,15 @@ export type MemberScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MemberScalarWhereWithAggregatesInput | Prisma.MemberScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Member"> | string
   householdId?: Prisma.StringWithAggregatesFilter<"Member"> | string
-  telegramUserId?: Prisma.StringWithAggregatesFilter<"Member"> | string
-  chatId?: Prisma.StringWithAggregatesFilter<"Member"> | string
+  telegramUserId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  chatId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   firstName?: Prisma.StringWithAggregatesFilter<"Member"> | string
   lastName?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   username?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  role?: Prisma.StringWithAggregatesFilter<"Member"> | string
+  isActive?: Prisma.BoolWithAggregatesFilter<"Member"> | boolean
+  joinedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
+  leftAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
   experiencePoints?: Prisma.IntWithAggregatesFilter<"Member"> | number
   level?: Prisma.IntWithAggregatesFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntWithAggregatesFilter<"Member"> | number
@@ -364,11 +415,15 @@ export type MemberScalarWhereWithAggregatesInput = {
 
 export type MemberCreateInput = {
   id?: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -377,16 +432,21 @@ export type MemberCreateInput = {
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
   id?: string
   householdId: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -394,15 +454,20 @@ export type MemberUncheckedCreateInput = {
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -411,16 +476,21 @@ export type MemberUpdateInput = {
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -428,16 +498,21 @@ export type MemberUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
   id?: string
   householdId: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -447,11 +522,15 @@ export type MemberCreateManyInput = {
 
 export type MemberUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -462,11 +541,15 @@ export type MemberUpdateManyMutationInput = {
 export type MemberUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -492,6 +575,10 @@ export type MemberCountOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  joinedAt?: Prisma.SortOrder
+  leftAt?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
@@ -513,6 +600,10 @@ export type MemberMaxOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  joinedAt?: Prisma.SortOrder
+  leftAt?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
@@ -528,6 +619,10 @@ export type MemberMinOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  joinedAt?: Prisma.SortOrder
+  leftAt?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
@@ -592,6 +687,14 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -628,13 +731,31 @@ export type MemberUpdateOneRequiredWithoutBonusPurchasesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutBonusPurchasesInput, Prisma.MemberUpdateWithoutBonusPurchasesInput>, Prisma.MemberUncheckedUpdateWithoutBonusPurchasesInput>
 }
 
+export type MemberCreateNestedOneWithoutCreatedInvitesInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedInvitesInput, Prisma.MemberUncheckedCreateWithoutCreatedInvitesInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedInvitesInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutCreatedInvitesNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedInvitesInput, Prisma.MemberUncheckedCreateWithoutCreatedInvitesInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedInvitesInput
+  upsert?: Prisma.MemberUpsertWithoutCreatedInvitesInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutCreatedInvitesInput, Prisma.MemberUpdateWithoutCreatedInvitesInput>, Prisma.MemberUncheckedUpdateWithoutCreatedInvitesInput>
+}
+
 export type MemberCreateWithoutHouseholdInput = {
   id?: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -642,15 +763,20 @@ export type MemberCreateWithoutHouseholdInput = {
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutHouseholdInput = {
   id?: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -658,6 +784,7 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutHouseholdInput = {
@@ -692,11 +819,15 @@ export type MemberScalarWhereInput = {
   NOT?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
   id?: Prisma.StringFilter<"Member"> | string
   householdId?: Prisma.StringFilter<"Member"> | string
-  telegramUserId?: Prisma.StringFilter<"Member"> | string
-  chatId?: Prisma.StringFilter<"Member"> | string
+  telegramUserId?: Prisma.StringNullableFilter<"Member"> | string | null
+  chatId?: Prisma.StringNullableFilter<"Member"> | string | null
   firstName?: Prisma.StringFilter<"Member"> | string
   lastName?: Prisma.StringNullableFilter<"Member"> | string | null
   username?: Prisma.StringNullableFilter<"Member"> | string | null
+  role?: Prisma.StringFilter<"Member"> | string
+  isActive?: Prisma.BoolFilter<"Member"> | boolean
+  joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
+  leftAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   experiencePoints?: Prisma.IntFilter<"Member"> | number
   level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
@@ -706,11 +837,15 @@ export type MemberScalarWhereInput = {
 
 export type MemberCreateWithoutBonusTransactionsInput = {
   id?: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -718,22 +853,28 @@ export type MemberCreateWithoutBonusTransactionsInput = {
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
   id?: string
   householdId: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusTransactionsInput = {
@@ -754,11 +895,15 @@ export type MemberUpdateToOneWithWhereWithoutBonusTransactionsInput = {
 
 export type MemberUpdateWithoutBonusTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -766,31 +911,41 @@ export type MemberUpdateWithoutBonusTransactionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberCreateWithoutBonusPurchasesInput = {
   id?: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
@@ -798,22 +953,28 @@ export type MemberCreateWithoutBonusPurchasesInput = {
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
   id?: string
   householdId: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusPurchasesInput = {
@@ -834,11 +995,15 @@ export type MemberUpdateToOneWithWhereWithoutBonusPurchasesInput = {
 
 export type MemberUpdateWithoutBonusPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -846,61 +1011,121 @@ export type MemberUpdateWithoutBonusPurchasesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
 }
 
-export type MemberCreateManyHouseholdInput = {
+export type MemberCreateWithoutCreatedInvitesInput = {
   id?: string
-  telegramUserId: string
-  chatId: string
+  telegramUserId?: string | null
+  chatId?: string | null
   firstName: string
   lastName?: string | null
   username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
   experiencePoints?: number
   level?: number
   bonusBalanceUnits?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
 }
 
-export type MemberUpdateWithoutHouseholdInput = {
+export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+}
+
+export type MemberCreateOrConnectWithoutCreatedInvitesInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedInvitesInput, Prisma.MemberUncheckedCreateWithoutCreatedInvitesInput>
+}
+
+export type MemberUpsertWithoutCreatedInvitesInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedInvitesInput, Prisma.MemberUncheckedUpdateWithoutCreatedInvitesInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedInvitesInput, Prisma.MemberUncheckedCreateWithoutCreatedInvitesInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutCreatedInvitesInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedInvitesInput, Prisma.MemberUncheckedUpdateWithoutCreatedInvitesInput>
+}
+
+export type MemberUpdateWithoutCreatedInvitesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
 }
 
-export type MemberUncheckedUpdateWithoutHouseholdInput = {
+export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -910,13 +1135,77 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
 }
 
-export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
+export type MemberCreateManyHouseholdInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type MemberUpdateWithoutHouseholdInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  telegramUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutHouseholdInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+}
+
+export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
@@ -932,11 +1221,13 @@ export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
 export type MemberCountOutputType = {
   bonusTransactions: number
   bonusPurchases: number
+  createdInvites: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bonusTransactions?: boolean | MemberCountOutputTypeCountBonusTransactionsArgs
   bonusPurchases?: boolean | MemberCountOutputTypeCountBonusPurchasesArgs
+  createdInvites?: boolean | MemberCountOutputTypeCountCreatedInvitesArgs
 }
 
 /**
@@ -963,6 +1254,13 @@ export type MemberCountOutputTypeCountBonusPurchasesArgs<ExtArgs extends runtime
   where?: Prisma.BonusPurchaseWhereInput
 }
 
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountCreatedInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HouseholdInviteWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -972,6 +1270,10 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  role?: boolean
+  isActive?: boolean
+  joinedAt?: boolean
+  leftAt?: boolean
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
@@ -980,6 +1282,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
   bonusPurchases?: boolean | Prisma.Member$bonusPurchasesArgs<ExtArgs>
+  createdInvites?: boolean | Prisma.Member$createdInvitesArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -991,6 +1294,10 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  role?: boolean
+  isActive?: boolean
+  joinedAt?: boolean
+  leftAt?: boolean
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
@@ -1007,6 +1314,10 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  role?: boolean
+  isActive?: boolean
+  joinedAt?: boolean
+  leftAt?: boolean
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
@@ -1023,6 +1334,10 @@ export type MemberSelectScalar = {
   firstName?: boolean
   lastName?: boolean
   username?: boolean
+  role?: boolean
+  isActive?: boolean
+  joinedAt?: boolean
+  leftAt?: boolean
   experiencePoints?: boolean
   level?: boolean
   bonusBalanceUnits?: boolean
@@ -1030,11 +1345,12 @@ export type MemberSelectScalar = {
   updatedAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "experiencePoints" | "level" | "bonusBalanceUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "role" | "isActive" | "joinedAt" | "leftAt" | "experiencePoints" | "level" | "bonusBalanceUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
   bonusPurchases?: boolean | Prisma.Member$bonusPurchasesArgs<ExtArgs>
+  createdInvites?: boolean | Prisma.Member$createdInvitesArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1050,15 +1366,20 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     household: Prisma.$HouseholdPayload<ExtArgs>
     bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
     bonusPurchases: Prisma.$BonusPurchasePayload<ExtArgs>[]
+    createdInvites: Prisma.$HouseholdInvitePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     householdId: string
-    telegramUserId: string
-    chatId: string
+    telegramUserId: string | null
+    chatId: string | null
     firstName: string
     lastName: string | null
     username: string | null
+    role: string
+    isActive: boolean
+    joinedAt: Date
+    leftAt: Date | null
     experiencePoints: number
     level: number
     bonusBalanceUnits: number
@@ -1461,6 +1782,7 @@ export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.T
   household<T extends Prisma.HouseholdDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdDefaultArgs<ExtArgs>>): Prisma.Prisma__HouseholdClient<runtime.Types.Result.GetResult<Prisma.$HouseholdPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   bonusTransactions<T extends Prisma.Member$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bonusPurchases<T extends Prisma.Member$bonusPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$bonusPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdInvites<T extends Prisma.Member$createdInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1497,6 +1819,10 @@ export interface MemberFieldRefs {
   readonly firstName: Prisma.FieldRef<"Member", 'String'>
   readonly lastName: Prisma.FieldRef<"Member", 'String'>
   readonly username: Prisma.FieldRef<"Member", 'String'>
+  readonly role: Prisma.FieldRef<"Member", 'String'>
+  readonly isActive: Prisma.FieldRef<"Member", 'Boolean'>
+  readonly joinedAt: Prisma.FieldRef<"Member", 'DateTime'>
+  readonly leftAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly experiencePoints: Prisma.FieldRef<"Member", 'Int'>
   readonly level: Prisma.FieldRef<"Member", 'Int'>
   readonly bonusBalanceUnits: Prisma.FieldRef<"Member", 'Int'>
@@ -1948,6 +2274,30 @@ export type Member$bonusPurchasesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.BonusPurchaseScalarFieldEnum | Prisma.BonusPurchaseScalarFieldEnum[]
+}
+
+/**
+ * Member.createdInvites
+ */
+export type Member$createdInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HouseholdInvite
+   */
+  select?: Prisma.HouseholdInviteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HouseholdInvite
+   */
+  omit?: Prisma.HouseholdInviteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HouseholdInviteInclude<ExtArgs> | null
+  where?: Prisma.HouseholdInviteWhereInput
+  orderBy?: Prisma.HouseholdInviteOrderByWithRelationInput | Prisma.HouseholdInviteOrderByWithRelationInput[]
+  cursor?: Prisma.HouseholdInviteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HouseholdInviteScalarFieldEnum | Prisma.HouseholdInviteScalarFieldEnum[]
 }
 
 /**

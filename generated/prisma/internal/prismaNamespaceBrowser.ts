@@ -57,6 +57,7 @@ export const ModelName = {
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
+  HouseholdInvite: 'HouseholdInvite',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -94,6 +95,10 @@ export const MemberScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   username: 'username',
+  role: 'role',
+  isActive: 'isActive',
+  joinedAt: 'joinedAt',
+  leftAt: 'leftAt',
   experiencePoints: 'experiencePoints',
   level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
@@ -177,6 +182,21 @@ export const BonusPurchaseScalarFieldEnum = {
 } as const
 
 export type BonusPurchaseScalarFieldEnum = (typeof BonusPurchaseScalarFieldEnum)[keyof typeof BonusPurchaseScalarFieldEnum]
+
+
+export const HouseholdInviteScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  createdByMemberId: 'createdByMemberId',
+  code: 'code',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HouseholdInviteScalarFieldEnum = (typeof HouseholdInviteScalarFieldEnum)[keyof typeof HouseholdInviteScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {

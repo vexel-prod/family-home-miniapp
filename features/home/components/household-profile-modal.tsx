@@ -1,13 +1,22 @@
 import { AppButton } from '@/components/ui/app-button'
 import { ModalPanel } from '@/components/ui/app-modal'
+import { TextInput } from '@/components/ui/form-field'
 import { formatRelativeDate } from '@/shared/lib/format'
 import { PROFILE_LEVEL_BONUS_POINTS } from '@/shared/lib/household-profile'
-import { formatPoints } from '@/shared/lib/bonus-shop'
-import type { HouseholdProfile } from '@/shared/types/family'
+import type { HouseholdProfile, HouseholdSummary } from '@/shared/types/family'
 
 type HouseholdProfileModalProps = {
   actorName: string
   profile: HouseholdProfile
+  household: HouseholdSummary
+  customInviteCode: string
+  busyAction: string | null
+  onCustomInviteCodeChange: (value: string) => void
+  onCopyInvite: () => void
+  onCreateCustomInvite: () => void
+  onReissueInvite: () => void
+  onLeaveHousehold: () => void
+  onRemoveMember: (memberId: string) => void
   onClose: () => void
 }
 
@@ -36,7 +45,20 @@ function getVariantLabel(
   return `Базовое выполнение: +${expDelta} exp`
 }
 
-export function HouseholdProfileModal({ actorName, profile, onClose }: HouseholdProfileModalProps) {
+export function HouseholdProfileModal({
+  actorName,
+  profile,
+  household,
+  customInviteCode,
+  busyAction,
+  onCustomInviteCodeChange,
+  onCopyInvite,
+  onCreateCustomInvite,
+  onReissueInvite,
+  onLeaveHousehold,
+  onRemoveMember,
+  onClose,
+}: HouseholdProfileModalProps) {
   return (
     <ModalPanel
       wide
@@ -112,6 +134,113 @@ export function HouseholdProfileModal({ actorName, profile, onClose }: Household
               <div className='mt-3 text-3xl font-semibold text-rose-50'>
                 {profile.overdueTasksCount}
               </div>
+            </div>
+          </div>
+
+          <div className='rounded-md border border-white/10 bg-white/6 p-5'>
+            <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
+              <div>
+                <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Семья</div>
+                <div className='mt-2 text-2xl font-(--font-family-heading) text-white'>
+                  {household.name}
+                </div>
+                <div className='mt-2 text-sm text-white/65'>
+                  Текущая роль: {household.currentUserRole === 'head' ? 'глава семьи' : 'участник'}
+                </div>
+              </div>
+
+              <div className='rounded-md border border-white/10 bg-black/15 px-4 py-3 text-right'>
+                <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Инвайт-код</div>
+                <div className='mt-2 text-2xl font-semibold text-white'>
+                  {household.activeInvite?.code ?? 'Нет кода'}
+                </div>
+                <div className='mt-2 text-xs text-white/45'>
+                  {household.activeInvite
+                    ? `Действует до ${formatRelativeDate(household.activeInvite.expiresAt)}`
+                    : 'Перевыпусти код для новых приглашений'}
+                </div>
+              </div>
+            </div>
+
+            <div className='mt-5 flex flex-wrap gap-3'>
+              {household.activeInvite ? (
+                <AppButton
+                  tone='light'
+                  className='w-auto min-w-40'
+                  disabled={busyAction !== null}
+                  onClick={onCopyInvite}
+                >
+                  {busyAction === 'copy-invite' ? 'Копирую...' : 'Скопировать код'}
+                </AppButton>
+              ) : null}
+
+              {household.currentUserRole === 'head' ? (
+                <>
+                  <div className='min-w-[16rem] flex-1'>
+                    <TextInput
+                      value={customInviteCode}
+                      placeholder='Свой код, например HOUSE777'
+                      disabled={busyAction !== null}
+                      onChange={event => onCustomInviteCodeChange(event.target.value)}
+                    />
+                  </div>
+                  <AppButton
+                    tone='secondary'
+                    className='w-auto min-w-44'
+                    disabled={busyAction !== null || !customInviteCode.trim()}
+                    onClick={onCreateCustomInvite}
+                  >
+                    {busyAction === 'custom-invite' ? 'Сохраняю код...' : 'Сохранить свой код'}
+                  </AppButton>
+                  <AppButton
+                    tone='secondary'
+                    className='w-auto min-w-44'
+                    disabled={busyAction !== null}
+                    onClick={onReissueInvite}
+                  >
+                    {busyAction === 'reissue-invite' ? 'Обновляю код...' : 'Сгенерировать новый'}
+                  </AppButton>
+                </>
+              ) : null}
+
+              <AppButton
+                tone='ghost'
+                className='min-w-40'
+                disabled={busyAction !== null}
+                onClick={onLeaveHousehold}
+              >
+                {busyAction === 'leave-household' ? 'Выхожу...' : 'Покинуть семью'}
+              </AppButton>
+            </div>
+
+            <div className='mt-5 space-y-3'>
+              {household.members.map(member => (
+                <div
+                  key={member.id}
+                  className='flex flex-col gap-3 rounded-md border border-white/10 bg-black/15 p-4 sm:flex-row sm:items-center sm:justify-between'
+                >
+                  <div>
+                    <div className='text-sm font-semibold text-white'>
+                      {member.displayName}
+                      {member.isCurrentUser ? ' • это ты' : ''}
+                    </div>
+                    <div className='mt-2 text-xs text-white/45'>
+                      {member.role === 'head' ? 'Глава семьи' : 'Участник'} • в семье {formatRelativeDate(member.joinedAt)}
+                    </div>
+                  </div>
+
+                  {household.currentUserRole === 'head' && !member.isCurrentUser ? (
+                    <AppButton
+                      tone='danger'
+                      className='w-auto min-w-40'
+                      disabled={busyAction !== null}
+                      onClick={() => onRemoveMember(member.id)}
+                    >
+                      {busyAction === `remove-member-${member.id}` ? 'Удаляю...' : 'Удалить из семьи'}
+                    </AppButton>
+                  ) : null}
+                </div>
+              ))}
             </div>
           </div>
         </div>
