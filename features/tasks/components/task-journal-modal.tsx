@@ -29,7 +29,7 @@ export function TaskJournalModal({ tasks, participantCount, onClose }: TaskJourn
 
       <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {tasks.length ? (
-          <div className='space-y-4 max-h-[45dvh]'>
+          <div className='space-y-4'>
             {tasks.map(task => (
               <div
                 key={task.id}

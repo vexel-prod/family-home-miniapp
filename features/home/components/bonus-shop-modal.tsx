@@ -1,9 +1,14 @@
+'use client'
+
+import { useState } from 'react'
+
 import { AppButton } from '@/components/ui/app-button'
-import { SelectField, TextAreaField, TextInput } from '@/components/ui/form-field'
 import { ModalPanel } from '@/components/ui/app-modal'
 import { formatPoints, getBonusRewardAccentClassName } from '@/shared/lib/bonus-shop'
 import { formatRelativeDate } from '@/shared/lib/format'
 import type { BonusPurchase, BonusReward, FamilyGoal, MonthlyReport } from '@/shared/types/family'
+
+type BonusShopTab = 'rewards' | 'goal' | 'purchases' | 'reports'
 
 type BonusShopModalProps = {
   balanceUnits: number
@@ -12,28 +17,11 @@ type BonusShopModalProps = {
   purchases: BonusPurchase[]
   reports: MonthlyReport[]
   busyRewardKey: string | null
-  rewardTitle: string
-  rewardDescription: string
-  rewardCost: string
-  goalKind: 'spiritual' | 'material'
-  goalTitle: string
-  goalDescription: string
-  goalTargetValue: string
-  goalCurrentValue: string
-  goalUnitLabel: string
   onBuy: (rewardKey: string) => void
-  onRewardTitleChange: (value: string) => void
-  onRewardDescriptionChange: (value: string) => void
-  onRewardCostChange: (value: string) => void
-  onCreateReward: () => void
+  onOpenAddElement: () => void
+  onOpenEditReward: (reward: BonusReward) => void
+  onOpenEditGoal: () => void
   onDeleteReward: (rewardId: string) => void
-  onGoalKindChange: (value: 'spiritual' | 'material') => void
-  onGoalTitleChange: (value: string) => void
-  onGoalDescriptionChange: (value: string) => void
-  onGoalTargetValueChange: (value: string) => void
-  onGoalCurrentValueChange: (value: string) => void
-  onGoalUnitLabelChange: (value: string) => void
-  onSaveGoal: () => void
   onClearGoal: () => void
   onClose: () => void
 }
@@ -45,34 +33,28 @@ export function BonusShopModal({
   purchases,
   reports,
   busyRewardKey,
-  rewardTitle,
-  rewardDescription,
-  rewardCost,
-  goalKind,
-  goalTitle,
-  goalDescription,
-  goalTargetValue,
-  goalCurrentValue,
-  goalUnitLabel,
   onBuy,
-  onRewardTitleChange,
-  onRewardDescriptionChange,
-  onRewardCostChange,
-  onCreateReward,
+  onOpenAddElement,
+  onOpenEditReward,
+  onOpenEditGoal,
   onDeleteReward,
-  onGoalKindChange,
-  onGoalTitleChange,
-  onGoalDescriptionChange,
-  onGoalTargetValueChange,
-  onGoalCurrentValueChange,
-  onGoalUnitLabelChange,
-  onSaveGoal,
   onClearGoal,
   onClose,
 }: BonusShopModalProps) {
+  const [activeTab, setActiveTab] = useState<BonusShopTab>('rewards')
   const familyGoalProgress = familyGoal
-    ? Math.min(100, Math.round((familyGoal.currentValue / Math.max(familyGoal.targetValue, 1)) * 100))
+    ? Math.min(
+        100,
+        Math.round((familyGoal.currentValue / Math.max(familyGoal.targetValue, 1)) * 100),
+      )
     : 0
+
+  const tabs: Array<{ key: BonusShopTab; label: string }> = [
+    { key: 'rewards', label: 'Товары' },
+    { key: 'goal', label: 'Цель' },
+    { key: 'purchases', label: 'Покупки' },
+    { key: 'reports', label: 'Отчеты' },
+  ]
 
   return (
     <ModalPanel
@@ -80,200 +62,180 @@ export function BonusShopModal({
       tall
     >
       <div className='border-b border-white/10 p-4 sm:p-6'>
-        <div className='flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
           <div>
             <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
               Доступный баланс: {formatPoints(balanceUnits)}
             </h2>
           </div>
-          <div className='rounded-md bg-white/5 px-4 py-3 text-right text-sm text-white/70'>
+          <div className='max-w-sm rounded-md bg-white/5 px-4 py-3 text-sm text-white/70 sm:text-right'>
             Бонусы действуют только до конца текущего месяца
           </div>
         </div>
+
+        <div className='mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap'>
+          {tabs.map(tab => (
+            <button
+              key={tab.key}
+              type='button'
+              onClick={() => setActiveTab(tab.key)}
+              className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                activeTab === tab.key
+                  ? 'border-transparent bg-white text-(--color-page-text) shadow-(--shadow-card)'
+                  : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className='max-h-[45dvh] overflow-auto grid gap-4 p-4 sm:grid-cols-[1.15fr_0.85fr] sm:p-6'>
-        <div className='grid gap-4'>
-          <div className='rounded-md border border-white/10 bg-white/5 p-4'>
-            <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Семейная цель</div>
-            {familyGoal ? (
-              <div className='mt-3 space-y-3'>
-                <div>
-                  <div className='text-sm text-white/45'>
-                    {familyGoal.kind === 'spiritual' ? 'Духовная цель' : 'Материальная цель'}
-                  </div>
-                  <div className='mt-2 text-xl font-semibold text-white'>{familyGoal.title}</div>
-                  {familyGoal.description ? (
-                    <div className='mt-2 text-sm leading-6 text-white/65'>{familyGoal.description}</div>
-                  ) : null}
-                </div>
-                <div>
-                  <div className='mb-2 flex items-center justify-between gap-3 text-sm text-white/65'>
-                    <span>
-                      {familyGoal.currentValue} / {familyGoal.targetValue}{' '}
-                      {familyGoal.kind === 'material' ? familyGoal.unitLabel || 'ед.' : 'общих баллов'}
-                    </span>
-                    <span>{familyGoalProgress}%</span>
-                  </div>
-                  <div className='h-3 overflow-hidden rounded-full bg-white/10'>
-                    <div
-                      className='h-full rounded-full bg-white transition-all duration-300'
-                      style={{ width: `${familyGoalProgress}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className='mt-3 rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-6 text-sm text-white/60'>
-                Пока нет общей цели семьи.
-              </div>
-            )}
-
-            <div className='mt-4 grid gap-3'>
-              <SelectField
-                value={goalKind}
-                onChange={event => onGoalKindChange(event.target.value === 'material' ? 'material' : 'spiritual')}
-              >
-                <option value='spiritual'>Духовная цель</option>
-                <option value='material'>Материальная цель</option>
-              </SelectField>
-              <TextInput
-                value={goalTitle}
-                placeholder='Например, Семейный выходной или Новый автомобиль'
-                onChange={event => onGoalTitleChange(event.target.value)}
-              />
-              <TextAreaField
-                value={goalDescription}
-                placeholder='Коротко опиши, к чему идет семья'
-                onChange={event => onGoalDescriptionChange(event.target.value)}
-              />
-              <TextInput
-                value={goalTargetValue}
-                inputMode='numeric'
-                placeholder={goalKind === 'spiritual' ? 'Сколько общих баллов нужно' : 'Целевое значение'}
-                onChange={event => onGoalTargetValueChange(event.target.value.replace(/[^\d]/g, ''))}
-              />
-              {goalKind === 'material' ? (
-                <>
-                  <TextInput
-                    value={goalCurrentValue}
-                    inputMode='numeric'
-                    placeholder='Текущий прогресс'
-                    onChange={event => onGoalCurrentValueChange(event.target.value.replace(/[^\d]/g, ''))}
-                  />
-                  <TextInput
-                    value={goalUnitLabel}
-                    placeholder='Единица, например ₽'
-                    onChange={event => onGoalUnitLabelChange(event.target.value)}
-                  />
-                </>
-              ) : null}
-              <div className='flex flex-wrap gap-3'>
-                <AppButton
-                  tone='secondary'
-                  className='w-auto'
-                  onClick={onSaveGoal}
-                >
-                  Сохранить цель
-                </AppButton>
-                {familyGoal ? (
-                  <AppButton
-                    tone='ghost'
-                    onClick={onClearGoal}
-                  >
-                    Убрать цель
-                  </AppButton>
-                ) : null}
-              </div>
+      <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
+        {activeTab === 'goal' ? (
+          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
+            <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
+              Семейная цель
             </div>
-          </div>
-
-          <div className='rounded-md border border-white/10 bg-white/5 p-4'>
-            <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Добавить ништяк</div>
-            <div className='mt-4 grid gap-3'>
-              <TextInput
-                value={rewardTitle}
-                placeholder='Название награды'
-                onChange={event => onRewardTitleChange(event.target.value)}
-              />
-              <TextAreaField
-                value={rewardDescription}
-                placeholder='Короткое описание'
-                onChange={event => onRewardDescriptionChange(event.target.value)}
-              />
-              <TextInput
-                value={rewardCost}
-                inputMode='numeric'
-                placeholder='Стоимость в баллах'
-                onChange={event => onRewardCostChange(event.target.value.replace(/[^\d]/g, ''))}
-              />
-              <AppButton
-                tone='secondary'
-                className='w-auto'
-                onClick={onCreateReward}
-              >
-                Добавить в магазин
-              </AppButton>
-            </div>
-          </div>
-
-          {rewards.length ? rewards.map(reward => {
-            const canBuy = balanceUnits >= reward.costUnits && !busyRewardKey
-
-            return (
-              <div
-                key={reward.id}
-                className='overflow-hidden rounded-md border border-white/10 bg-white/5'
-              >
-                <div
-                  className={`bg-linear-to-r ${getBonusRewardAccentClassName(reward.id)} p-5 text-(--color-page-text)`}
-                >
-                  <div className='text-xs uppercase tracking-[0.24em] text-black/55'>
-                    Семейный ништяк
-                  </div>
-                  <div className='mt-3 text-2xl font-semibold'>{reward.title}</div>
-                  <div className='mt-2 max-w-xl text-sm text-black/70'>{reward.description}</div>
-                </div>
-
-                <div className='flex items-center justify-between gap-4 p-5'>
+            <div className='min-h-0 flex-1 overflow-y-auto p-4'>
+              {familyGoal ? (
+                <div className='space-y-3'>
                   <div>
-                    <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
-                      Стоимость
+                    <div className='text-sm text-white/45'>
+                      {familyGoal.kind === 'spiritual' ? 'Для души' : 'Покупка'}
                     </div>
-                    <div className='mt-2 text-xl font-semibold text-white'>
-                      {formatPoints(reward.costUnits)} баллов
+                    <div className='mt-2 text-xl font-semibold text-white'>{familyGoal.title}</div>
+                    {familyGoal.description ? (
+                      <div className='mt-2 text-sm leading-6 text-white/65'>
+                        {familyGoal.description}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div>
+                    <div className='mb-2 flex items-center justify-between gap-3 text-sm text-white/65'>
+                      <span>
+                        {familyGoal.currentValue} / {familyGoal.targetValue}{' '}
+                        {familyGoal.kind === 'material'
+                          ? familyGoal.unitLabel || 'ед.'
+                          : 'общих баллов'}
+                      </span>
+                      <span>{familyGoalProgress}%</span>
+                    </div>
+                    <div className='h-3 overflow-hidden rounded-full bg-white/10'>
+                      <div
+                        className='h-full rounded-full bg-white transition-all duration-300'
+                        style={{ width: `${familyGoalProgress}%` }}
+                      />
                     </div>
                   </div>
 
-                  <AppButton
-                    tone={canBuy ? 'home' : 'secondary'}
-                    className='w-auto min-w-40'
-                    disabled={!canBuy}
-                    onClick={() => onBuy(reward.id)}
-                  >
-                    {busyRewardKey === reward.id
-                      ? 'Покупаю...'
-                      : canBuy
-                        ? 'Купить'
-                        : 'Недостаточно баллов'}
-                  </AppButton>
-                  <AppButton
-                    tone='ghost'
-                    onClick={() => onDeleteReward(reward.id)}
-                  >
-                    Удалить
-                  </AppButton>
+                  <div className='flex flex-wrap gap-3'>
+                    <AppButton
+                      tone='secondary'
+                      className='w-auto px-4 py-3 text-sm'
+                      onClick={onOpenEditGoal}
+                    >
+                      Редактировать цель
+                    </AppButton>
+                    <AppButton
+                      tone='ghost'
+                      onClick={onClearGoal}
+                    >
+                      Убрать цель
+                    </AppButton>
+                  </div>
                 </div>
-              </div>
-            )
-          }) : (
-            <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-              Магазин пока пуст. Добавь первый семейный ништяк через форму выше.
+              ) : (
+                <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                  Пока нет общей цели семьи.
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        ) : null}
 
-        <div className='grid gap-4'>
+        {activeTab === 'rewards' ? (
+          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
+            <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
+              Семейные товары
+            </div>
+
+            <div className='min-h-0 flex-1 overflow-y-auto p-4'>
+              {rewards.length ? (
+                <div className='space-y-4'>
+                  {rewards.map(reward => {
+                    const canBuy = balanceUnits >= reward.costUnits && !busyRewardKey
+
+                    return (
+                      <div
+                        key={reward.id}
+                        className='overflow-hidden rounded-md border border-white/10 bg-white/5'
+                      >
+                        <div
+                          className={`bg-linear-to-r ${getBonusRewardAccentClassName(reward.id)} p-5 text-(--color-page-text)`}
+                        >
+                          <div className='text-xs uppercase tracking-[0.24em] text-black/55'>
+                            Семейный ништяк
+                          </div>
+                          <div className='mt-3 text-2xl font-semibold'>{reward.title}</div>
+                          <div className='mt-2 max-w-xl text-sm text-black/70'>
+                            {reward.description}
+                          </div>
+                        </div>
+
+                        <div className='flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between'>
+                          <div>
+                            <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
+                              Стоимость
+                            </div>
+                            <div className='mt-2 text-xl font-semibold text-white'>
+                              {formatPoints(reward.costUnits)} баллов
+                            </div>
+                          </div>
+
+                          <div className='flex flex-wrap justify-end gap-2 sm:max-w-[22rem]'>
+                            <AppButton
+                              tone={canBuy ? 'home' : 'secondary'}
+                              disabled={!canBuy}
+                              onClick={() => onBuy(reward.id)}
+                              className='w-auto px-4 py-3 text-xs'
+                            >
+                              {busyRewardKey === reward.id
+                                ? 'Покупаю...'
+                                : canBuy
+                                  ? 'Купить'
+                                  : 'Недостаточно'}
+                            </AppButton>
+                            <AppButton
+                              tone='ghost'
+                              className='w-auto px-4 py-3 text-xs'
+                              onClick={() => onOpenEditReward(reward)}
+                            >
+                              Изменить
+                            </AppButton>
+                            <AppButton
+                              tone='ghost'
+                              className='w-auto px-4 py-3 text-xs'
+                              onClick={() => onDeleteReward(reward.id)}
+                            >
+                              Удалить
+                            </AppButton>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                  Магазин пока пуст.
+                </div>
+              )}
+            </div>
+          </div>
+        ) : null}
+
+        {activeTab === 'purchases' ? (
           <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
             <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
               История покупок
@@ -304,7 +266,9 @@ export function BonusShopModal({
               )}
             </div>
           </div>
+        ) : null}
 
+        {activeTab === 'reports' ? (
           <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
             <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
               Месячные отчеты
@@ -337,10 +301,16 @@ export function BonusShopModal({
               )}
             </div>
           </div>
-        </div>
+        ) : null}
       </div>
 
-      <div className='border-t border-white/10 p-4 sm:p-6'>
+      <div className='space-y-3 border-t border-white/10 p-4 sm:p-6'>
+        <AppButton
+          tone='secondary'
+          onClick={onOpenAddElement}
+        >
+          Добавить элемент
+        </AppButton>
         <AppButton
           tone='ghost'
           onClick={onClose}

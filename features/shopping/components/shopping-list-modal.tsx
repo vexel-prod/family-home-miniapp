@@ -29,7 +29,7 @@ export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: Shopp
 
       <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {items.length ? (
-          <div className='space-y-4 max-h-[45dvh]'>
+          <div className='space-y-4'>
             {items.map(item => (
               <button
                 key={item.id}
@@ -68,7 +68,7 @@ export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: Shopp
         )}
       </div>
 
-      <div className='space-y-4 border-t border-white/10 p-4 sm:p-6'>
+      <div className='space-y-3 border-t border-white/10 p-4 sm:p-6'>
         <AppButton
           tone='shopping'
           onClick={onAdd}

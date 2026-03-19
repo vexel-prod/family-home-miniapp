@@ -24,7 +24,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
       initial='hidden'
       animate='visible'
       transition={{ delay: 0.12, duration: 0.35, ease: 'easeOut' }}
-      className='grid max-h-[50dvh] gap-4 overflow-y-auto rounded-md px-4 py-4 text-white sm:px-6'
+      className='grid min-h-0 flex-1 gap-4 overflow-y-auto rounded-md px-4 py-4 text-white sm:px-6'
     >
       <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
         <SimpleMetric

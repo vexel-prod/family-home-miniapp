@@ -4,8 +4,11 @@ import { startTransition, useCallback, useEffect, useRef, useState } from 'react
 
 import { ModalOverlay } from '@/components/ui/app-modal'
 import { NoticeToast } from '@/components/ui/notice-toast'
+import { BonusElementCreateModal } from '@/features/home/components/bonus-element-create-modal'
 import { BonusShopModal } from '@/features/home/components/bonus-shop-modal'
+import { BonusRewardFormModal } from '@/features/home/components/bonus-reward-form-modal'
 import { DashboardHero } from '@/features/home/components/dashboard-hero'
+import { FamilyGoalFormModal } from '@/features/home/components/family-goal-form-modal'
 import { HouseholdOnboarding } from '@/features/home/components/household-onboarding'
 import { HouseholdProfileModal } from '@/features/home/components/household-profile-modal'
 import { JournalSummary } from '@/features/home/components/journal-summary'
@@ -227,6 +230,7 @@ export default function Page() {
   const [rewardTitle, setRewardTitle] = useState('')
   const [rewardDescription, setRewardDescription] = useState('')
   const [rewardCost, setRewardCost] = useState('')
+  const [editingRewardId, setEditingRewardId] = useState<string | null>(null)
   const [goalKind, setGoalKind] = useState<'spiritual' | 'material'>('spiritual')
   const [goalTitle, setGoalTitle] = useState('')
   const [goalDescription, setGoalDescription] = useState('')
@@ -314,6 +318,11 @@ export default function Page() {
       return
     }
 
+    if (nextModal === 'profile' && !household) {
+      setError('Личный кабинет пока недоступен. Обнови экран и попробуй снова.')
+      return
+    }
+
     setModal(nextModal)
   }
 
@@ -352,6 +361,76 @@ export default function Page() {
     setTaskDeadlineDay('')
     setTaskDeadlineTime('')
     setModal('task-create')
+  }
+
+  function openBonusRewardCreateModal() {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setEditingRewardId(null)
+    setRewardTitle('')
+    setRewardDescription('')
+    setRewardCost('')
+    setModal('bonus-reward-form')
+  }
+
+  function openBonusElementCreateModal() {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setModal('bonus-element-create')
+  }
+
+  function openBonusRewardEditModal(reward: BonusReward) {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setEditingRewardId(reward.id)
+    setRewardTitle(reward.title)
+    setRewardDescription(reward.description ?? '')
+    setRewardCost(String(Math.round(reward.costUnits / 4)))
+    setModal('bonus-reward-form')
+  }
+
+  function openFamilyGoalCreateModal() {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setGoalKind('spiritual')
+    setGoalTitle('')
+    setGoalDescription('')
+    setGoalTargetValue('')
+    setGoalCurrentValue('')
+    setGoalUnitLabel('')
+    setModal('family-goal-form')
+  }
+
+  function openFamilyGoalEditModal() {
+    if (!canOpenModal()) {
+      return
+    }
+
+    if (familyGoal) {
+      setGoalKind(familyGoal.kind)
+      setGoalTitle(familyGoal.title)
+      setGoalDescription(familyGoal.description ?? '')
+      setGoalTargetValue(String(familyGoal.targetValue))
+      setGoalCurrentValue(familyGoal.kind === 'material' ? String(familyGoal.currentValue) : '')
+      setGoalUnitLabel(familyGoal.kind === 'material' ? familyGoal.unitLabel ?? '' : '')
+    } else {
+      setGoalKind('spiritual')
+      setGoalTitle('')
+      setGoalDescription('')
+      setGoalTargetValue('')
+      setGoalCurrentValue('')
+      setGoalUnitLabel('')
+    }
+
+    setModal('family-goal-form')
   }
 
   function openTaskReplaceModal() {
@@ -942,30 +1021,44 @@ export default function Page() {
     setError('')
 
     try {
-      const response = await telegramFetch('/api/bonus-shop/rewards', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: rewardTitle.trim(),
-          description: rewardDescription.trim(),
-          costPoints: Number(rewardCost),
-        }),
-      })
+      const response = await telegramFetch(
+        editingRewardId ? `/api/bonus-shop/rewards/${editingRewardId}` : '/api/bonus-shop/rewards',
+        {
+          method: editingRewardId ? 'PATCH' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: rewardTitle.trim(),
+            description: rewardDescription.trim(),
+            costPoints: Number(rewardCost),
+          }),
+        },
+      )
 
       if (!response.ok) {
         throw new Error(
-          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось добавить ништяк в магазин.'),
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            editingRewardId
+              ? 'Не удалось обновить товар в магазине.'
+              : 'Не удалось добавить ништяк в магазин.',
+          ),
         )
       }
 
+      setEditingRewardId(null)
       setRewardTitle('')
       setRewardDescription('')
       setRewardCost('')
-      setToast('Ништяк добавлен в магазин')
+      setToast(editingRewardId ? 'Товар обновлен' : 'Ништяк добавлен в магазин')
+      setModal('bonus-shop')
       await loadData({ silent: true })
     } catch (rewardError) {
       setError(
-        rewardError instanceof Error ? rewardError.message : 'Не удалось добавить ништяк в магазин.',
+        rewardError instanceof Error
+          ? rewardError.message
+          : editingRewardId
+            ? 'Не удалось обновить товар в магазине.'
+            : 'Не удалось добавить ништяк в магазин.',
       )
     } finally {
       setBusyKey(null)
@@ -1038,7 +1131,8 @@ export default function Page() {
         )
       }
 
-      setToast('Семейная цель сохранена')
+      setToast(familyGoal ? 'Семейная цель обновлена' : 'Семейная цель создана')
+      setModal('bonus-shop')
       await loadData({ silent: true })
     } catch (goalError) {
       setError(
@@ -1646,50 +1740,75 @@ export default function Page() {
               busyRewardKey={
                 busyKey?.startsWith('buy-reward-') ? busyKey.replace('buy-reward-', '') : null
               }
-              rewardTitle={rewardTitle}
-              rewardDescription={rewardDescription}
-              rewardCost={rewardCost}
-              goalKind={goalKind}
-              goalTitle={goalTitle}
-              goalDescription={goalDescription}
-              goalTargetValue={goalTargetValue}
-              goalCurrentValue={goalCurrentValue}
-              goalUnitLabel={goalUnitLabel}
               onBuy={rewardKey => void buyBonusReward(rewardKey)}
-              onRewardTitleChange={setRewardTitle}
-              onRewardDescriptionChange={setRewardDescription}
-              onRewardCostChange={setRewardCost}
-              onCreateReward={() => void createBonusReward()}
+              onOpenAddElement={openBonusElementCreateModal}
+              onOpenEditReward={openBonusRewardEditModal}
+              onOpenEditGoal={openFamilyGoalEditModal}
               onDeleteReward={rewardId => void deleteBonusReward(rewardId)}
-              onGoalKindChange={setGoalKind}
-              onGoalTitleChange={setGoalTitle}
-              onGoalDescriptionChange={setGoalDescription}
-              onGoalTargetValueChange={setGoalTargetValue}
-              onGoalCurrentValueChange={setGoalCurrentValue}
-              onGoalUnitLabelChange={setGoalUnitLabel}
-              onSaveGoal={() => void saveFamilyGoal()}
               onClearGoal={() => void clearFamilyGoal()}
               onClose={closeModalWithGuard}
             />
           ) : null}
 
-          {modal === 'profile' ? (
-            household ? (
-              <HouseholdProfileModal
-                actorName={getActorName(buyer)}
-                profile={currentUserProfile}
-                household={household}
-                customInviteCode={customInviteCode}
-                busyAction={busyKey}
-                onCustomInviteCodeChange={value => setCustomInviteCode(normalizeInviteCode(value))}
-                onCopyInvite={() => void copyInviteCode()}
-                onCreateCustomInvite={() => void createCustomInvite()}
-                onReissueInvite={() => void reissueInvite()}
-                onLeaveHousehold={() => void leaveHousehold()}
-                onRemoveMember={memberId => void removeHouseholdMember(memberId)}
-                onClose={closeModalWithGuard}
-              />
-            ) : null
+          {modal === 'bonus-element-create' ? (
+            <BonusElementCreateModal
+              onOpenRewardForm={openBonusRewardCreateModal}
+              onOpenGoalForm={openFamilyGoalCreateModal}
+              onBack={() => setModal('bonus-shop')}
+            />
+          ) : null}
+
+          {modal === 'bonus-reward-form' ? (
+            <BonusRewardFormModal
+              mode={editingRewardId ? 'edit' : 'create'}
+              title={rewardTitle}
+              description={rewardDescription}
+              cost={rewardCost}
+              loading={busyKey === 'create-reward'}
+              onTitleChange={setRewardTitle}
+              onDescriptionChange={setRewardDescription}
+              onCostChange={value => setRewardCost(value.replace(/[^\d]/g, ''))}
+              onSubmit={() => void createBonusReward()}
+              onBack={() => setModal('bonus-element-create')}
+            />
+          ) : null}
+
+          {modal === 'family-goal-form' ? (
+            <FamilyGoalFormModal
+              mode={familyGoal ? 'edit' : 'create'}
+              kind={goalKind}
+              title={goalTitle}
+              description={goalDescription}
+              targetValue={goalTargetValue}
+              currentValue={goalCurrentValue}
+              unitLabel={goalUnitLabel}
+              loading={busyKey === 'save-family-goal'}
+              onKindChange={setGoalKind}
+              onTitleChange={setGoalTitle}
+              onDescriptionChange={setGoalDescription}
+              onTargetValueChange={value => setGoalTargetValue(value.replace(/[^\d]/g, ''))}
+              onCurrentValueChange={value => setGoalCurrentValue(value.replace(/[^\d]/g, ''))}
+              onUnitLabelChange={setGoalUnitLabel}
+              onSubmit={() => void saveFamilyGoal()}
+              onBack={() => setModal('bonus-element-create')}
+            />
+          ) : null}
+
+          {modal === 'profile' && household ? (
+            <HouseholdProfileModal
+              actorName={getActorName(buyer)}
+              profile={currentUserProfile}
+              household={household}
+              customInviteCode={customInviteCode}
+              busyAction={busyKey}
+              onCustomInviteCodeChange={value => setCustomInviteCode(normalizeInviteCode(value))}
+              onCopyInvite={() => void copyInviteCode()}
+              onCreateCustomInvite={() => void createCustomInvite()}
+              onReissueInvite={() => void reissueInvite()}
+              onLeaveHousehold={() => void leaveHousehold()}
+              onRemoveMember={memberId => void removeHouseholdMember(memberId)}
+              onClose={closeModalWithGuard}
+            />
           ) : null}
 
           {modal === 'shopping-list' ? (

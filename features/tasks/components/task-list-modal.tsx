@@ -29,7 +29,7 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
 
       <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
         {tasks.length ? (
-          <div className='space-y-4 max-h-[45dvh]'>
+          <div className='space-y-4'>
             {tasks.map(task => (
               (() => {
                 const deadlineAlertActive = Boolean(task.lastDeadlineReminderAt || task.penaltyAppliedAt)
@@ -70,7 +70,7 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
         )}
       </div>
 
-      <div className='space-y-4 border-t border-white/10 p-4 sm:p-6'>
+      <div className='space-y-3 border-t border-white/10 p-4 sm:p-6'>
         <AppButton
           tone='home'
           onClick={onAdd}

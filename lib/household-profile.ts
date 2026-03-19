@@ -35,7 +35,7 @@ export async function getMemberProfileSnapshot(
   prisma: PrismaClient,
   memberId: string,
 ): Promise<MemberProfileSnapshot> {
-  const [member, recentTaskTransactions] = await Promise.all([
+  const [initialMember, recentTaskTransactions] = await Promise.all([
     prisma.member.findUnique({
       where: { id: memberId },
       select: {
@@ -75,8 +75,40 @@ export async function getMemberProfileSnapshot(
     }),
   ])
 
-  if (!member) {
+  if (!initialMember) {
     throw new Error(`Member not found: ${memberId}`)
+  }
+
+  let member = initialMember
+
+  const hasTaskHistory = recentTaskTransactions.some((transaction) => Boolean(transaction.task?.completedAt))
+  const hasEmptyProgressSnapshot =
+    member.completedTasksCount === 0 &&
+    member.fastTasksCount === 0 &&
+    member.overdueTasksCount === 0
+  const hasMissingTotals = member.experiencePoints === 0 && member.bonusBalanceUnits === 0
+
+  // Backfill legacy member snapshots lazily on read when historical task data exists
+  // but persisted profile counters were never synchronized.
+  if (hasTaskHistory && (hasEmptyProgressSnapshot || hasMissingTotals)) {
+    await recalculateMemberProfile(prisma, memberId)
+
+    const refreshedMember = await prisma.member.findUnique({
+      where: { id: memberId },
+      select: {
+        id: true,
+        experiencePoints: true,
+        level: true,
+        bonusBalanceUnits: true,
+        completedTasksCount: true,
+        fastTasksCount: true,
+        overdueTasksCount: true,
+      },
+    })
+
+    if (refreshedMember) {
+      member = refreshedMember
+    }
   }
 
   const recentEvents: MemberProfileTaskEvent[] = []
