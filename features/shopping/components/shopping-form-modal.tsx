@@ -56,13 +56,13 @@ export function ShoppingFormModal({
             onChange={event => onTitleChange(event.target.value)}
           />
 
-          <div className='flex rounded-md border border-white/10 bg-white/5 p-1'>
+          <div className='flex rounded-md border border-white/10 bg-white/6 p-1'>
             <button
               type='button'
               onClick={() => onUrgencyChange('soon')}
-              className={`w-full rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+              className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
                 urgency === 'soon'
-                  ? 'bg-(--color-brand-home)/20 text-(--color-page-text) shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  ? 'bg-(--color-brand-home)/10 text-[#111827] shadow-(--shadow-card)'
                   : 'text-white/70'
               }`}
             >
@@ -72,9 +72,9 @@ export function ShoppingFormModal({
             <button
               type='button'
               onClick={() => onUrgencyChange('out')}
-              className={`w-full rounded-[calc(var(--radius-md)-4px)] px-6 py-3 text-sm font-semibold transition-colors duration-150 ${
+              className={`w-full rounded-xl px-6 py-3 text-sm font-semibold transition-colors duration-150 ${
                 urgency === 'out'
-                  ? 'bg-(--color-danger-soft) text-rose-900 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  ? 'bg-(--color-danger-soft) text-(--color-danger-text) shadow-(--shadow-card)'
                   : 'text-white/70'
               }`}
             >
@@ -84,9 +84,9 @@ export function ShoppingFormModal({
             <button
               type='button'
               onClick={() => onUrgencyChange('without')}
-              className={`w-full rounded-[calc(var(--radius-md)-4px)] px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+              className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
                 urgency === 'without'
-                  ? 'bg-(--color-success-soft) text-gray-800 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+                  ? 'bg-(--color-success-soft) text-(--color-success-text) shadow-(--shadow-card)'
                   : 'text-white/70'
               }`}
             >

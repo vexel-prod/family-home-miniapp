@@ -15,9 +15,9 @@ function resolveTone(text: string) {
 }
 
 const toneClassName = {
-  idle: 'border-white/10 bg-white/5 text-white/80',
-  success: 'border-emerald-300/30 bg-[var(--color-surface-success)] text-emerald-100',
-  error: 'border-rose-300/30 bg-[var(--color-surface-danger)] text-rose-100',
+  idle: 'border-white/10 bg-white/6 text-white/80',
+  success: 'border-emerald-300/25 bg-[var(--color-surface-success)] text-emerald-100',
+  error: 'border-rose-300/25 bg-[var(--color-surface-danger)] text-rose-100',
 }
 
 export function StatusMessage({ text }: StatusMessageProps) {

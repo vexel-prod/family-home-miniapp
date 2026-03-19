@@ -11,7 +11,7 @@ export function ModalOverlay({ children }: AppModalProps) {
   return (
     <div
       id='modal-overlay'
-      className='flex flex-col justify-center absolute inset-0 z-50 bg-(--overlay-backdrop) backdrop-blur-md px-4'
+      className='absolute inset-0 z-50 flex flex-col justify-center bg-(--overlay-backdrop) px-4 backdrop-blur-md'
     >
       {children}
     </div>
@@ -26,9 +26,9 @@ type ModalPanelProps = {
 
 export function ModalPanel({ children, wide = false, tall = false }: ModalPanelProps) {
   const classNames = [
-    'rounded-xl border border-white/10 bg-[var(--color-panel)] text-[var(--color-panel-text)] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]',
-    wide ? '' : '',
-    tall ? '' : '',
+    'w-full overflow-hidden rounded-md border border-white/10 bg-[var(--color-panel)] text-[var(--color-panel-text)] shadow-[var(--shadow-panel)] backdrop-blur-xl',
+    wide ? 'mx-auto max-w-5xl' : 'mx-auto max-w-2xl',
+    tall ? 'max-h-[min(88dvh,56rem)]' : 'max-h-[min(84dvh,44rem)]',
   ]
 
   return (
@@ -38,9 +38,6 @@ export function ModalPanel({ children, wide = false, tall = false }: ModalPanelP
       animate={modalReveal.animate}
       transition={modalReveal.transition}
       className={classNames.filter(Boolean).join(' ')}
-      style={{
-        maxHeight: '',
-      }}
     >
       {children}
     </motion.div>

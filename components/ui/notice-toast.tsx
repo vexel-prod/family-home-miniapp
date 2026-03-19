@@ -27,7 +27,7 @@ export function NoticeToast({ tone, label, title, icon }: NoticeToastProps) {
       initial={toastReveal.initial}
       animate={toastReveal.animate}
       exit={toastReveal.exit}
-      className={`pointer-events-auto w-full max-w-sm rounded-xl border p-5 backdrop-blur-xl ${cardToneClassName[tone]}`}
+      className={`pointer-events-auto w-full max-w-sm rounded-md border p-5 backdrop-blur-xl ${cardToneClassName[tone]}`}
     >
       <div className='flex items-start gap-4'>
         <div

@@ -16,22 +16,22 @@ type AppButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const baseClassName =
-  'inline-flex w-full items-center justify-center rounded-[var(--radius-md)] border border-transparent px-4 py-4 text-base font-semibold leading-[var(--line-height-snug)] transition-colors duration-150 disabled:cursor-default disabled:opacity-60'
+  'inline-flex w-full items-center justify-center rounded-xl border border-transparent px-5 py-4 text-base font-semibold leading-[var(--line-height-snug)] transition-all duration-150 disabled:cursor-default disabled:opacity-60'
 
 const toneClassName: Record<ButtonTone, string> = {
   home:
-    'bg-[var(--color-brand-home)] text-[var(--color-page-text)] hover:bg-[var(--color-brand-home-hover)]',
+    'bg-[var(--color-brand-home)] text-[#111827] hover:bg-[var(--color-brand-home-hover)]',
   shopping:
-    'bg-[var(--color-brand-shopping)] text-[var(--color-page-text)] hover:bg-[var(--color-brand-shopping-hover)]',
+    'bg-[var(--color-brand-shopping)] text-[#111827] hover:bg-[var(--color-brand-shopping-hover)]',
   success:
-    'bg-[var(--color-brand-shopping)] text-[var(--color-page-text)] hover:bg-[var(--color-brand-shopping-hover)]',
+    'bg-[var(--color-brand-shopping)] text-[#111827] hover:bg-[var(--color-brand-shopping-hover)]',
   together:
-    'bg-[var(--color-brand-together)] text-[var(--color-page-text)] hover:bg-[var(--color-brand-together-hover)]',
-  danger: 'bg-[var(--color-danger-soft)] text-[var(--color-danger-text)] hover:bg-rose-200',
-  secondary: 'border-white/10 bg-white/5 text-white hover:bg-white/10',
+    'bg-[var(--color-brand-together)] text-white hover:bg-[var(--color-brand-together-hover)]',
+  danger: 'bg-[var(--color-danger-soft)] text-[var(--color-danger-text)] hover:bg-rose-400/25',
+  secondary: 'border-white/10 bg-white/6 text-white hover:bg-white/10',
   light: 'bg-white text-[var(--color-page-text)] hover:bg-white/90',
   ghost:
-    'w-auto border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80 hover:bg-white/10',
+    'w-auto border-white/10 bg-white/6 px-5 py-3 text-sm text-white/80 hover:bg-white/10',
 }
 
 export function AppButton({
@@ -43,7 +43,7 @@ export function AppButton({
   return (
     <button
       type='button'
-      className={`${baseClassName} ${toneClassName[tone]}${className ? ` ${className}` : ''} shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]`}
+      className={`${baseClassName} ${toneClassName[tone]}${className ? ` ${className}` : ''} shadow-(--shadow-card)`}
       {...props}
     >
       {children}

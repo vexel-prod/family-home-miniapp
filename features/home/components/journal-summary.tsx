@@ -29,52 +29,52 @@ export function JournalSummary({
       initial='hidden'
       animate='visible'
       transition={{ delay: 0.18, duration: 0.35, ease: 'easeOut' }}
-      className='rounded-2xl border border-[rgba(15,23,42,0.08)] bg-(--color-surface) p-4 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] sm:p-6'
+      className='rounded-md border border-white/10 bg-(--color-surface) p-4 shadow-(--shadow-panel) backdrop-blur-xl sm:p-6'
     >
       <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
         <button
           type='button'
-          className='rounded-lg bg-(--color-success-soft) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+          className='rounded-xl border border-white/10 bg-white/8 p-5 text-left text-white transition-transform duration-150 hover:scale-[0.99] shadow-(--shadow-card)'
           onClick={onOpenJournal}
         >
-          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
+          <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
             Всего выполненных задач:
           </div>
-          <div className='mt-3 text-lg font-bold'>
+          <div className='mt-3 text-lg font-bold text-white'>
             {completedTasksCount === 0 ? 'Нет выполненных задач' : completedTasksCount}
           </div>
         </button>
 
-        <div className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-lilac) p-4 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'>
-          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
+        <div className='rounded-md border border-white/10 bg-white/8 p-5 shadow-(--shadow-card)'>
+          <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
             Последнее закрытие:
           </div>
-          <div className='mt-3 text-lg font-bold'>{lastCompletedAt}</div>
+          <div className='mt-3 text-lg font-bold text-white'>{lastCompletedAt}</div>
         </div>
         <button
           type='button'
-          className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-mint) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+          className='rounded-xl border border-white/10 bg-white/8 p-5 text-left text-white transition-transform duration-150 hover:scale-[0.99] shadow-(--shadow-card)'
           onClick={onOpenLeaderboard}
         >
-          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
+          <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
             доска лидеров
           </div>
-          <div className='mt-3 text-lg font-bold'>{leaderName}</div>
-          <div className='mt-2 text-sm text-(--color-text-muted)'>
+          <div className='mt-3 text-lg font-bold text-white'>{leaderName}</div>
+          <div className='mt-2 text-sm text-white/65'>
             {leaderPoints > 0 ? `${leaderPoints} баллов в этом месяце` : 'Открыть рейтинг месяца'}
           </div>
         </button>
 
         <button
           type='button'
-          className='rounded-lg border border-[rgba(15,23,42,0.08)] bg-(--color-surface-cream) p-4 text-left transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+          className='rounded-xl border border-white/10 bg-white/8 p-5 text-left text-white transition-transform duration-150 hover:scale-[0.99] shadow-(--shadow-card)'
           onClick={onOpenBonusShop}
         >
-          <div className='text-xs uppercase tracking-[0.24em] text-(--color-text-muted)'>
+          <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
             Магазин бонусов
           </div>
-          <div className='mt-3 text-lg font-bold'>{balanceLabel}</div>
-          <div className='mt-2 text-sm text-(--color-text-muted)'>
+          <div className='mt-3 text-lg font-bold text-white'>{balanceLabel}</div>
+          <div className='mt-2 text-sm text-white/65'>
             Открыть карточки услуг месяца
           </div>
         </button>

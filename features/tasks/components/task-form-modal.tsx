@@ -60,9 +60,7 @@ export function TaskFormModal({
           />
 
           <div className='space-y-2'>
-            <div className='text-xs uppercase tracking-[0.22em] text-white/45'>
-              Сделать до
-            </div>
+            <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Сделать до</div>
             <div className='grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]'>
               <div className='grid grid-cols-2 gap-3'>
                 {[
@@ -73,10 +71,10 @@ export function TaskFormModal({
                     key={option.value}
                     type='button'
                     onClick={() => onDeadlineDayChange(option.value)}
-                    className={`rounded-[var(--radius-md)] border px-4 py-4 text-left text-base transition-colors duration-150 ${
+                    className={`text-center rounded-xl border px-4 py-4 text-base transition-colors duration-150 ${
                       deadlineDay === option.value
-                        ? 'border-transparent bg-[var(--color-accent)] text-[var(--color-accent-text)] shadow-lg shadow-black/20'
-                        : 'border-white/10 bg-[var(--color-panel-field)] text-[var(--color-panel-text)] hover:border-white/20'
+                        ? 'border-transparent bg-(--color-brand-home)/70 text-[#111827] shadow-(--shadow-card)'
+                        : 'border-white/10 bg-(--color-panel-field) text-(--color-panel-text) hover:border-white/20'
                     }`}
                   >
                     {option.label}

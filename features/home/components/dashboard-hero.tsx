@@ -24,14 +24,14 @@ export function DashboardHero({
       initial='hidden'
       animate='visible'
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className='overflow-hidden rounded-2xl bg-(--dashboard-panel) text-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] bg-cover bg-center bg-no-repeat md:bg-contain'
+      className='hero overflow-hidden rounded-md border border-white/10 bg-(--dashboard-panel) text-white shadow-(--shadow-panel) backdrop-blur-xl'
       style={{
         backgroundImage:
           'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url(/dashboard-image.png)',
       }}
     >
-      <div className='flex flex-col gap-4 p-4 sm:p-6'>
-        <div className='w-full flex items-center justify-center flex-wrap md:flex-nowrap'>
+      <div className='hero-content flex w-full max-w-none flex-col gap-6 px-4 py-6 sm:px-6'>
+        <div className='flex w-full items-center justify-center'>
           <div className='flex flex-col gap-6'>
             <TypingText
               key={actorName}
@@ -40,27 +40,27 @@ export function DashboardHero({
           </div>
         </div>
 
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='w-full grid grid-cols-2 gap-4'>
           <button
             type='button'
-            className='rounded-3xl bg-(--color-brand-home) p-4 text-left text-(--color-page-text) transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+            className='rounded-xl bg-(--color-brand-home) p-5 text-left text-[#111827] shadow-(--shadow-card) transition-transform duration-150 hover:scale-[0.99]'
             onClick={onOpenHousehold}
           >
-            <div className='flex gap-2 items-center text-xs uppercase tracking-widest'>
+            <div className='flex items-center gap-2 text-xs uppercase tracking-[0.28em]'>
               Задачи: <span className='font-bold text-2xl'>{openTasksCount}</span>
             </div>
-            <div className='mt-1 text-base'>Открыть список</div>
+            <div className='mt-2 text-base'>Открыть список</div>
           </button>
 
           <button
             type='button'
-            className='rounded-3xl bg-(--color-brand-shopping) p-4 text-left text-(--color-page-text) transition-transform duration-150 hover:scale-[0.99] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)]'
+            className='rounded-xl bg-(--color-brand-shopping) p-5 text-left text-[#111827] shadow-(--shadow-card) transition-transform duration-150 hover:scale-[0.99]'
             onClick={onOpenShopping}
           >
-            <div className='flex gap-2 items-center text-xs uppercase tracking-widest'>
+            <div className='flex items-center gap-2 text-xs uppercase tracking-[0.28em]'>
               Покупки: <span className='font-bold text-2xl'>{shoppingItemsCount}</span>
             </div>
-            <div className='mt-1 text-base'>Открыть список</div>
+            <div className='mt-2 text-base'>Открыть список</div>
           </button>
         </div>
       </div>

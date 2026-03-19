@@ -20,7 +20,7 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
       <div className='border-b border-white/10 p-4 sm:p-6'>
         <div className='flex items-center justify-center gap-4'>
           {tasks.length > 0 && (
-            <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
+            <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
               Всего: {tasks.length}
             </h2>
           )}
@@ -38,7 +38,7 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
               <button
                 key={task.id}
                 type='button'
-                className='w-full rounded-lg border border-white/10 bg-(--color-panel-muted) p-4 text-left transition-colors duration-150 hover:bg-white/10'
+                className='w-full rounded-xl border border-white/10 bg-white/6 p-5 text-left transition-colors duration-150 hover:bg-white/10'
                 onClick={() => onSelectTask(task)}
               >
                 <div className='space-y-2'>
@@ -64,7 +64,7 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
             ))}
           </div>
         ) : (
-          <div className='rounded-lg border border-dashed border-white/12 bg-(--color-panel-muted) px-4 py-10 text-center text-white/60'>
+          <div className='rounded-md border border-dashed border-white/12 bg-white/6 px-4 py-10 text-center text-white/60'>
             Нет активных задач
           </div>
         )}

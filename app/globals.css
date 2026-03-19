@@ -8,7 +8,7 @@
 
 :root {
   --font-family-base: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --font-family-heading: 'Avenir Next Condensed', 'Arial Narrow', 'Trebuchet MS', sans-serif;
+  --font-family-heading: 'Avenir Next', 'Inter', 'Segoe UI', sans-serif;
 
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -25,53 +25,54 @@
   --letter-spacing-tag: 0.24em;
   --letter-spacing-wide: 0.3em;
 
-  --radius-md: 1rem;
-  --radius-lg: 1.2rem;
-  --radius-xl: 1.4rem;
-  --radius-2xl: 1.8rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 1.9rem;
+  --radius-2xl: 2.25rem;
 
-  --border-soft: 1px solid rgba(15, 23, 42, 0.08);
+  --border-soft: 1px solid rgba(255, 255, 255, 0.1);
   --border-inverse: 1px solid rgba(255, 255, 255, 0.1);
 
-  --shadow-panel: 0 30px 80px rgba(17, 24, 39, 0.22);
-  --shadow-card: 0 22px 70px rgba(52, 72, 60, 0.1);
+  --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 22px 70px rgba(0, 0, 0, 0.24);
   --shadow-toast-success: 0 28px 80px rgba(16, 185, 129, 0.22);
   --shadow-toast-danger: 0 28px 80px rgba(244, 63, 94, 0.18);
   --shadow-accent: 0 10px 30px rgba(16, 185, 129, 0.28);
   --shadow-danger: 0 10px 30px rgba(244, 63, 94, 0.24);
 
-  --color-page-text: #0f172a;
+  --color-page-text: #4d4d4d;
   --color-page-bg:
-    radial-gradient(circle at top, rgba(250, 204, 21, 0.12), transparent 20%),
-    linear-gradient(180deg, #f3efe3 0%, #ebe7d8 45%, #dde7df 100%);
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.22), transparent 26%),
+    radial-gradient(circle at 85% 20%, rgba(253, 186, 116, 0.22), transparent 20%),
+    linear-gradient(180deg, #07111f 0%, #140c1e 52%, #070d18 100%);
 
-  --color-panel: #26272f;
-  --dashboard-panel: #414a5b;
-  --color-panel-muted: rgba(255, 255, 255, 0.06);
-  --color-panel-field: rgba(255, 255, 255, 0.08);
-  --color-panel-text: #ffffff;
+  --color-panel: rgba(18, 15, 31, 0.95);
+  --dashboard-panel: rgba(255, 255, 255, 0.08);
+  --color-panel-muted: rgba(255, 255, 255, 0.08);
+  --color-panel-field: rgba(0, 0, 0, 0.2);
+  --color-panel-text: #d1d1d1;
   --color-panel-text-faint: rgba(255, 255, 255, 0.5);
 
-  --color-surface: rgba(255, 255, 255, 0.8);
-  --color-surface-cream: #f8f5ec;
-  --color-surface-mint: #eef7f0;
-  --color-surface-lilac: #f5f0ff;
-  --color-surface-success: rgba(16, 185, 129, 0.1);
-  --color-surface-danger: rgba(244, 63, 94, 0.1);
+  --color-surface: rgba(255, 255, 255, 0.08);
+  --color-surface-cream: rgba(255, 255, 255, 0.1);
+  --color-surface-mint: rgba(255, 255, 255, 0.1);
+  --color-surface-lilac: rgba(255, 255, 255, 0.1);
+  --color-surface-success: rgba(16, 185, 129, 0.14);
+  --color-surface-danger: rgba(244, 63, 94, 0.14);
 
-  --color-brand-home: #f3c54b;
-  --color-brand-home-hover: #eabf36;
+  --color-brand-home: #facc15;
+  --color-brand-home-hover: #fbbf24;
   --color-brand-shopping: #8fd4b0;
   --color-brand-shopping-hover: #7bc8a0;
-  --color-brand-together: #ffdca8;
-  --color-brand-together-hover: #ffd08b;
+  --color-brand-together: #c084fc;
+  --color-brand-together-hover: #a855f7;
 
-  --color-danger-soft: #ffe4e6;
-  --color-danger-text: #9f1239;
-  --color-success-soft: #d1fae5;
-  --color-success-text: #065f46;
-  --color-text-muted: #64748b;
-  --overlay-backdrop: #00000069;
+  --color-danger-soft: rgba(251, 113, 133, 0.18);
+  --color-danger-text: #ffe4e6;
+  --color-success-soft: rgba(52, 211, 153, 0.18);
+  --color-success-text: #d1fae5;
+  --color-text-muted: rgba(255, 255, 255, 0.65);
+  --overlay-backdrop: rgba(0, 0, 0, 0.55);
 
   --page-gutter: 1rem;
   --page-max-width: 80rem;
@@ -92,7 +93,7 @@ html {
 body {
   min-height: 100dvh;
   font-family: var(--font-family-base);
-  background: var(--color-panel);
+  background: var(--color-page-bg);
   color: var(--color-page-text);
 }
 
@@ -105,6 +106,22 @@ textarea {
 
 button {
   cursor: pointer;
+}
+
+main {
+  position: relative;
+}
+
+main::before {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.18;
 }
 
 @keyframes macos-caret-blink {

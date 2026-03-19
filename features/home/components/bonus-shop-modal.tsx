@@ -33,7 +33,7 @@ export function BonusShopModal({
               Баланс месяца: {formatPoints(balanceUnits)}
             </h2>
           </div>
-          <div className='rounded-2xl bg-white/5 px-4 py-3 text-right text-sm text-white/70'>
+          <div className='rounded-md bg-white/5 px-4 py-3 text-right text-sm text-white/70'>
             Бонусы действуют только до конца текущего месяца
           </div>
         </div>
@@ -47,10 +47,10 @@ export function BonusShopModal({
             return (
               <div
                 key={reward.key}
-                className='overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5'
+                className='overflow-hidden rounded-md border border-white/10 bg-white/5'
               >
                 <div
-                  className={`bg-gradient-to-r ${reward.accentClassName} p-5 text-(--color-page-text)`}
+                  className={`bg-linear-to-r ${reward.accentClassName} p-5 text-(--color-page-text)`}
                 >
                   <div className='text-xs uppercase tracking-[0.24em] text-black/55'>
                     Услуга месяца
@@ -71,7 +71,7 @@ export function BonusShopModal({
 
                   <AppButton
                     tone={canBuy ? 'home' : 'secondary'}
-                    className='w-auto min-w-[10rem]'
+                    className='w-auto min-w-40'
                     disabled={!canBuy}
                     onClick={() => onBuy(reward.key)}
                   >
@@ -88,7 +88,7 @@ export function BonusShopModal({
         </div>
 
         <div className='grid gap-4'>
-          <div className='flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/5'>
+          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
             <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
               История покупок
             </div>
@@ -99,7 +99,7 @@ export function BonusShopModal({
                   {purchases.map(purchase => (
                     <div
                       key={purchase.id}
-                      className='rounded-2xl bg-white/6 p-4'
+                      className='rounded-md bg-white/6 p-4'
                     >
                       <div className='text-sm font-semibold text-white'>{purchase.rewardTitle}</div>
                       <div className='mt-2 text-sm text-white/65'>
@@ -112,14 +112,14 @@ export function BonusShopModal({
                   ))}
                 </div>
               ) : (
-                <div className='rounded-2xl border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
                   Пока нет покупок в этом месяце.
                 </div>
               )}
             </div>
           </div>
 
-          <div className='flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/5'>
+          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/5'>
             <div className='border-b border-white/10 p-4 text-xs uppercase tracking-[0.24em] text-white/45'>
               Месячные отчеты
             </div>
@@ -130,7 +130,7 @@ export function BonusShopModal({
                   {reports.map(report => (
                     <div
                       key={report.id}
-                      className='rounded-2xl bg-white/6 p-4'
+                      className='rounded-md bg-white/6 p-4'
                     >
                       <div className='text-sm font-semibold text-white'>{report.title}</div>
                       <div className='mt-2 whitespace-pre-line text-sm leading-6 text-white/65'>
@@ -145,7 +145,7 @@ export function BonusShopModal({
                   ))}
                 </div>
               ) : (
-                <div className='rounded-2xl border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
                   Отчеты появятся после закрытия месяца.
                 </div>
               )}
