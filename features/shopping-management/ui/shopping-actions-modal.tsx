@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import type { ShoppingItem } from '@entities/family'
 
 type ShoppingActionsModalProps = {
@@ -21,7 +21,7 @@ export function ShoppingActionsModal({
 }: ShoppingActionsModalProps) {
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
           <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
             ПОКУПКИ
@@ -35,8 +35,10 @@ export function ShoppingActionsModal({
           {item.note ? <div className='text-sm leading-6 text-white/65'>{item.note}</div> : null}
           <div className='text-sm text-white/60'>Выбери действие для этой позиции.</div>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           <AppButton tone='shopping' onClick={onPurchase} disabled={busyKey === `product-${item.id}`}>
             {busyKey === `product-${item.id}` ? 'Обновляю...' : 'Отметить купленным'}
           </AppButton>
@@ -48,12 +50,14 @@ export function ShoppingActionsModal({
           <AppButton tone='danger' onClick={onDelete} disabled={busyKey === `delete-${item.id}`}>
             {busyKey === `delete-${item.id}` ? 'Удаляю...' : 'Удалить'}
           </AppButton>
-
-          <AppButton tone='ghost' onClick={onClose}>
-            Закрыть
-          </AppButton>
         </div>
-      </div>
+      </ModalBody>
+
+      <ModalFooter>
+        <AppButton tone='ghost' onClick={onClose}>
+          Закрыть
+        </AppButton>
+      </ModalFooter>
     </ModalPanel>
   )
 }

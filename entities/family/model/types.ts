@@ -180,7 +180,6 @@ export type ModalKey =
   | "last-completed-task"
   | "leaderboard"
   | "bonus-shop"
-  | "bonus-element-create"
   | "bonus-reward-form"
   | "family-goal-form"
   | "profile"

@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { TextAreaField, TextInput } from '@shared/ui/form-field'
 import { StatusMessage } from '@shared/ui/status-message'
 
@@ -40,14 +40,16 @@ export function ShoppingFormModal({
 }: ShoppingFormModalProps) {
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             {mode === 'create' ? 'Новая позиция' : 'Внести изменения'}
           </h2>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           {status ? <StatusMessage text={status} /> : null}
 
           <TextInput
@@ -106,7 +108,11 @@ export function ShoppingFormModal({
             value={note}
             onChange={event => onNoteChange(event.target.value)}
           />
+        </div>
+      </ModalBody>
 
+      <ModalFooter>
+        <div className='space-y-3'>
           <AppButton
             tone='shopping'
             onClick={onSubmit}
@@ -122,7 +128,7 @@ export function ShoppingFormModal({
             Назад
           </AppButton>
         </div>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { TextAreaField, TextInput } from '@shared/ui/form-field'
 
 type FamilyGoalFormModalProps = {
@@ -41,14 +41,16 @@ export function FamilyGoalFormModal({
 }: FamilyGoalFormModalProps) {
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             {mode === 'create' ? 'Новая цель' : 'Редактировать цель'}
           </h2>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           <div className='grid grid-cols-2 gap-3'>
             <button
               type='button'
@@ -108,7 +110,11 @@ export function FamilyGoalFormModal({
               />
             </>
           ) : null}
+        </div>
+      </ModalBody>
 
+      <ModalFooter>
+        <div className='space-y-3'>
           <AppButton
             tone='secondary'
             onClick={onSubmit}
@@ -130,7 +136,7 @@ export function FamilyGoalFormModal({
             Назад
           </AppButton>
         </div>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

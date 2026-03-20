@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { StatusPill } from '@shared/ui/status-pill'
 import { formatPoints, getDisplayedTaskRewardUnits } from '@entities/bonus'
 import { formatRelativeDate } from '@entities/family'
@@ -18,15 +18,15 @@ export function LastCompletedTaskModal({
 }: LastCompletedTaskModalProps) {
   return (
     <ModalPanel>
-      <div className='border-b border-white/10 p-4 sm:p-6'>
+      <ModalHeader>
         <div className='flex items-center justify-center gap-4'>
           <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
             Последнее закрытие
           </h2>
         </div>
-      </div>
+      </ModalHeader>
 
-      <div className='p-4 sm:p-6'>
+      <ModalBody>
         {task ? (
           <div className='rounded-md border border-white/10 bg-white/6 p-5'>
             <div className='space-y-3'>
@@ -62,16 +62,16 @@ export function LastCompletedTaskModal({
             Пока нет выполненных задач.
           </div>
         )}
-      </div>
+      </ModalBody>
 
-      <div className='border-t border-white/10 p-4 sm:p-6'>
+      <ModalFooter>
         <AppButton
           tone='ghost'
           onClick={onClose}
         >
           Закрыть
         </AppButton>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

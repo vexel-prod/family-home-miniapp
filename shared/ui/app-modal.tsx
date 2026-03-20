@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import type { ReactNode } from 'react'
-
 import { modalReveal } from '@/shared/lib/animations'
+
+import { type ReactNode } from 'react'
 
 type ModalProps = {
   children: ReactNode
@@ -12,11 +12,15 @@ export function ModalOverlay({ children, className }: ModalProps) {
   return (
     <div
       className={[
-        'fixed inset-0 z-50 flex flex-col justify-center overflow-hidden px-4 backdrop-blur-md',
+        'fixed inset-0 z-50 flex w-full items-center justify-center overflow-hidden overscroll-none bg-black/40 backdrop-blur-md',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
+      style={{
+        paddingTop: 'max(10rem, env(safe-area-inset-top))',
+        paddingBottom: 'max(4rem, env(safe-area-inset-bottom))',
+      }}
     >
       {children}
     </div>
@@ -25,7 +29,7 @@ export function ModalOverlay({ children, className }: ModalProps) {
 
 export function ModalPanel({ children, className }: ModalProps) {
   const classNames = [
-    'flex w-full flex-col overflow-hidden rounded-md border border-white/10 bg-(--color-panel) text-[var(--color-panel-text)] ',
+    'relative flex max-h-full w-full max-w-3xl flex-col overflow-hidden rounded-md border border-white/10 bg-(--color-panel) text-[var(--color-panel-text)] shadow-2xl',
     className,
   ]
 
@@ -38,5 +42,41 @@ export function ModalPanel({ children, className }: ModalProps) {
     >
       {children}
     </motion.div>
+  )
+}
+
+export function ModalHeader({ children, className }: ModalProps) {
+  return (
+    <div
+      className={['flex-none border-b border-white/10 p-4 sm:p-6', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function ModalBody({ children, className }: ModalProps) {
+  return (
+    <div
+      className={['min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function ModalFooter({ children, className }: ModalProps) {
+  return (
+    <div
+      className={['flex-none border-t border-white/10 bg-(--color-panel) p-4 sm:p-6', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      {children}
+    </div>
   )
 }

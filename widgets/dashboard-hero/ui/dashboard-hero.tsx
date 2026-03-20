@@ -14,15 +14,15 @@ export function DashboardHero({ actorName }: DashboardHeroProps) {
       initial='hidden'
       animate='visible'
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className='hero min-h-50 overflow-hidden rounded-md border border-white/10 bg-(--dashboard-panel) text-white shadow-(--shadow-panel) backdrop-blur-xl p-4'
-      style={{
-        backgroundImage: 'linear-gradient(#1d1d1db1, #13131380), url(/dashboard-image.png)',
-      }}
+      className='hero min-h-50 overflow-hidden rounded-md inset-shadow-sm text-white bg-no-repeat bg-cover bg-center bg-[url(/hero.png)] p-px'
     >
-      <TypingText
-        key={actorName}
-        typedText={`Привет, ${actorName}, добро пожаловать в Household!\nЗдесь ты можешь управлять своими задачами, отслеживать прогресс и зарабатывать очки лидера, чтобы получать крутые бонусы!`}
-      />
+      <div className='flex justify-center items-center p-4 h-full w-full bg-black/25 border border-white/10 inset-shadow-sm rounded-md'>
+        <TypingText
+          key={actorName}
+          className='whitespace-pre-line bg-black/20 backdrop-blur-xs inline-block p-4 rounded-md text-left text-shadow-md'
+          typedText={`Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\n Отслеживайте прогресс\nЗарабатывайте очки лидера\nПокупайте крутые бонусы!`}
+        />
+      </div>
     </motion.section>
   )
 }

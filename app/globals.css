@@ -113,18 +113,6 @@ main {
   position: relative;
 }
 
-/* main::before {
-  content: '';
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.18;
-} */
-
 @media (min-width: 640px) {
   :root {
     --page-gutter: 1.5rem;

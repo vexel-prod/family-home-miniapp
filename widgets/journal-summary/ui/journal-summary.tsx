@@ -45,20 +45,20 @@ export function JournalSummary({
       <div className='grid grid-cols-2 gap-4'>
         <button
           type='button'
-          className='border border-white/10 h-full flex items-center justify-center rounded-md bg-(--color-brand-home) text-center p-px inset-shadow-sm transition-transform duration-150 hover:scale-[0.99]'
+          className='border border-white/20 h-full flex items-center justify-center rounded-md bg-(--color-brand-home) text-center p-px inset-shadow-sm transition-transform duration-150 hover:scale-[0.99]'
           onClick={onOpenHousehold}
         >
-          <div className='p-4 flex items-center justify-center w-full h-full bg-black/12 text-(--color-panel) rounded-md font-black shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] transition-transform duration-150 border border-white/10'>
+          <div className='p-4 flex items-center justify-center w-full h-full bg-black/12 text-(--color-panel) rounded-md font-black shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] transition-transform duration-150 border border-white/2'>
             {'ЗАДАЧИ' + ': ' + openTasksCount}
           </div>
         </button>
 
         <button
           type='button'
-          className='h-full flex items-center justify-center rounded-md bg-(--color-brand-shopping) p-px text-center inset-shadow-sm transition-transform duration-150 hover:scale-[0.99]'
+          className='border border-white/20 h-full flex items-center justify-center rounded-md bg-(--color-brand-shopping) p-px text-center inset-shadow-sm transition-transform duration-150 hover:scale-[0.99]'
           onClick={onOpenShopping}
         >
-          <div className='p-4 flex items-center justify-center w-full h-full bg-black/12 text-(--color-panel) rounded-md font-black shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] transition-transform duration-150 border border-white/10'>
+          <div className='p-4 flex items-center justify-center w-full h-full bg-black/12 text-(--color-panel) rounded-md font-black shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] transition-transform duration-150 border border-white/2'>
             {'ПОКУПКИ' + ': ' + shoppingItemsCount}
           </div>
         </button>
@@ -78,7 +78,7 @@ export function JournalSummary({
           onClick={onOpenBonusShop}
         />
         <TabButton
-          label='Личный кабинет'
+          label='Семейный кабинет'
           caption={`LVL ${profileLevel} / EXP ${profileExp}`}
           onClick={onOpenProfile}
         />

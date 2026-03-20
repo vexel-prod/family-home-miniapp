@@ -2,7 +2,6 @@
 
 import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
 
-import { BonusElementCreateModal } from '@features/bonus-element/create'
 import { BonusRewardFormModal } from '@features/bonus-reward/manage'
 import { BonusShopModal } from '@features/bonus-shop/view'
 import { FamilyGoalFormModal } from '@features/family-goal/manage'
@@ -198,7 +197,11 @@ const FALLBACK_HOUSEHOLD_SUMMARY: HouseholdSummary = {
   currentUserRole: 'head',
 }
 
-export function HomePage() {
+type HomePageProps = {
+  version: string
+}
+
+export function HomePage({ version }: HomePageProps) {
   const bootstrapRequestInFlight = useRef(false)
   const eventSourceRef = useRef<EventSource | null>(null)
   const [buyer, setBuyer] = useState<TelegramUser | undefined>()
@@ -267,6 +270,7 @@ export function HomePage() {
   const [goalTargetValue, setGoalTargetValue] = useState('')
   const [goalCurrentValue, setGoalCurrentValue] = useState('')
   const [goalUnitLabel, setGoalUnitLabel] = useState('')
+  const [familyGoalSubmitModal, setFamilyGoalSubmitModal] = useState<'bonus-shop' | 'profile'>('bonus-shop')
   const [onboardingStatus, setOnboardingStatus] = useState('')
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [taskCreateStatus, setTaskCreateStatus] = useState('')
@@ -410,14 +414,6 @@ export function HomePage() {
     setModal('bonus-reward-form')
   }
 
-  function openBonusElementCreateModal() {
-    if (!canOpenModal()) {
-      return
-    }
-
-    setModal('bonus-element-create')
-  }
-
   function openBonusRewardEditModal(reward: BonusReward) {
     if (!canOpenModal()) {
       return
@@ -430,21 +426,7 @@ export function HomePage() {
     setModal('bonus-reward-form')
   }
 
-  function openFamilyGoalCreateModal() {
-    if (!canOpenModal()) {
-      return
-    }
-
-    setGoalKind('spiritual')
-    setGoalTitle('')
-    setGoalDescription('')
-    setGoalTargetValue('')
-    setGoalCurrentValue('')
-    setGoalUnitLabel('')
-    setModal('family-goal-form')
-  }
-
-  function openFamilyGoalEditModal() {
+  function openFamilyGoalEditModal(returnModal: 'bonus-shop' | 'profile' = 'profile') {
     if (!canOpenModal()) {
       return
     }
@@ -465,6 +447,7 @@ export function HomePage() {
       setGoalUnitLabel('')
     }
 
+    setFamilyGoalSubmitModal(returnModal)
     setModal('family-goal-form')
   }
 
@@ -1189,7 +1172,7 @@ export function HomePage() {
       }
 
       setToast(familyGoal ? 'Семейная цель обновлена' : 'Семейная цель создана')
-      setModal('bonus-shop')
+      setModal(familyGoalSubmitModal)
       await loadData({ silent: true })
     } catch (goalError) {
       setError(
@@ -1691,7 +1674,7 @@ export function HomePage() {
   }
 
   return (
-    <main className='bg-(--color-page-bg) text-(--color-page-text)'>
+    <main className='min-h-dvh flex justify-between items-center bg-(--color-page-bg) text-(--color-page-text) px-4 relative'>
       <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
         {toast ? (
           <NoticeToast
@@ -1804,27 +1787,16 @@ export function HomePage() {
             <BonusShopModal
               balanceUnits={currentUserBonusBalanceUnits}
               rewards={bonusRewards}
-              familyGoal={familyGoal}
               purchases={bonusPurchases}
               reports={monthlyReports}
               busyRewardKey={
                 busyKey?.startsWith('buy-reward-') ? busyKey.replace('buy-reward-', '') : null
               }
               onBuy={rewardKey => void buyBonusReward(rewardKey)}
-              onOpenAddElement={openBonusElementCreateModal}
+              onOpenAddElement={openBonusRewardCreateModal}
               onOpenEditReward={openBonusRewardEditModal}
-              onOpenEditGoal={openFamilyGoalEditModal}
               onDeleteReward={rewardId => void deleteBonusReward(rewardId)}
-              onClearGoal={() => void clearFamilyGoal()}
               onClose={closeModalWithGuard}
-            />
-          ) : null}
-
-          {modal === 'bonus-element-create' ? (
-            <BonusElementCreateModal
-              onOpenRewardForm={openBonusRewardCreateModal}
-              onOpenGoalForm={openFamilyGoalCreateModal}
-              onBack={() => setModal('bonus-shop')}
             />
           ) : null}
 
@@ -1839,7 +1811,7 @@ export function HomePage() {
               onDescriptionChange={setRewardDescription}
               onCostChange={value => setRewardCost(value.replace(/[^\d]/g, ''))}
               onSubmit={() => void createBonusReward()}
-              onBack={() => setModal('bonus-element-create')}
+              onBack={() => setModal('bonus-shop')}
             />
           ) : null}
 
@@ -1860,7 +1832,7 @@ export function HomePage() {
               onCurrentValueChange={value => setGoalCurrentValue(value.replace(/[^\d]/g, ''))}
               onUnitLabelChange={setGoalUnitLabel}
               onSubmit={() => void saveFamilyGoal()}
-              onBack={() => setModal('bonus-element-create')}
+              onBack={() => setModal('profile')}
             />
           ) : null}
 
@@ -1869,13 +1841,16 @@ export function HomePage() {
               actorName={getActorName(buyer)}
               profile={currentUserProfile}
               household={household ?? FALLBACK_HOUSEHOLD_SUMMARY}
+              familyGoal={familyGoal}
               customInviteCode={customInviteCode}
               busyAction={busyKey}
               onCustomInviteCodeChange={value => setCustomInviteCode(normalizeInviteCode(value))}
               onCopyInvite={() => void copyInviteCode()}
               onCreateCustomInvite={() => void createCustomInvite()}
               onReissueInvite={() => void reissueInvite()}
+              onOpenEditGoal={() => openFamilyGoalEditModal('profile')}
               onLeaveHousehold={() => void leaveHousehold()}
+              onClearGoal={() => void clearFamilyGoal()}
               onRemoveMember={memberId => void removeHouseholdMember(memberId)}
               onClose={closeModalWithGuard}
             />
@@ -1943,7 +1918,7 @@ export function HomePage() {
         </ModalOverlay>
       ) : null}
 
-      <div className='mx-auto flex min-h-screen w-full max-w-(--page-max-width) flex-col justify-center items-center gap-4 px-4'>
+      <div className='mx-auto flex min-h-screen w-full max-w-(--page-max-width) flex-col justify-center items-center gap-4'>
         <DashboardHero actorName={getActorName(buyer)} />
 
         <JournalSummary
@@ -1962,6 +1937,14 @@ export function HomePage() {
           openTasksCount={openTasks.length}
           shoppingItemsCount={shoppingItems.length}
         />
+
+        <div className='text-center'>
+          <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md'>
+            <span>Household</span>
+            <span className='h-1 w-1 rounded-full bg-green-500/70 animate-pulse' />
+            <span>v{version}</span>
+          </div>
+        </div>
       </div>
     </main>
   )
