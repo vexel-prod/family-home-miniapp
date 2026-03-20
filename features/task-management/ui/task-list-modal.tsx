@@ -1,6 +1,7 @@
 import { AppButton } from '@shared/ui/app-button'
 import { ModalPanel } from '@shared/ui/app-modal'
 import { StatusPill } from '@shared/ui/status-pill'
+import { formatPoints } from '@entities/bonus'
 import { formatRelativeDate } from '@entities/family'
 import type { HouseholdTask } from '@entities/family'
 
@@ -48,6 +49,18 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
                   {task.note ? (
                     <p className='text-sm leading-6 text-white/70'>{task.note}</p>
                   ) : null}
+                  <div className='flex flex-wrap gap-2 text-xs text-white/55'>
+                    {task.assignedMemberName ? (
+                      <span className='rounded-full border border-white/10 bg-white/6 px-3 py-1'>
+                        Для: {task.assignedMemberName}
+                      </span>
+                    ) : null}
+                    <span className='rounded-full border border-white/10 bg-white/6 px-3 py-1'>
+                      {task.rewardUnits
+                        ? `${formatPoints(task.rewardUnits)} house-coin`
+                        : 'Базовая награда'}
+                    </span>
+                  </div>
                   <div className='text-sm text-white/70'>
                     Сделать до: {formatRelativeDate(task.deadlineAt)}
                   </div>

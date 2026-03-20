@@ -13,6 +13,11 @@ model Household {
   name          String
   revision      Int             @default(0)
   sharedGoalUnits Int           @default(0)
+  experiencePoints Int         @default(0)
+  level         Int             @default(0)
+  completedTasksCount Int      @default(0)
+  fastTasksCount Int           @default(0)
+  overdueTasksCount Int        @default(0)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   members       Member[]
@@ -61,6 +66,9 @@ model HouseholdTask {
   householdId       String
   title             String
   note              String?
+  assignedMemberId  String?
+  assignedMemberName String?
+  rewardUnits       Int?
   status            String    @default("open")
   priority          String    @default("normal")
   addedByName       String

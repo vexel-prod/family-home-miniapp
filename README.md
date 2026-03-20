@@ -1,7 +1,7 @@
 # Household
 
-Telegram Mini App для семьи: общие домашние задачи, список покупок, месячный рейтинг и личный
-прогресс участника.
+Telegram Mini App для семьи: общие домашние задачи, список покупок, месячный рейтинг, семейный
+уровень и личные `house-coin` участников.
 
 Это уже не приложение для двух фиксированных пользователей. Теперь это многопользовательская
 household-модель с onboarding, invite-кодами и ролью главы семьи.
@@ -12,7 +12,7 @@ household-модель с onboarding, invite-кодами и ролью глав
 
 - ведет общий список бытовых задач
 - ведет общий список покупок
-- делает вклад каждого участника видимым через рейтинг и систему уровней
+- делает вклад каждого участника видимым через рейтинг, семейный уровень и `house-coin`
 
 Приложение работает внутри Telegram Mini App. Авторизация опирается только на валидированный
 Telegram `user.id`.
@@ -78,6 +78,7 @@ Telegram `user.id`.
 - задачи
 - покупки
 - бонусные транзакции
+- семейный `experiencePoints` и `level`
 - месячные отчеты
 
 ### `Member`
@@ -93,12 +94,9 @@ Telegram `user.id`.
 - `isActive`
 - `joinedAt`
 - `leftAt`
-- `experiencePoints`
-- `level`
-- `bonusBalanceUnits`
+- личный `bonusBalanceUnits` как баланс `house-coin`
 
-Важно: уровень и прогресс живут на уровне membership, а не глобального пользователя. Это значит, что
-новая семья = новый чистый прогресс.
+Важно: `exp` и `level` теперь живут на уровне `Household`, а не на `Member`.
 
 ### `HouseholdInvite`
 
@@ -127,7 +125,7 @@ Invite живет 24 часа.
 
 ### `MonthlyReport`
 
-История месячных отчетов по семье.
+Служебная сущность месячного отчета. Хранится в базе и используется cron/bot-логикой, но не участвует в клиентском UI приложения.
 
 ## 4. Что умеет приложение
 
@@ -141,8 +139,9 @@ Invite живет 24 часа.
 - вести общий список покупок
 - считать журнал выполненных задач
 - считать месячный рейтинг
-- показывать профиль участника с exp и level
-- начислять бонусный баланс
+- показывать семейный профиль с общим exp / level
+- начислять личный баланс `house-coin`
+- создавать кастомные задачи с адресатом и произвольной наградой
 - отправлять уведомления участникам семьи через Telegram-бота
 
 ## 5. Главный UX-контракт
@@ -170,9 +169,10 @@ Invite живет 24 часа.
 
 Показывает:
 
-- текущий уровень
-- прогресс до следующего уровня
-- статистику exp
+- текущий уровень семьи
+- прогресс до следующего уровня семьи
+- статистику семейного exp
+- личный баланс `house-coin`
 - состав семьи
 - invite-код
 - семейные действия
@@ -193,10 +193,11 @@ onboarding с двумя действиями:
 
 - title
 - note
-- priority
 - deadline
 - статус
 - автора
+- адресата
+- кастомную награду в `house-coin`
 - закрывшего участника
 
 ### Месячный рейтинг
@@ -213,12 +214,19 @@ onboarding с двумя действиями:
 
 Их нельзя смешивать.
 
-Рейтинг сейчас считается на клиенте на основе `monthlyCompletedTasks`, который приходит из
-`/api/bootstrap`.
+Рейтинг считается из серверной месячной статистики и учитывает:
+
+- накопленные `house-coin`
+- количество выполненных задач
+
+Совместное закрытие (`complete-together`) означает участие всей семьи:
+
+- задача засчитывается всем активным участникам
+- награда делится поровну между всеми активными участниками
 
 ### Профиль и уровни
 
-Профиль участника считается на сервере.
+Профиль считается на сервере. Уровень общий для всей семьи, баланс `house-coin` индивидуальный.
 
 Правила exp:
 
@@ -232,11 +240,7 @@ onboarding с двумя действиями:
 - `lvl 2 = 250 exp`
 - дальше шкала продолжается возрастающими порогами
 
-За каждый уровень участник получает:
-
-- `+100` бонусных баллов к постоянному бонусному балансу
-
-Баланс и уровень сохраняются в `Member`.
+Баланс `house-coin` считается только по транзакциям участника и не получает автоматических level-бонусов.
 
 ## 7. Файлы, которые важно знать
 
@@ -250,7 +254,7 @@ onboarding с двумя действиями:
 - [entities/household/server/household.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/household/server/household.ts)
   Invite-коды, household summary, лимиты семьи.
 - [entities/profile/server/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/profile/server/household-profile.ts)
-  Серверный профиль участника.
+  Серверный профиль: семейный exp / level и личный баланс `house-coin`.
 - [entities/profile/lib/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/profile/lib/household-profile.ts)
   Формулы exp/level.
 - [entities/monthly-rating/lib/monthly-rating.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/monthly-rating/lib/monthly-rating.ts)
@@ -300,8 +304,8 @@ onboarding с двумя действиями:
 - `currentUserProfile`
 - `household`
 - `bonusPurchases`
-- `monthlyReports`
 - `activeShoppingItems`
+- `purchasedShoppingItems`
 
 ### `POST /api/household/create`
 
@@ -344,7 +348,7 @@ onboarding с двумя действиями:
 
 ### `POST /api/tasks`
 
-Создает задачу.
+Создает задачу. Поддерживает адресата, кастомную награду и дедлайн только в пределах текущего месяца.
 
 ### `PATCH /api/tasks/[taskId]`
 
@@ -354,6 +358,8 @@ onboarding с двумя действиями:
 - `complete-together`
 - `reopen`
 - `replace`
+
+Тоже поддерживает адресата, кастомную награду и обновление дедлайна в рамках текущего месяца.
 
 ### `DELETE /api/tasks/[taskId]`
 

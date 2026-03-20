@@ -104,7 +104,6 @@ export async function GET(request: Request) {
       householdGoalState,
       familyGoal,
       bonusPurchases,
-      monthlyReports,
       household,
     ] = await Promise.all([
       prisma.householdTask.findMany({
@@ -166,11 +165,6 @@ export async function GET(request: Request) {
         orderBy: [{ createdAt: 'desc' }],
         take: 50,
       }),
-      prisma.monthlyReport.findMany({
-        where: { householdId: auth.member.householdId },
-        orderBy: [{ createdAt: 'desc' }],
-        take: 6,
-      }),
       getHouseholdSummary(prisma, auth.member.householdId, auth.member.id),
     ])
 
@@ -209,7 +203,6 @@ export async function GET(request: Request) {
           }
         : null,
       bonusPurchases,
-      monthlyReports,
       activeShoppingItems,
       purchasedShoppingItems,
     })

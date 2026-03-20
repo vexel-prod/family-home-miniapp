@@ -86,10 +86,11 @@ export function TaskJournalModal({
                             createdAt: new Date(task.createdAt),
                             completedAt: new Date(task.completedAt ?? task.createdAt),
                             completedByName: task.completedByName,
+                            rewardUnits: task.rewardUnits,
                             participantCount,
                           }),
                         )}{' '}
-                        балла
+                        house-coin
                       </div>
                       <div className='text-xs text-white/45'>
                         Закрыл(а) {task.completedByName ?? 'неизвестно'} •{' '}

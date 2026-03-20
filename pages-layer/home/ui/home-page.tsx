@@ -45,7 +45,6 @@ import type {
   HouseholdTask,
   MonthlyLeaderboardEntry,
   ModalKey,
-  MonthlyReport,
   ShoppingItem,
   TelegramUser,
   TelegramWindow,
@@ -90,88 +89,52 @@ function getApiErrorMessage(payload: ApiErrorPayload | null, fallbackMessage: st
   return fallbackMessage
 }
 
-function toDeadlineParts(value?: string | null) {
+function toDateTimeLocalValue(value?: string | Date | null) {
   if (!value) {
-    return { day: '', time: '' }
+    return ''
   }
 
   const date = new Date(value)
 
   if (Number.isNaN(date.getTime())) {
-    return { day: '', time: '' }
+    return ''
   }
 
+  const timezoneOffsetMs = date.getTimezoneOffset() * 60 * 1000
+  return new Date(date.getTime() - timezoneOffsetMs).toISOString().slice(0, 16)
+}
+
+function getDefaultTaskDeadlineValue() {
   const now = new Date()
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const tomorrowStart = new Date(todayStart)
-  tomorrowStart.setDate(todayStart.getDate() + 1)
-  const dayAfterTomorrowStart = new Date(todayStart)
-  dayAfterTomorrowStart.setDate(todayStart.getDate() + 2)
+  const next = new Date(now)
+  next.setMinutes(0, 0, 0)
+  next.setHours(next.getHours() + 2)
 
-  let day = ''
+  const monthLimit = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 0, 0, 0)
 
-  if (date >= todayStart && date < tomorrowStart) {
-    day = 'today'
-  } else if (date >= tomorrowStart && date < dayAfterTomorrowStart) {
-    day = 'tomorrow'
+  if (next.getTime() > monthLimit.getTime()) {
+    return toDateTimeLocalValue(monthLimit)
   }
 
-  return {
-    day,
-    time: `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
-  }
+  return toDateTimeLocalValue(next)
 }
 
-function normalizeDeadlineTime(value: string) {
-  const digits = value.replace(/\D/g, '').slice(0, 4)
-
-  if (digits.length <= 2) {
-    return digits
+function buildDeadlineIso(value: string) {
+  if (!value) {
+    return ''
   }
 
-  return `${digits.slice(0, 2)}:${digits.slice(2)}`
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
+
+  return date.toISOString()
 }
 
-function buildDeadlineIso(day: string, time: string) {
-  if (!day || !time) {
-    return ''
-  }
-
-  const match = time.match(/^(\d{2}):(\d{2})$/)
-
-  if (!match) {
-    return ''
-  }
-
-  const hours = Number(match[1])
-  const minutes = Number(match[2])
-
-  if (
-    Number.isNaN(hours) ||
-    Number.isNaN(minutes) ||
-    hours < 0 ||
-    hours > 23 ||
-    minutes < 0 ||
-    minutes > 59
-  ) {
-    return ''
-  }
-
-  const nextValue = new Date()
-  nextValue.setSeconds(0, 0)
-  nextValue.setHours(hours, minutes, 0, 0)
-
-  if (day === 'tomorrow') {
-    nextValue.setDate(nextValue.getDate() + 1)
-  } else if (day !== 'today') {
-    return ''
-  }
-
-  if (Number.isNaN(nextValue.getTime())) {
-    return ''
-  }
-
-  return nextValue.toISOString()
+function normalizePointsInput(value: string) {
+  return value.replace(/\D/g, '').slice(0, 4)
 }
 
 const FALLBACK_HOUSEHOLD_SUMMARY: HouseholdSummary = {
@@ -232,27 +195,27 @@ export function HomePage({ version }: HomePageProps) {
     completedTasksCount: 0,
     fastTasksCount: 0,
     overdueTasksCount: 0,
-    levelBonusUnits: 0,
     recentEvents: [],
   })
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
-  const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [purchasedShoppingItems, setPurchasedShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
   const [taskTitle, setTaskTitle] = useState('')
   const [taskNote, setTaskNote] = useState('')
-  const [taskDeadlineDay, setTaskDeadlineDay] = useState('')
-  const [taskDeadlineTime, setTaskDeadlineTime] = useState('')
+  const [taskDeadlineAt, setTaskDeadlineAt] = useState('')
+  const [taskAssigneeMemberId, setTaskAssigneeMemberId] = useState('')
+  const [taskRewardPoints, setTaskRewardPoints] = useState('')
   const [productTitle, setProductTitle] = useState('')
   const [productQuantity, setProductQuantity] = useState('')
   const [productNote, setProductNote] = useState('')
   const [productUrgency, setProductUrgency] = useState<'soon' | 'out' | 'without'>('soon')
   const [replaceTaskTitle, setReplaceTaskTitle] = useState('')
   const [replaceTaskNote, setReplaceTaskNote] = useState('')
-  const [replaceTaskDeadlineDay, setReplaceTaskDeadlineDay] = useState('')
-  const [replaceTaskDeadlineTime, setReplaceTaskDeadlineTime] = useState('')
+  const [replaceTaskDeadlineAt, setReplaceTaskDeadlineAt] = useState('')
+  const [replaceTaskAssigneeMemberId, setReplaceTaskAssigneeMemberId] = useState('')
+  const [replaceTaskRewardPoints, setReplaceTaskRewardPoints] = useState('')
   const [replaceTitle, setReplaceTitle] = useState('')
   const [replaceQuantity, setReplaceQuantity] = useState('')
   const [replaceNote, setReplaceNote] = useState('')
@@ -397,8 +360,11 @@ export function HomePage({ version }: HomePageProps) {
     }
 
     setTaskCreateStatus('')
-    setTaskDeadlineDay('')
-    setTaskDeadlineTime('')
+    setTaskTitle('')
+    setTaskNote('')
+    setTaskDeadlineAt(getDefaultTaskDeadlineValue())
+    setTaskAssigneeMemberId('')
+    setTaskRewardPoints('')
     setModal('task-create')
   }
 
@@ -458,9 +424,9 @@ export function HomePage({ version }: HomePageProps) {
 
     setReplaceTaskTitle(selectedTask.title)
     setReplaceTaskNote(selectedTask.note ?? '')
-    const deadlineParts = toDeadlineParts(selectedTask.deadlineAt)
-    setReplaceTaskDeadlineDay(deadlineParts.day)
-    setReplaceTaskDeadlineTime(deadlineParts.time)
+    setReplaceTaskDeadlineAt(toDateTimeLocalValue(selectedTask.deadlineAt))
+    setReplaceTaskAssigneeMemberId(selectedTask.assignedMemberId ?? '')
+    setReplaceTaskRewardPoints(selectedTask.rewardUnits ? formatPoints(selectedTask.rewardUnits) : '')
     setModal('task-replace')
   }
 
@@ -470,10 +436,14 @@ export function HomePage({ version }: HomePageProps) {
     setSelectedTask(null)
     setReplaceTaskTitle('')
     setReplaceTaskNote('')
-    setReplaceTaskDeadlineDay('')
-    setReplaceTaskDeadlineTime('')
-    setTaskDeadlineDay('')
-    setTaskDeadlineTime('')
+    setReplaceTaskDeadlineAt('')
+    setReplaceTaskAssigneeMemberId('')
+    setReplaceTaskRewardPoints('')
+    setTaskDeadlineAt('')
+    setTaskAssigneeMemberId('')
+    setTaskRewardPoints('')
+    setTaskTitle('')
+    setTaskNote('')
     setTaskCreateStatus('')
   }
 
@@ -538,11 +508,9 @@ export function HomePage({ version }: HomePageProps) {
             completedTasksCount: 0,
             fastTasksCount: 0,
             overdueTasksCount: 0,
-            levelBonusUnits: 0,
             recentEvents: [],
           })
           setBonusPurchases([])
-          setMonthlyReports([])
           setShoppingItems([])
           setPurchasedShoppingItems([])
           setRewardTitle('')
@@ -572,7 +540,6 @@ export function HomePage({ version }: HomePageProps) {
         setCustomInviteCode(payload.household.activeInvite?.code ?? '')
         setCurrentUserProfile(payload.currentUserProfile)
         setBonusPurchases(payload.bonusPurchases)
-        setMonthlyReports(payload.monthlyReports)
         setShoppingItems(payload.activeShoppingItems)
         setPurchasedShoppingItems(payload.purchasedShoppingItems)
         setGoalKind(payload.familyGoal?.kind ?? 'spiritual')
@@ -750,7 +717,7 @@ export function HomePage({ version }: HomePageProps) {
 
   async function addTask() {
     const title = taskTitle.trim()
-    const deadlineAt = buildDeadlineIso(taskDeadlineDay, taskDeadlineTime)
+    const deadlineAt = buildDeadlineIso(taskDeadlineAt)
 
     if (!title) {
       setError('Впиши, какое действие нужно сделать по дому.')
@@ -759,7 +726,7 @@ export function HomePage({ version }: HomePageProps) {
     }
 
     if (!deadlineAt) {
-      setError('Укажи дедлайн задачи в пределах ближайших 24 часов.')
+      setError('Укажи дедлайн задачи в пределах текущего месяца.')
       setTaskCreateStatus('Ошибка: укажи дедлайн.')
       return
     }
@@ -776,6 +743,8 @@ export function HomePage({ version }: HomePageProps) {
           title,
           note: taskNote,
           deadlineAt,
+          assignedMemberId: taskAssigneeMemberId || null,
+          rewardPoints: taskRewardPoints ? Number(taskRewardPoints) : null,
         }),
       })
 
@@ -792,8 +761,9 @@ export function HomePage({ version }: HomePageProps) {
 
       setTaskTitle('')
       setTaskNote('')
-      setTaskDeadlineDay('')
-      setTaskDeadlineTime('')
+      setTaskDeadlineAt('')
+      setTaskAssigneeMemberId('')
+      setTaskRewardPoints('')
       setTaskCreateStatus(`Добавлено: ${title}`)
       setModal('household')
       setToast(`Задача добавлена: ${title}`)
@@ -952,7 +922,7 @@ export function HomePage({ version }: HomePageProps) {
     }
 
     const title = replaceTaskTitle.trim()
-    const deadlineAt = buildDeadlineIso(replaceTaskDeadlineDay, replaceTaskDeadlineTime)
+    const deadlineAt = buildDeadlineIso(replaceTaskDeadlineAt)
 
     if (!title) {
       setError('Впиши новое название задачи.')
@@ -976,6 +946,8 @@ export function HomePage({ version }: HomePageProps) {
           title,
           note: replaceTaskNote,
           deadlineAt,
+          assignedMemberId: replaceTaskAssigneeMemberId || null,
+          rewardPoints: replaceTaskRewardPoints ? Number(replaceTaskRewardPoints) : null,
         }),
       })
 
@@ -1710,16 +1682,19 @@ export function HomePage({ version }: HomePageProps) {
               mode='create'
               title={taskTitle}
               note={taskNote}
-              deadlineDay={taskDeadlineDay}
-              deadlineTime={taskDeadlineTime}
+              deadlineAt={taskDeadlineAt}
+              assigneeMemberId={taskAssigneeMemberId}
+              rewardPoints={taskRewardPoints}
               status={taskCreateStatus}
               loading={busyKey === 'create-task' || loading}
               submitLabel='Добавить задачу'
               busyLabel='Добавляю...'
+              members={household?.members ?? []}
               onTitleChange={setTaskTitle}
               onNoteChange={setTaskNote}
-              onDeadlineDayChange={setTaskDeadlineDay}
-              onDeadlineTimeChange={value => setTaskDeadlineTime(normalizeDeadlineTime(value))}
+              onDeadlineAtChange={setTaskDeadlineAt}
+              onAssigneeMemberIdChange={setTaskAssigneeMemberId}
+              onRewardPointsChange={value => setTaskRewardPoints(normalizePointsInput(value))}
               onSubmit={() => void addTask()}
               onBack={() => setModal('household')}
             />
@@ -1742,18 +1717,19 @@ export function HomePage({ version }: HomePageProps) {
               mode='replace'
               title={replaceTaskTitle}
               note={replaceTaskNote}
-              deadlineDay={replaceTaskDeadlineDay}
-              deadlineTime={replaceTaskDeadlineTime}
+              deadlineAt={replaceTaskDeadlineAt}
+              assigneeMemberId={replaceTaskAssigneeMemberId}
+              rewardPoints={replaceTaskRewardPoints}
               status=''
               loading={busyKey === `replace-task-${selectedTask.id}`}
               submitLabel='Сохранить изменения'
               busyLabel='Сохраняю...'
+              members={household?.members ?? []}
               onTitleChange={setReplaceTaskTitle}
               onNoteChange={setReplaceTaskNote}
-              onDeadlineDayChange={setReplaceTaskDeadlineDay}
-              onDeadlineTimeChange={value =>
-                setReplaceTaskDeadlineTime(normalizeDeadlineTime(value))
-              }
+              onDeadlineAtChange={setReplaceTaskDeadlineAt}
+              onAssigneeMemberIdChange={setReplaceTaskAssigneeMemberId}
+              onRewardPointsChange={value => setReplaceTaskRewardPoints(normalizePointsInput(value))}
               onSubmit={() => void replaceTask()}
               onBack={() => setModal('task-actions')}
             />
@@ -1788,7 +1764,6 @@ export function HomePage({ version }: HomePageProps) {
               balanceUnits={currentUserBonusBalanceUnits}
               rewards={bonusRewards}
               purchases={bonusPurchases}
-              reports={monthlyReports}
               busyRewardKey={
                 busyKey?.startsWith('buy-reward-') ? busyKey.replace('buy-reward-', '') : null
               }
@@ -1918,7 +1893,7 @@ export function HomePage({ version }: HomePageProps) {
         </ModalOverlay>
       ) : null}
 
-      <div className='mx-auto flex min-h-screen w-full max-w-(--page-max-width) flex-col justify-center items-center gap-4'>
+      <div className='mx-auto flex min-h-screen w-full max-w-(--page-max-width) flex-col items-center justify-center gap-4'>
         <DashboardHero actorName={getActorName(buyer)} />
 
         <JournalSummary
@@ -1938,12 +1913,13 @@ export function HomePage({ version }: HomePageProps) {
           shoppingItemsCount={shoppingItems.length}
         />
 
-        <div className='text-center'>
-          <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md'>
-            <span>Household</span>
-            <span className='h-1 w-1 rounded-full bg-green-500/70 animate-pulse' />
-            <span>v{version}</span>
-          </div>
+      </div>
+
+      <div className='pointer-events-none absolute inset-x-0 bottom-4 flex justify-center px-4'>
+        <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md'>
+          <span>Household</span>
+          <span className='h-1 w-1 animate-pulse rounded-full bg-green-500/70' />
+          <span>v{version}</span>
         </div>
       </div>
     </main>

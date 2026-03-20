@@ -5,8 +5,8 @@ import { useState } from 'react'
 import { AppButton } from '@shared/ui/app-button'
 import { ModalPanel } from '@shared/ui/app-modal'
 import { TextInput } from '@shared/ui/form-field'
+import { formatPoints } from '@entities/bonus'
 import { formatRelativeDate } from '@entities/family'
-import { PROFILE_LEVEL_BONUS_POINTS } from '@entities/profile/lib/household-profile'
 import type { FamilyGoal, HouseholdProfile, HouseholdSummary } from '@entities/family'
 
 type ProfileTab = 'progress' | 'family' | 'goal' | 'history'
@@ -88,8 +88,11 @@ export function HouseholdProfileModal({
         <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
           <div>
             <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
-              {actorName} LVL {profile.currentLevel}
+              {household.name} LVL {profile.currentLevel}
             </h2>
+            <div className='mt-2 text-sm text-white/55'>
+              Баланс участника: {actorName}
+            </div>
           </div>
         </div>
 
@@ -118,7 +121,7 @@ export function HouseholdProfileModal({
               <div className='flex items-end justify-between gap-4'>
                 <div>
                   <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
-                    Прогресс уровня
+                    Общий уровень семьи
                   </div>
                   <div className='mt-3 text-3xl font-semibold text-white'>
                     {profile.totalExp} / {profile.nextLevelThreshold} exp
@@ -136,6 +139,8 @@ export function HouseholdProfileModal({
                 />
               </div>
               <div className='mt-2 rounded-md border border-white/10 bg-white/6 px-4 py-4 text-xs text-white/70'>
+                exp начисляется в общий уровень семьи
+                <br />
                 обычная задача +10 exp
                 <br />
                 быстрая +15 exp
@@ -147,10 +152,10 @@ export function HouseholdProfileModal({
             <div className='grid gap-3 sm:grid-cols-2'>
               <div className='rounded-md border border-white/10 bg-white/6 p-4'>
                 <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
-                  Бонус от уровней
+                  Твой баланс
                 </div>
                 <div className='mt-2 text-2xl font-semibold text-white'>
-                  {profile.currentLevel * PROFILE_LEVEL_BONUS_POINTS}
+                  {formatPoints(profile.bonusBalanceUnits)} HC
                 </div>
               </div>
               <div className='rounded-md border border-white/10 bg-white/6 p-4'>
@@ -401,7 +406,7 @@ export function HouseholdProfileModal({
               </div>
             ) : (
               <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-                Как только появятся выполненные задачи, здесь начнет копиться опыт.
+                Как только появятся выполненные задачи, здесь появится история семейного прогресса.
               </div>
             )}
           </>

@@ -55,17 +55,22 @@ export function getDisplayedTaskRewardUnits({
   createdAt,
   completedAt,
   completedByName,
+  rewardUnits,
   participantCount,
 }: {
   createdAt: Date
   completedAt: Date
   completedByName?: string | null
+  rewardUnits?: number | null
   participantCount?: number
 }) {
-  const awardUnits = getTaskAwardUnits({
-    createdAt,
-    completedAt,
-  })
+  const awardUnits =
+    typeof rewardUnits === 'number' && rewardUnits > 0
+      ? rewardUnits
+      : getTaskAwardUnits({
+          createdAt,
+          completedAt,
+        })
 
   if (completedByName === 'Сделано вместе' && participantCount && participantCount > 0) {
     return awardUnits / participantCount

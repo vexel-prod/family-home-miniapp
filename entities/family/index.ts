@@ -9,7 +9,6 @@ export type {
   HouseholdTask,
   ModalKey,
   MonthlyLeaderboardEntry,
-  MonthlyReport,
   ShoppingItem,
   TelegramWebApp,
   TelegramUser,

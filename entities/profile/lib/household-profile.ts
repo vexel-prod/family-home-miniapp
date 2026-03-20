@@ -1,9 +1,8 @@
-import { FAST_COMPLETION_WINDOW_MS, POINT_UNITS } from '@entities/bonus'
+import { FAST_COMPLETION_WINDOW_MS } from '@entities/bonus'
 
 export const PROFILE_BASE_EXP = 10
 export const PROFILE_FAST_EXP_MULTIPLIER = 1.5
 export const PROFILE_OVERDUE_EXP_MULTIPLIER = 1.5
-export const PROFILE_LEVEL_BONUS_POINTS = 100
 
 export type ProfileTaskExpVariant = 'base' | 'fast' | 'overdue'
 
@@ -71,8 +70,4 @@ export function getCurrentLevel(totalExp: number) {
   }
 
   return level
-}
-
-export function getLevelBonusUnits(level: number) {
-  return level * PROFILE_LEVEL_BONUS_POINTS * POINT_UNITS
 }

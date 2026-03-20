@@ -29,11 +29,21 @@ export type AggregateHousehold = {
 export type HouseholdAvgAggregateOutputType = {
   revision: number | null
   sharedGoalUnits: number | null
+  experiencePoints: number | null
+  level: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
 }
 
 export type HouseholdSumAggregateOutputType = {
   revision: number | null
   sharedGoalUnits: number | null
+  experiencePoints: number | null
+  level: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
 }
 
 export type HouseholdMinAggregateOutputType = {
@@ -41,6 +51,11 @@ export type HouseholdMinAggregateOutputType = {
   name: string | null
   revision: number | null
   sharedGoalUnits: number | null
+  experiencePoints: number | null
+  level: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +65,11 @@ export type HouseholdMaxAggregateOutputType = {
   name: string | null
   revision: number | null
   sharedGoalUnits: number | null
+  experiencePoints: number | null
+  level: number | null
+  completedTasksCount: number | null
+  fastTasksCount: number | null
+  overdueTasksCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +79,11 @@ export type HouseholdCountAggregateOutputType = {
   name: number
   revision: number
   sharedGoalUnits: number
+  experiencePoints: number
+  level: number
+  completedTasksCount: number
+  fastTasksCount: number
+  overdueTasksCount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -68,11 +93,21 @@ export type HouseholdCountAggregateOutputType = {
 export type HouseholdAvgAggregateInputType = {
   revision?: true
   sharedGoalUnits?: true
+  experiencePoints?: true
+  level?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
 }
 
 export type HouseholdSumAggregateInputType = {
   revision?: true
   sharedGoalUnits?: true
+  experiencePoints?: true
+  level?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
 }
 
 export type HouseholdMinAggregateInputType = {
@@ -80,6 +115,11 @@ export type HouseholdMinAggregateInputType = {
   name?: true
   revision?: true
   sharedGoalUnits?: true
+  experiencePoints?: true
+  level?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -89,6 +129,11 @@ export type HouseholdMaxAggregateInputType = {
   name?: true
   revision?: true
   sharedGoalUnits?: true
+  experiencePoints?: true
+  level?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -98,6 +143,11 @@ export type HouseholdCountAggregateInputType = {
   name?: true
   revision?: true
   sharedGoalUnits?: true
+  experiencePoints?: true
+  level?: true
+  completedTasksCount?: true
+  fastTasksCount?: true
+  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -194,6 +244,11 @@ export type HouseholdGroupByOutputType = {
   name: string
   revision: number
   sharedGoalUnits: number
+  experiencePoints: number
+  level: number
+  completedTasksCount: number
+  fastTasksCount: number
+  overdueTasksCount: number
   createdAt: Date
   updatedAt: Date
   _count: HouseholdCountAggregateOutputType | null
@@ -226,6 +281,11 @@ export type HouseholdWhereInput = {
   name?: Prisma.StringFilter<"Household"> | string
   revision?: Prisma.IntFilter<"Household"> | number
   sharedGoalUnits?: Prisma.IntFilter<"Household"> | number
+  experiencePoints?: Prisma.IntFilter<"Household"> | number
+  level?: Prisma.IntFilter<"Household"> | number
+  completedTasksCount?: Prisma.IntFilter<"Household"> | number
+  fastTasksCount?: Prisma.IntFilter<"Household"> | number
+  overdueTasksCount?: Prisma.IntFilter<"Household"> | number
   createdAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   members?: Prisma.MemberListRelationFilter
@@ -244,6 +304,11 @@ export type HouseholdOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   members?: Prisma.MemberOrderByRelationAggregateInput
@@ -265,6 +330,11 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Household"> | string
   revision?: Prisma.IntFilter<"Household"> | number
   sharedGoalUnits?: Prisma.IntFilter<"Household"> | number
+  experiencePoints?: Prisma.IntFilter<"Household"> | number
+  level?: Prisma.IntFilter<"Household"> | number
+  completedTasksCount?: Prisma.IntFilter<"Household"> | number
+  fastTasksCount?: Prisma.IntFilter<"Household"> | number
+  overdueTasksCount?: Prisma.IntFilter<"Household"> | number
   createdAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Household"> | Date | string
   members?: Prisma.MemberListRelationFilter
@@ -283,6 +353,11 @@ export type HouseholdOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HouseholdCountOrderByAggregateInput
@@ -300,6 +375,11 @@ export type HouseholdScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Household"> | string
   revision?: Prisma.IntWithAggregatesFilter<"Household"> | number
   sharedGoalUnits?: Prisma.IntWithAggregatesFilter<"Household"> | number
+  experiencePoints?: Prisma.IntWithAggregatesFilter<"Household"> | number
+  level?: Prisma.IntWithAggregatesFilter<"Household"> | number
+  completedTasksCount?: Prisma.IntWithAggregatesFilter<"Household"> | number
+  fastTasksCount?: Prisma.IntWithAggregatesFilter<"Household"> | number
+  overdueTasksCount?: Prisma.IntWithAggregatesFilter<"Household"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Household"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Household"> | Date | string
 }
@@ -309,6 +389,11 @@ export type HouseholdCreateInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -327,6 +412,11 @@ export type HouseholdUncheckedCreateInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -345,6 +435,11 @@ export type HouseholdUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -363,6 +458,11 @@ export type HouseholdUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -381,6 +481,11 @@ export type HouseholdCreateManyInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -390,6 +495,11 @@ export type HouseholdUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,6 +509,11 @@ export type HouseholdUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,6 +523,11 @@ export type HouseholdCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -415,6 +535,11 @@ export type HouseholdCountOrderByAggregateInput = {
 export type HouseholdAvgOrderByAggregateInput = {
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
 }
 
 export type HouseholdMaxOrderByAggregateInput = {
@@ -422,6 +547,11 @@ export type HouseholdMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -431,6 +561,11 @@ export type HouseholdMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -438,6 +573,11 @@ export type HouseholdMinOrderByAggregateInput = {
 export type HouseholdSumOrderByAggregateInput = {
   revision?: Prisma.SortOrder
   sharedGoalUnits?: Prisma.SortOrder
+  experiencePoints?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  completedTasksCount?: Prisma.SortOrder
+  fastTasksCount?: Prisma.SortOrder
+  overdueTasksCount?: Prisma.SortOrder
 }
 
 export type HouseholdScalarRelationFilter = {
@@ -592,6 +732,11 @@ export type HouseholdCreateWithoutMembersInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
@@ -609,6 +754,11 @@ export type HouseholdUncheckedCreateWithoutMembersInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
@@ -642,6 +792,11 @@ export type HouseholdUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
@@ -659,6 +814,11 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -676,6 +836,11 @@ export type HouseholdCreateWithoutTasksInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -693,6 +858,11 @@ export type HouseholdUncheckedCreateWithoutTasksInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -726,6 +896,11 @@ export type HouseholdUpdateWithoutTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -743,6 +918,11 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -760,6 +940,11 @@ export type HouseholdCreateWithoutShoppingItemsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -777,6 +962,11 @@ export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -810,6 +1000,11 @@ export type HouseholdUpdateWithoutShoppingItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -827,6 +1022,11 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -844,6 +1044,11 @@ export type HouseholdCreateWithoutBonusTransactionsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -861,6 +1066,11 @@ export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -894,6 +1104,11 @@ export type HouseholdUpdateWithoutBonusTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -911,6 +1126,11 @@ export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -928,6 +1148,11 @@ export type HouseholdCreateWithoutBonusPurchasesInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -945,6 +1170,11 @@ export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -978,6 +1208,11 @@ export type HouseholdUpdateWithoutBonusPurchasesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -995,6 +1230,11 @@ export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1012,6 +1252,11 @@ export type HouseholdCreateWithoutBonusRewardsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -1029,6 +1274,11 @@ export type HouseholdUncheckedCreateWithoutBonusRewardsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -1062,6 +1312,11 @@ export type HouseholdUpdateWithoutBonusRewardsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -1079,6 +1334,11 @@ export type HouseholdUncheckedUpdateWithoutBonusRewardsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1096,6 +1356,11 @@ export type HouseholdCreateWithoutFamilyGoalsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -1113,6 +1378,11 @@ export type HouseholdUncheckedCreateWithoutFamilyGoalsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -1146,6 +1416,11 @@ export type HouseholdUpdateWithoutFamilyGoalsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -1163,6 +1438,11 @@ export type HouseholdUncheckedUpdateWithoutFamilyGoalsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1180,6 +1460,11 @@ export type HouseholdCreateWithoutInvitesInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -1197,6 +1482,11 @@ export type HouseholdUncheckedCreateWithoutInvitesInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -1230,6 +1520,11 @@ export type HouseholdUpdateWithoutInvitesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -1247,6 +1542,11 @@ export type HouseholdUncheckedUpdateWithoutInvitesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1264,6 +1564,11 @@ export type HouseholdCreateWithoutMonthlyReportsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
@@ -1281,6 +1586,11 @@ export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
   name: string
   revision?: number
   sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
@@ -1314,6 +1624,11 @@ export type HouseholdUpdateWithoutMonthlyReportsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
@@ -1331,6 +1646,11 @@ export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   revision?: Prisma.IntFieldUpdateOperationsInput | number
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1451,6 +1771,11 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   name?: boolean
   revision?: boolean
   sharedGoalUnits?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
@@ -1470,6 +1795,11 @@ export type HouseholdSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   name?: boolean
   revision?: boolean
   sharedGoalUnits?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["household"]>
@@ -1479,6 +1809,11 @@ export type HouseholdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   name?: boolean
   revision?: boolean
   sharedGoalUnits?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["household"]>
@@ -1488,11 +1823,16 @@ export type HouseholdSelectScalar = {
   name?: boolean
   revision?: boolean
   sharedGoalUnits?: boolean
+  experiencePoints?: boolean
+  level?: boolean
+  completedTasksCount?: boolean
+  fastTasksCount?: boolean
+  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "revision" | "sharedGoalUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
+export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "revision" | "sharedGoalUnits" | "experiencePoints" | "level" | "completedTasksCount" | "fastTasksCount" | "overdueTasksCount" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
 export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
   invites?: boolean | Prisma.Household$invitesArgs<ExtArgs>
@@ -1526,6 +1866,11 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     name: string
     revision: number
     sharedGoalUnits: number
+    experiencePoints: number
+    level: number
+    completedTasksCount: number
+    fastTasksCount: number
+    overdueTasksCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["household"]>
@@ -1964,6 +2309,11 @@ export interface HouseholdFieldRefs {
   readonly name: Prisma.FieldRef<"Household", 'String'>
   readonly revision: Prisma.FieldRef<"Household", 'Int'>
   readonly sharedGoalUnits: Prisma.FieldRef<"Household", 'Int'>
+  readonly experiencePoints: Prisma.FieldRef<"Household", 'Int'>
+  readonly level: Prisma.FieldRef<"Household", 'Int'>
+  readonly completedTasksCount: Prisma.FieldRef<"Household", 'Int'>
+  readonly fastTasksCount: Prisma.FieldRef<"Household", 'Int'>
+  readonly overdueTasksCount: Prisma.FieldRef<"Household", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Household", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Household", 'DateTime'>
 }

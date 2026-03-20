@@ -1,6 +1,7 @@
 import { AppButton } from '@shared/ui/app-button'
 import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { StatusPill } from '@shared/ui/status-pill'
+import { formatPoints } from '@entities/bonus'
 import { formatRelativeDate } from '@entities/family'
 import type { HouseholdTask } from '@entities/family'
 
@@ -39,6 +40,13 @@ export function TaskActionsModal({
             {deadlineAlertActive ? 'Срок уже горит' : 'В работе'}
           </StatusPill>
           {task.note ? <div className='text-sm leading-6 text-white/65'>{task.note}</div> : null}
+          {task.assignedMemberName ? (
+            <div className='text-sm text-white/65'>Адресат: {task.assignedMemberName}</div>
+          ) : null}
+          <div className='text-sm text-white/65'>
+            Награда:{' '}
+            {task.rewardUnits ? `${formatPoints(task.rewardUnits)} house-coin` : 'базовая'}
+          </div>
           <div className='text-sm text-white/65'>Дедлайн: {formatRelativeDate(task.deadlineAt)}</div>
           <div className='text-sm text-white/60'>Выбери действие для этой задачи.</div>
         </div>

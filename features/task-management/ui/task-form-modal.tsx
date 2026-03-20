@@ -7,16 +7,22 @@ type TaskFormModalProps = {
   mode: 'create' | 'replace'
   title: string
   note: string
-  deadlineDay: string
-  deadlineTime: string
+  deadlineAt: string
+  assigneeMemberId: string
+  rewardPoints: string
   status: string
   loading: boolean
   submitLabel: string
   busyLabel: string
+  members: Array<{
+    id: string
+    displayName: string
+  }>
   onTitleChange: (value: string) => void
   onNoteChange: (value: string) => void
-  onDeadlineDayChange: (value: string) => void
-  onDeadlineTimeChange: (value: string) => void
+  onDeadlineAtChange: (value: string) => void
+  onAssigneeMemberIdChange: (value: string) => void
+  onRewardPointsChange: (value: string) => void
   onSubmit: () => void
   onBack: () => void
 }
@@ -25,16 +31,19 @@ export function TaskFormModal({
   mode,
   title,
   note,
-  deadlineDay,
-  deadlineTime,
+  deadlineAt,
+  assigneeMemberId,
+  rewardPoints,
   status,
   loading,
   submitLabel,
   busyLabel,
+  members,
   onTitleChange,
   onNoteChange,
-  onDeadlineDayChange,
-  onDeadlineTimeChange,
+  onDeadlineAtChange,
+  onAssigneeMemberIdChange,
+  onRewardPointsChange,
   onSubmit,
   onBack,
 }: TaskFormModalProps) {
@@ -43,7 +52,7 @@ export function TaskFormModal({
       <ModalHeader>
         <div className='space-y-2'>
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
-            {mode === 'create' ? 'Новая задача' : 'Вносим изменения'}
+            {mode === 'create' ? 'Новая задача' : 'Редактирование задачи'}
           </h2>
         </div>
       </ModalHeader>
@@ -60,35 +69,45 @@ export function TaskFormModal({
 
           <div className='space-y-2'>
             <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Сделать до</div>
-            <div className='grid gap-3 sm:grid-cols-[minmax(0,1fr)_10rem]'>
-              <div className='grid grid-cols-2 gap-3'>
-                {[
-                  { value: 'today', label: 'Сегодня' },
-                  { value: 'tomorrow', label: 'Завтра' },
-                ].map(option => (
-                  <button
-                    key={option.value}
-                    type='button'
-                    onClick={() => onDeadlineDayChange(option.value)}
-                    className={`text-center rounded-xl border px-4 py-4 text-base transition-colors duration-150 ${
-                      deadlineDay === option.value
-                        ? 'border-transparent bg-(--color-brand-home)/70 text-[#111827] shadow-(--shadow-card)'
-                        : 'border-white/10 bg-(--color-panel-field) text-(--color-panel-text) hover:border-white/20'
-                    }`}
-                  >
-                    {option.label}
-                  </button>
+            <TextInput
+              type='datetime-local'
+              value={deadlineAt}
+              onChange={event => onDeadlineAtChange(event.target.value)}
+            />
+            <div className='text-xs text-white/45'>
+              Дедлайн можно ставить только в пределах текущего месяца.
+            </div>
+          </div>
+
+          <div className='grid gap-4 sm:grid-cols-2'>
+            <label className='space-y-2'>
+              <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Адресат</div>
+              <select
+                value={assigneeMemberId}
+                onChange={event => onAssigneeMemberIdChange(event.target.value)}
+                className='w-full rounded-xl border border-white/10 bg-(--color-panel-field) px-4 py-4 text-base text-(--color-panel-text) outline-none transition-colors duration-150 hover:border-white/20 focus:border-white/30'
+              >
+                <option value=''>Без адресата</option>
+                {members.map(member => (
+                  <option key={member.id} value={member.id}>
+                    {member.displayName}
+                  </option>
                 ))}
+              </select>
+            </label>
+
+            <label className='space-y-2'>
+              <div className='text-xs uppercase tracking-[0.22em] text-white/45'>
+                Награда, house-coin
               </div>
               <TextInput
                 type='text'
                 inputMode='numeric'
-                placeholder='14:00'
-                maxLength={5}
-                value={deadlineTime}
-                onChange={event => onDeadlineTimeChange(event.target.value)}
+                placeholder='По умолчанию'
+                value={rewardPoints}
+                onChange={event => onRewardPointsChange(event.target.value)}
               />
-            </div>
+            </label>
           </div>
 
           <TextAreaField

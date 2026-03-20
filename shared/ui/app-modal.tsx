@@ -12,14 +12,14 @@ export function ModalOverlay({ children, className }: ModalProps) {
   return (
     <div
       className={[
-        'fixed inset-0 z-50 flex w-full items-center justify-center overflow-hidden overscroll-none bg-black/40 backdrop-blur-md',
+        'px-4 fixed inset-0 z-50 flex w-full items-center justify-center overflow-hidden overscroll-none bg-[radial-gradient(circle_at_top,rgba(20,36,52,0.22),rgba(5,6,10,0.78)_52%)] backdrop-blur-md',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
       style={{
-        paddingTop: 'max(10rem, env(safe-area-inset-top))',
-        paddingBottom: 'max(4rem, env(safe-area-inset-bottom))',
+        paddingTop: 'max(4.5rem, env(safe-area-inset-top))',
+        paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
       }}
     >
       {children}
@@ -29,7 +29,7 @@ export function ModalOverlay({ children, className }: ModalProps) {
 
 export function ModalPanel({ children, className }: ModalProps) {
   const classNames = [
-    'relative flex max-h-full w-full max-w-3xl flex-col overflow-hidden rounded-md border border-white/10 bg-(--color-panel) text-[var(--color-panel-text)] shadow-2xl',
+    'relative flex max-h-full w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(23,18,36,0.96)_0%,rgba(20,16,31,0.98)_100%)] text-[var(--color-panel-text)] shadow-[0_24px_80px_rgba(0,0,0,0.42)]',
     className,
   ]
 
@@ -48,7 +48,7 @@ export function ModalPanel({ children, className }: ModalProps) {
 export function ModalHeader({ children, className }: ModalProps) {
   return (
     <div
-      className={['flex-none border-b border-white/10 p-4 sm:p-6', className]
+      className={['flex-none border-b border-white/10 bg-white/[0.02] p-4 sm:p-6', className]
         .filter(Boolean)
         .join(' ')}
     >
@@ -72,7 +72,7 @@ export function ModalBody({ children, className }: ModalProps) {
 export function ModalFooter({ children, className }: ModalProps) {
   return (
     <div
-      className={['flex-none border-t border-white/10 bg-(--color-panel) p-4 sm:p-6', className]
+      className={['flex-none border-t border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] p-4 sm:p-6', className]
         .filter(Boolean)
         .join(' ')}
     >

@@ -6,7 +6,7 @@ import { syncHouseholdProfiles } from '@entities/profile/server/household-profil
 import { getMemberDisplayName, notifyHousehold } from '@entities/household/server/household-notify'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
-import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@entities/bonus'
+import { formatMoscowDeadlineLabel, formatPoints, POINT_UNITS } from '@entities/bonus'
 import {
   sanitizeOptionalText,
   TASK_NOTE_MAX_LENGTH,
@@ -25,6 +25,12 @@ type UpdateTaskPayload = {
   title?: string
   note?: string | null
   deadlineAt?: string
+  assignedMemberId?: string | null
+  rewardPoints?: number | null
+}
+
+function getCurrentMonthDeadlineLimit(now = new Date()) {
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
 }
 
 function parseDeadline(deadlineAt?: string) {
@@ -39,9 +45,9 @@ function parseDeadline(deadlineAt?: string) {
   }
 
   const now = new Date()
-  const diffMs = deadline.getTime() - now.getTime()
+  const monthLimit = getCurrentMonthDeadlineLimit(now)
 
-  if (diffMs <= 0 || diffMs > DEADLINE_LIMIT_MS) {
+  if (deadline.getTime() <= now.getTime() || deadline.getTime() > monthLimit.getTime()) {
     return null
   }
 
@@ -98,6 +104,10 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
   if (body.action === 'replace') {
     const title = validateRequiredText(body.title ?? null, TASK_TITLE_MAX_LENGTH)
     const note = sanitizeOptionalText(body.note)
+    const rewardPoints =
+      body.rewardPoints === null || body.rewardPoints === undefined
+        ? null
+        : Number(body.rewardPoints)
 
     if (!title) {
       return NextResponse.json({ ok: false, error: 'Missing replacement title' }, { status: 400 })
@@ -113,12 +123,47 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
       return NextResponse.json({ ok: false, error: 'Invalid deadline' }, { status: 400 })
     }
 
+    if (
+      rewardPoints !== null &&
+      (!Number.isInteger(rewardPoints) || rewardPoints <= 0 || rewardPoints > 5000)
+    ) {
+      return NextResponse.json({ ok: false, error: 'Invalid task reward' }, { status: 400 })
+    }
+
+    const assignee = body.assignedMemberId
+      ? await prisma.member.findFirst({
+          where: {
+            id: body.assignedMemberId,
+            householdId: auth.member.householdId,
+            isActive: true,
+          },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            username: true,
+          },
+        })
+      : null
+
+    if (body.assignedMemberId && !assignee) {
+      return NextResponse.json({ ok: false, error: 'Invalid task assignee' }, { status: 400 })
+    }
+
     const updatedTask = await prisma.householdTask.update({
       where: { id: taskId },
       data: {
         title,
         note,
         deadlineAt: deadline,
+        assignedMemberId: assignee?.id ?? null,
+        assignedMemberName:
+          assignee
+            ? [assignee.firstName, assignee.lastName].filter(Boolean).join(' ').trim() ||
+              assignee.username ||
+              assignee.firstName
+            : null,
+        rewardUnits: rewardPoints ? rewardPoints * POINT_UNITS : null,
       },
     })
 
@@ -130,7 +175,10 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
       `Household\n\n` +
         `${actorName} обновил(а) задачу\n` +
         `Задача: ${updatedTask.title}\n` +
-        `Новый дедлайн: ${formatMoscowDeadlineLabel(updatedTask.deadlineAt)}${updatedTask.note ? `\nКомментарий: ${updatedTask.note}` : ''}`,
+        `Новый дедлайн: ${formatMoscowDeadlineLabel(updatedTask.deadlineAt)}` +
+        `${updatedTask.assignedMemberName ? `\nАдресат: ${updatedTask.assignedMemberName}` : ''}` +
+        `${updatedTask.rewardUnits ? `\nНаграда: ${formatPoints(updatedTask.rewardUnits)} house-coin` : ''}` +
+        `${updatedTask.note ? `\nКомментарий: ${updatedTask.note}` : ''}`,
     )
 
     return NextResponse.json({ ok: true, task: updatedTask })
@@ -163,6 +211,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
         createdAt: updatedTask.createdAt,
         completedAt: updatedTask.completedAt ?? new Date(),
         completedByName: updatedTask.completedByName,
+        rewardUnits: updatedTask.rewardUnits,
       },
       auth.member.id,
       body.action === 'complete-together',

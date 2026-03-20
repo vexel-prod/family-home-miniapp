@@ -27,10 +27,12 @@ export type AggregateHouseholdTask = {
 }
 
 export type HouseholdTaskAvgAggregateOutputType = {
+  rewardUnits: number | null
   penaltyAppliedUnits: number | null
 }
 
 export type HouseholdTaskSumAggregateOutputType = {
+  rewardUnits: number | null
   penaltyAppliedUnits: number | null
 }
 
@@ -39,6 +41,9 @@ export type HouseholdTaskMinAggregateOutputType = {
   householdId: string | null
   title: string | null
   note: string | null
+  assignedMemberId: string | null
+  assignedMemberName: string | null
+  rewardUnits: number | null
   status: string | null
   priority: string | null
   addedByName: string | null
@@ -59,6 +64,9 @@ export type HouseholdTaskMaxAggregateOutputType = {
   householdId: string | null
   title: string | null
   note: string | null
+  assignedMemberId: string | null
+  assignedMemberName: string | null
+  rewardUnits: number | null
   status: string | null
   priority: string | null
   addedByName: string | null
@@ -79,6 +87,9 @@ export type HouseholdTaskCountAggregateOutputType = {
   householdId: number
   title: number
   note: number
+  assignedMemberId: number
+  assignedMemberName: number
+  rewardUnits: number
   status: number
   priority: number
   addedByName: number
@@ -97,10 +108,12 @@ export type HouseholdTaskCountAggregateOutputType = {
 
 
 export type HouseholdTaskAvgAggregateInputType = {
+  rewardUnits?: true
   penaltyAppliedUnits?: true
 }
 
 export type HouseholdTaskSumAggregateInputType = {
+  rewardUnits?: true
   penaltyAppliedUnits?: true
 }
 
@@ -109,6 +122,9 @@ export type HouseholdTaskMinAggregateInputType = {
   householdId?: true
   title?: true
   note?: true
+  assignedMemberId?: true
+  assignedMemberName?: true
+  rewardUnits?: true
   status?: true
   priority?: true
   addedByName?: true
@@ -129,6 +145,9 @@ export type HouseholdTaskMaxAggregateInputType = {
   householdId?: true
   title?: true
   note?: true
+  assignedMemberId?: true
+  assignedMemberName?: true
+  rewardUnits?: true
   status?: true
   priority?: true
   addedByName?: true
@@ -149,6 +168,9 @@ export type HouseholdTaskCountAggregateInputType = {
   householdId?: true
   title?: true
   note?: true
+  assignedMemberId?: true
+  assignedMemberName?: true
+  rewardUnits?: true
   status?: true
   priority?: true
   addedByName?: true
@@ -256,6 +278,9 @@ export type HouseholdTaskGroupByOutputType = {
   householdId: string
   title: string
   note: string | null
+  assignedMemberId: string | null
+  assignedMemberName: string | null
+  rewardUnits: number | null
   status: string
   priority: string
   addedByName: string
@@ -299,6 +324,9 @@ export type HouseholdTaskWhereInput = {
   householdId?: Prisma.StringFilter<"HouseholdTask"> | string
   title?: Prisma.StringFilter<"HouseholdTask"> | string
   note?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  assignedMemberId?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  assignedMemberName?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  rewardUnits?: Prisma.IntNullableFilter<"HouseholdTask"> | number | null
   status?: Prisma.StringFilter<"HouseholdTask"> | string
   priority?: Prisma.StringFilter<"HouseholdTask"> | string
   addedByName?: Prisma.StringFilter<"HouseholdTask"> | string
@@ -321,6 +349,9 @@ export type HouseholdTaskOrderByWithRelationInput = {
   householdId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedMemberId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedMemberName?: Prisma.SortOrderInput | Prisma.SortOrder
+  rewardUnits?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   addedByName?: Prisma.SortOrder
@@ -346,6 +377,9 @@ export type HouseholdTaskWhereUniqueInput = Prisma.AtLeast<{
   householdId?: Prisma.StringFilter<"HouseholdTask"> | string
   title?: Prisma.StringFilter<"HouseholdTask"> | string
   note?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  assignedMemberId?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  assignedMemberName?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  rewardUnits?: Prisma.IntNullableFilter<"HouseholdTask"> | number | null
   status?: Prisma.StringFilter<"HouseholdTask"> | string
   priority?: Prisma.StringFilter<"HouseholdTask"> | string
   addedByName?: Prisma.StringFilter<"HouseholdTask"> | string
@@ -368,6 +402,9 @@ export type HouseholdTaskOrderByWithAggregationInput = {
   householdId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedMemberId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedMemberName?: Prisma.SortOrderInput | Prisma.SortOrder
+  rewardUnits?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   addedByName?: Prisma.SortOrder
@@ -396,6 +433,9 @@ export type HouseholdTaskScalarWhereWithAggregatesInput = {
   householdId?: Prisma.StringWithAggregatesFilter<"HouseholdTask"> | string
   title?: Prisma.StringWithAggregatesFilter<"HouseholdTask"> | string
   note?: Prisma.StringNullableWithAggregatesFilter<"HouseholdTask"> | string | null
+  assignedMemberId?: Prisma.StringNullableWithAggregatesFilter<"HouseholdTask"> | string | null
+  assignedMemberName?: Prisma.StringNullableWithAggregatesFilter<"HouseholdTask"> | string | null
+  rewardUnits?: Prisma.IntNullableWithAggregatesFilter<"HouseholdTask"> | number | null
   status?: Prisma.StringWithAggregatesFilter<"HouseholdTask"> | string
   priority?: Prisma.StringWithAggregatesFilter<"HouseholdTask"> | string
   addedByName?: Prisma.StringWithAggregatesFilter<"HouseholdTask"> | string
@@ -415,6 +455,9 @@ export type HouseholdTaskCreateInput = {
   id?: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -437,6 +480,9 @@ export type HouseholdTaskUncheckedCreateInput = {
   householdId: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -457,6 +503,9 @@ export type HouseholdTaskUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -479,6 +528,9 @@ export type HouseholdTaskUncheckedUpdateInput = {
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -500,6 +552,9 @@ export type HouseholdTaskCreateManyInput = {
   householdId: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -519,6 +574,9 @@ export type HouseholdTaskUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -539,6 +597,9 @@ export type HouseholdTaskUncheckedUpdateManyInput = {
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -569,6 +630,9 @@ export type HouseholdTaskCountOrderByAggregateInput = {
   householdId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  assignedMemberId?: Prisma.SortOrder
+  assignedMemberName?: Prisma.SortOrder
+  rewardUnits?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   addedByName?: Prisma.SortOrder
@@ -585,6 +649,7 @@ export type HouseholdTaskCountOrderByAggregateInput = {
 }
 
 export type HouseholdTaskAvgOrderByAggregateInput = {
+  rewardUnits?: Prisma.SortOrder
   penaltyAppliedUnits?: Prisma.SortOrder
 }
 
@@ -593,6 +658,9 @@ export type HouseholdTaskMaxOrderByAggregateInput = {
   householdId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  assignedMemberId?: Prisma.SortOrder
+  assignedMemberName?: Prisma.SortOrder
+  rewardUnits?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   addedByName?: Prisma.SortOrder
@@ -613,6 +681,9 @@ export type HouseholdTaskMinOrderByAggregateInput = {
   householdId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  assignedMemberId?: Prisma.SortOrder
+  assignedMemberName?: Prisma.SortOrder
+  rewardUnits?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   addedByName?: Prisma.SortOrder
@@ -629,6 +700,7 @@ export type HouseholdTaskMinOrderByAggregateInput = {
 }
 
 export type HouseholdTaskSumOrderByAggregateInput = {
+  rewardUnits?: Prisma.SortOrder
   penaltyAppliedUnits?: Prisma.SortOrder
 }
 
@@ -679,6 +751,14 @@ export type HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput = {
   deleteMany?: Prisma.HouseholdTaskScalarWhereInput | Prisma.HouseholdTaskScalarWhereInput[]
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type HouseholdTaskCreateNestedOneWithoutBonusTransactionsInput = {
   create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutBonusTransactionsInput, Prisma.HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput>
   connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput
@@ -699,6 +779,9 @@ export type HouseholdTaskCreateWithoutHouseholdInput = {
   id?: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -719,6 +802,9 @@ export type HouseholdTaskUncheckedCreateWithoutHouseholdInput = {
   id?: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -769,6 +855,9 @@ export type HouseholdTaskScalarWhereInput = {
   householdId?: Prisma.StringFilter<"HouseholdTask"> | string
   title?: Prisma.StringFilter<"HouseholdTask"> | string
   note?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  assignedMemberId?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  assignedMemberName?: Prisma.StringNullableFilter<"HouseholdTask"> | string | null
+  rewardUnits?: Prisma.IntNullableFilter<"HouseholdTask"> | number | null
   status?: Prisma.StringFilter<"HouseholdTask"> | string
   priority?: Prisma.StringFilter<"HouseholdTask"> | string
   addedByName?: Prisma.StringFilter<"HouseholdTask"> | string
@@ -788,6 +877,9 @@ export type HouseholdTaskCreateWithoutBonusTransactionsInput = {
   id?: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -809,6 +901,9 @@ export type HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput = {
   householdId: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -844,6 +939,9 @@ export type HouseholdTaskUpdateWithoutBonusTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -865,6 +963,9 @@ export type HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput = {
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -884,6 +985,9 @@ export type HouseholdTaskCreateManyHouseholdInput = {
   id?: string
   title: string
   note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   status?: string
   priority?: string
   addedByName: string
@@ -903,6 +1007,9 @@ export type HouseholdTaskUpdateWithoutHouseholdInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -923,6 +1030,9 @@ export type HouseholdTaskUncheckedUpdateWithoutHouseholdInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -943,6 +1053,9 @@ export type HouseholdTaskUncheckedUpdateManyWithoutHouseholdInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   addedByName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -994,6 +1107,9 @@ export type HouseholdTaskSelect<ExtArgs extends runtime.Types.Extensions.Interna
   householdId?: boolean
   title?: boolean
   note?: boolean
+  assignedMemberId?: boolean
+  assignedMemberName?: boolean
+  rewardUnits?: boolean
   status?: boolean
   priority?: boolean
   addedByName?: boolean
@@ -1017,6 +1133,9 @@ export type HouseholdTaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   householdId?: boolean
   title?: boolean
   note?: boolean
+  assignedMemberId?: boolean
+  assignedMemberName?: boolean
+  rewardUnits?: boolean
   status?: boolean
   priority?: boolean
   addedByName?: boolean
@@ -1038,6 +1157,9 @@ export type HouseholdTaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   householdId?: boolean
   title?: boolean
   note?: boolean
+  assignedMemberId?: boolean
+  assignedMemberName?: boolean
+  rewardUnits?: boolean
   status?: boolean
   priority?: boolean
   addedByName?: boolean
@@ -1059,6 +1181,9 @@ export type HouseholdTaskSelectScalar = {
   householdId?: boolean
   title?: boolean
   note?: boolean
+  assignedMemberId?: boolean
+  assignedMemberName?: boolean
+  rewardUnits?: boolean
   status?: boolean
   priority?: boolean
   addedByName?: boolean
@@ -1074,7 +1199,7 @@ export type HouseholdTaskSelectScalar = {
   updatedAt?: boolean
 }
 
-export type HouseholdTaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "title" | "note" | "status" | "priority" | "addedByName" | "addedByUsername" | "addedByTelegramId" | "deadlineAt" | "completedAt" | "completedByName" | "lastDeadlineReminderAt" | "penaltyAppliedAt" | "penaltyAppliedUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["householdTask"]>
+export type HouseholdTaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "title" | "note" | "assignedMemberId" | "assignedMemberName" | "rewardUnits" | "status" | "priority" | "addedByName" | "addedByUsername" | "addedByTelegramId" | "deadlineAt" | "completedAt" | "completedByName" | "lastDeadlineReminderAt" | "penaltyAppliedAt" | "penaltyAppliedUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["householdTask"]>
 export type HouseholdTaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>
@@ -1098,6 +1223,9 @@ export type $HouseholdTaskPayload<ExtArgs extends runtime.Types.Extensions.Inter
     householdId: string
     title: string
     note: string | null
+    assignedMemberId: string | null
+    assignedMemberName: string | null
+    rewardUnits: number | null
     status: string
     priority: string
     addedByName: string
@@ -1540,6 +1668,9 @@ export interface HouseholdTaskFieldRefs {
   readonly householdId: Prisma.FieldRef<"HouseholdTask", 'String'>
   readonly title: Prisma.FieldRef<"HouseholdTask", 'String'>
   readonly note: Prisma.FieldRef<"HouseholdTask", 'String'>
+  readonly assignedMemberId: Prisma.FieldRef<"HouseholdTask", 'String'>
+  readonly assignedMemberName: Prisma.FieldRef<"HouseholdTask", 'String'>
+  readonly rewardUnits: Prisma.FieldRef<"HouseholdTask", 'Int'>
   readonly status: Prisma.FieldRef<"HouseholdTask", 'String'>
   readonly priority: Prisma.FieldRef<"HouseholdTask", 'String'>
   readonly addedByName: Prisma.FieldRef<"HouseholdTask", 'String'>

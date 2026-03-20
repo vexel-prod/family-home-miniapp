@@ -28,6 +28,9 @@ export type HouseholdTask = {
   id: string
   title: string
   note: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
   priority: "normal" | "urgent"
   addedByName: string
   createdAt: string
@@ -111,7 +114,6 @@ export type HouseholdProfile = {
   completedTasksCount: number
   fastTasksCount: number
   overdueTasksCount: number
-  levelBonusUnits: number
   recentEvents: HouseholdProfileEvent[]
 }
 
@@ -120,15 +122,6 @@ export type MonthlyLeaderboardEntry = {
   points: number
   completedCount: number
   fastCount: number
-}
-
-export type MonthlyReport = {
-  id: string
-  monthKey: string
-  title: string
-  reportBody: string
-  sentAt?: string | null
-  createdAt: string
 }
 
 export type ShoppingItem = {
@@ -159,7 +152,6 @@ export type BootstrapActiveResponse = {
   bonusRewards: BonusReward[]
   familyGoal: FamilyGoal | null
   bonusPurchases: BonusPurchase[]
-  monthlyReports: MonthlyReport[]
   activeShoppingItems: ShoppingItem[]
   purchasedShoppingItems: ShoppingItem[]
 }

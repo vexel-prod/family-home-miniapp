@@ -65,8 +65,9 @@
 - Подробности рейтинга живут в `MonthlyRatingModal`.
 - Семейный кабинет живет в `HouseholdProfileModal`.
 - В личном кабинете есть:
-  - прогресс уровня
-  - статистика exp
+  - общий уровень семьи
+  - статистика семейного exp
+  - личный баланс `house-coin`
   - состав семьи
   - invite-код семьи
   - действия главы семьи
@@ -100,9 +101,9 @@
 - [entities/monthly-rating/lib/monthly-rating.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/monthly-rating/lib/monthly-rating.ts)
   Правила месячного рейтинга.
 - [entities/profile/lib/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/profile/lib/household-profile.ts)
-  Формулы exp и уровней.
+  Формулы семейного exp и уровней.
 - [entities/profile/server/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/profile/server/household-profile.ts)
-  Серверная синхронизация опыта, уровня и бонусного баланса.
+  Серверная синхронизация семейного опыта, уровня и личного `house-coin` баланса.
 - [widgets/dashboard-hero/ui/dashboard-hero.tsx](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/widgets/dashboard-hero/ui/dashboard-hero.tsx)
   Верхний dashboard-блок.
 - [widgets/journal-summary/ui/journal-summary.tsx](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/widgets/journal-summary/ui/journal-summary.tsx)
@@ -118,12 +119,18 @@
   `/api/household/*`.
 - Если меняется вход в лидерборд, сначала проверять
   `widgets/journal-summary/ui/journal-summary.tsx`.
+- Если меняется логика задач, сначала проверять `/api/tasks/*`, `entities/bonus/server/bonus-ledger.ts`
+  и `entities/profile/server/household-profile.ts`.
 - Если меняется прокрутка лидерборда, править `monthly-rating-modal.tsx`, а не базовый `ModalPanel`.
 - Если меняется форматирование / сортировка household-данных, сначала проверять
   `entities/family/lib/format.ts`.
 - Если добавляется новый cross-slice импорт, он должен проходить FSD-ограничения из
   `eslint.config.mjs`.
 - Не смешивать журнал выполненных задач и месячный рейтинг в один и тот же набор данных.
+- Не возвращать индивидуальные уровни участника. Уровень и exp теперь живут на `Household`.
+- Совместное закрытие задачи всегда означает участие всей семьи и делит `house-coin` на всех активных участников.
+- Лидерборд считается по двум осям: накопленные `house-coin` и количество выполненных задач.
+- Дедлайн задачи нельзя выводить за пределы текущего месяца.
 - Не убирать московскую привязку месяца без явного решения по timezone.
 - Не возвращать дефолтный household через env-переменные. Эта модель удалена.
 - Не разрешать клиенту выбирать `householdId` напрямую.

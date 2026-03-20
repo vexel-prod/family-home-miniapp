@@ -46,6 +46,21 @@ function splitUnitsEvenly(totalUnits: number, memberIds: string[]) {
   })
 }
 
+function getTaskRewardUnits(task: {
+  rewardUnits?: number | null
+  createdAt: Date
+  completedAt: Date
+}) {
+  if (typeof task.rewardUnits === 'number' && task.rewardUnits > 0) {
+    return task.rewardUnits
+  }
+
+  return getTaskAwardUnits({
+    createdAt: task.createdAt,
+    completedAt: task.completedAt,
+  })
+}
+
 export async function clearTaskBonusTransactions(
   prisma: PrismaClient,
   taskId: string,
@@ -57,6 +72,7 @@ export async function clearTaskBonusTransactions(
         householdId: true,
         createdAt: true,
         completedAt: true,
+        rewardUnits: true,
       },
     }),
     prisma.bonusTransaction.findMany({
@@ -81,9 +97,10 @@ export async function clearTaskBonusTransactions(
   })
 
   if (task?.completedAt && togetherTransactions.length) {
-    const togetherUnits = getTaskAwardUnits({
+    const togetherUnits = getTaskRewardUnits({
       createdAt: task.createdAt,
       completedAt: task.completedAt,
+      rewardUnits: task.rewardUnits,
     })
 
     await prisma.household.update({
@@ -108,6 +125,7 @@ export async function awardTaskCompletionBonuses(
     createdAt: Date
     completedAt: Date
     completedByName: string | null
+    rewardUnits?: number | null
   },
   actorMemberId: string,
   together: boolean,
@@ -115,10 +133,7 @@ export async function awardTaskCompletionBonuses(
   await clearTaskBonusTransactions(prisma, task.id)
 
   const monthKey = getMonthKey(task.completedAt)
-  const awardUnits = getTaskAwardUnits({
-    createdAt: task.createdAt,
-    completedAt: task.completedAt,
-  })
+  const awardUnits = getTaskRewardUnits(task)
 
   if (together) {
     const members = await prisma.member.findMany({
@@ -131,15 +146,20 @@ export async function awardTaskCompletionBonuses(
       return
     }
 
+    const memberShares = splitUnitsEvenly(
+      awardUnits,
+      members.map(member => member.id),
+    )
+
     await prisma.$transaction([
       prisma.bonusTransaction.createMany({
-        data: members.map(member => ({
+        data: memberShares.map(share => ({
           householdId: task.householdId,
-          memberId: member.id,
+          memberId: share.memberId,
           taskId: task.id,
           monthKey,
           kind: 'task-complete-together',
-          amountUnits: 0,
+          amountUnits: share.units,
           note: `Совместно выполнена задача "${task.title}"`,
         })),
       }),
@@ -226,14 +246,23 @@ export async function backfillCurrentMonthTaskBonuses(
       })
 
       if (members.length) {
+        const togetherUnits = getTaskRewardUnits({
+          createdAt: task.createdAt,
+          completedAt: task.completedAt,
+          rewardUnits: task.rewardUnits,
+        })
+
         await prisma.bonusTransaction.createMany({
-          data: members.map(member => ({
+          data: splitUnitsEvenly(
+            togetherUnits,
+            members.map(member => member.id),
+          ).map(share => ({
             householdId: task.householdId,
-            memberId: member.id,
+            memberId: share.memberId,
             taskId: task.id,
             monthKey,
             kind: 'task-complete-together',
-            amountUnits: 0,
+            amountUnits: share.units,
             note: `Backfill: совместно выполнена задача "${task.title}"`,
           })),
         })
@@ -242,10 +271,7 @@ export async function backfillCurrentMonthTaskBonuses(
           where: { id: task.householdId },
           data: {
             sharedGoalUnits: {
-              increment: getTaskAwardUnits({
-                createdAt: task.createdAt,
-                completedAt: task.completedAt,
-              }),
+              increment: togetherUnits,
             },
           },
         })
@@ -283,9 +309,10 @@ export async function backfillCurrentMonthTaskBonuses(
         taskId: task.id,
         monthKey,
         kind: 'task-complete',
-        amountUnits: getTaskAwardUnits({
+        amountUnits: getTaskRewardUnits({
           createdAt: task.createdAt,
           completedAt: task.completedAt,
+          rewardUnits: task.rewardUnits,
         }),
         note: `Backfill: выполнена задача "${task.title}"`,
       },
@@ -373,7 +400,19 @@ export async function getMonthlyLeaderboardStats(
   }
 
   for (const task of tasks) {
-    if (!task.completedAt || !task.completedByName || task.completedByName === 'Сделано вместе') {
+    if (!task.completedAt || !task.completedByName) {
+      continue
+    }
+
+    const fastIncrement =
+      task.completedAt.getTime() - task.createdAt.getTime() <= FAST_COMPLETION_WINDOW_MS ? 1 : 0
+
+    if (task.completedByName === 'Сделано вместе') {
+      for (const current of standingsMap.values()) {
+        current.completedCount += 1
+        current.fastCount += fastIncrement
+      }
+
       continue
     }
 
@@ -384,8 +423,7 @@ export async function getMonthlyLeaderboardStats(
     }
 
     current.completedCount += 1
-    current.fastCount +=
-      task.completedAt.getTime() - task.createdAt.getTime() <= FAST_COMPLETION_WINDOW_MS ? 1 : 0
+    current.fastCount += fastIncrement
   }
 
   const teamBonusUnits = transactions

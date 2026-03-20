@@ -1,5 +1,5 @@
 import { authorizeRequest } from '@entities/session/server/auth'
-import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@entities/bonus'
+import { formatMoscowDeadlineLabel, formatPoints, POINT_UNITS } from '@entities/bonus'
 import { jsonRateLimited } from '@shared/api/api-response'
 import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
 import { notifyHousehold } from '@entities/household/server/household-notify'
@@ -18,6 +18,12 @@ type CreateTaskPayload = {
   title?: string
   note?: string | null
   deadlineAt?: string
+  assignedMemberId?: string | null
+  rewardPoints?: number | null
+}
+
+function getCurrentMonthDeadlineLimit(now = new Date()) {
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
 }
 
 function parseDeadline(deadlineAt?: string) {
@@ -32,9 +38,9 @@ function parseDeadline(deadlineAt?: string) {
   }
 
   const now = new Date()
-  const diffMs = deadline.getTime() - now.getTime()
+  const monthLimit = getCurrentMonthDeadlineLimit(now)
 
-  if (diffMs <= 0 || diffMs > DEADLINE_LIMIT_MS) {
+  if (deadline.getTime() <= now.getTime() || deadline.getTime() > monthLimit.getTime()) {
     return null
   }
 
@@ -73,6 +79,8 @@ export async function POST(request: Request) {
 
   const title = validateRequiredText(body.title ?? null, TASK_TITLE_MAX_LENGTH)
   const note = sanitizeOptionalText(body.note)
+  const rewardPoints =
+    body.rewardPoints === null || body.rewardPoints === undefined ? null : Number(body.rewardPoints)
 
   if (!title) {
     return NextResponse.json({ ok: false, error: 'Missing task data' }, { status: 400 })
@@ -88,12 +96,47 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid deadline' }, { status: 400 })
   }
 
+  if (
+    rewardPoints !== null &&
+    (!Number.isInteger(rewardPoints) || rewardPoints <= 0 || rewardPoints > 5000)
+  ) {
+    return NextResponse.json({ ok: false, error: 'Invalid task reward' }, { status: 400 })
+  }
+
+  const assignee = body.assignedMemberId
+    ? await prisma.member.findFirst({
+        where: {
+          id: body.assignedMemberId,
+          householdId: auth.member.householdId,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          username: true,
+        },
+      })
+    : null
+
+  if (body.assignedMemberId && !assignee) {
+    return NextResponse.json({ ok: false, error: 'Invalid task assignee' }, { status: 400 })
+  }
+
   const task = await prisma.householdTask.create({
     data: {
       householdId: auth.member.householdId,
       title,
       note,
       deadlineAt: deadline,
+      assignedMemberId: assignee?.id ?? null,
+      assignedMemberName:
+        assignee
+          ? [assignee.firstName, assignee.lastName].filter(Boolean).join(' ').trim() ||
+            assignee.username ||
+            assignee.firstName
+          : null,
+      rewardUnits: rewardPoints ? rewardPoints * POINT_UNITS : null,
       addedByName: actorName,
       addedByUsername: auth.user.username ?? null,
       addedByTelegramId: String(auth.user.id),
@@ -108,7 +151,10 @@ export async function POST(request: Request) {
     `Household\n\n` +
       `${actorName} добавил(а) задачу\n` +
       `Задача: ${task.title}\n` +
-      `Сделать до: ${formatMoscowDeadlineLabel(task.deadlineAt)}${task.note ? `\nКомментарий: ${task.note}` : ''}`,
+      `Сделать до: ${formatMoscowDeadlineLabel(task.deadlineAt)}` +
+      `${task.assignedMemberName ? `\nАдресат: ${task.assignedMemberName}` : ''}` +
+      `${task.rewardUnits ? `\nНаграда: ${formatPoints(task.rewardUnits)} house-coin` : ''}` +
+      `${task.note ? `\nКомментарий: ${task.note}` : ''}`,
   )
 
   return NextResponse.json({ ok: true, task })

@@ -85,6 +85,11 @@ export const HouseholdScalarFieldEnum = {
   name: 'name',
   revision: 'revision',
   sharedGoalUnits: 'sharedGoalUnits',
+  experiencePoints: 'experiencePoints',
+  level: 'level',
+  completedTasksCount: 'completedTasksCount',
+  fastTasksCount: 'fastTasksCount',
+  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -122,6 +127,9 @@ export const HouseholdTaskScalarFieldEnum = {
   householdId: 'householdId',
   title: 'title',
   note: 'note',
+  assignedMemberId: 'assignedMemberId',
+  assignedMemberName: 'assignedMemberName',
+  rewardUnits: 'rewardUnits',
   status: 'status',
   priority: 'priority',
   addedByName: 'addedByName',

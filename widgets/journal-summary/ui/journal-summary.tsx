@@ -79,7 +79,7 @@ export function JournalSummary({
         />
         <TabButton
           label='Семейный кабинет'
-          caption={`LVL ${profileLevel} / EXP ${profileExp}`}
+          caption={`Семья LVL ${profileLevel} / EXP ${profileExp}`}
           onClick={onOpenProfile}
         />
       </div>
