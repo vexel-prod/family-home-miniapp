@@ -4,13 +4,6 @@ import { reveal } from '@/shared/lib/animations'
 import { formatPoints } from '@entities/bonus'
 import type { MonthlyRatingSummary } from '@entities/monthly-rating'
 
-const motivationRules = [
-  'Задача: +3',
-  'Быстрое закрытие: x1.5',
-  'Просрочка больше часа: -4.5',
-  'Общая задача: делим поровну',
-]
-
 type MonthlyRatingBoardProps = {
   summary: MonthlyRatingSummary
 }
@@ -28,7 +21,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
     >
       <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
         <SimpleMetric
-          label='Лидер'
+          label='Лидер 🏆'
           value={summary.leadingName}
         />
         <SimpleMetric
@@ -107,28 +100,6 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
           ) : (
             <div className='text-sm text-white/65'>В этом месяце еще нет закрытых задач.</div>
           )}
-        </div>
-      </div>
-
-      <div className='grid gap-4 rounded-md border border-white/10 bg-white/6 p-4 lg:grid-cols-2'>
-        <div>
-          <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Правила</div>
-          <div className='mt-3 space-y-2 text-sm text-white/65'>
-            {motivationRules.map(rule => (
-              <div key={rule}>{rule}</div>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Цели месяца</div>
-          <div className='mt-3 space-y-2 text-sm text-white/65'>
-            {summary.milestones.map(milestone => (
-              <div key={milestone.target}>
-                {milestone.target} баллов: {milestone.label}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </motion.section>

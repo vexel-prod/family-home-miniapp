@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { TextAreaField, TextInput } from '@shared/ui/form-field'
 import { StatusMessage } from '@shared/ui/status-message'
 
@@ -40,17 +40,16 @@ export function TaskFormModal({
 }: TaskFormModalProps) {
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
-          {/* <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
-            {mode === 'create' ? 'Добавить задачу' : 'Изменить задачу'}
-          </div> */}
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             {mode === 'create' ? 'Новая задача' : 'Вносим изменения'}
           </h2>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           {status ? <StatusMessage text={status} /> : null}
 
           <TextInput
@@ -97,7 +96,11 @@ export function TaskFormModal({
             value={note}
             onChange={event => onNoteChange(event.target.value)}
           />
+        </div>
+      </ModalBody>
 
+      <ModalFooter>
+        <div className='space-y-3'>
           <AppButton
             tone={mode === 'create' ? 'home' : 'success'}
             onClick={onSubmit}
@@ -113,7 +116,7 @@ export function TaskFormModal({
             Назад
           </AppButton>
         </div>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

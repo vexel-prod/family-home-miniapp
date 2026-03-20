@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 
 type BonusElementCreateModalProps = {
   onOpenRewardForm: () => void
@@ -14,14 +14,16 @@ export function BonusElementCreateModal({
 }: BonusElementCreateModalProps) {
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             Добавить элемент
           </h2>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           <AppButton
             tone='secondary'
             onClick={onOpenRewardForm}
@@ -35,15 +37,17 @@ export function BonusElementCreateModal({
           >
             Создать цель
           </AppButton>
-
-          <AppButton
-            tone='ghost'
-            onClick={onBack}
-          >
-            Назад
-          </AppButton>
         </div>
-      </div>
+      </ModalBody>
+
+      <ModalFooter>
+        <AppButton
+          tone='ghost'
+          onClick={onBack}
+        >
+          Назад
+        </AppButton>
+      </ModalFooter>
     </ModalPanel>
   )
 }

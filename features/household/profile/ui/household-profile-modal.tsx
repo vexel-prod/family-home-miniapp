@@ -7,21 +7,24 @@ import { ModalPanel } from '@shared/ui/app-modal'
 import { TextInput } from '@shared/ui/form-field'
 import { formatRelativeDate } from '@entities/family'
 import { PROFILE_LEVEL_BONUS_POINTS } from '@entities/profile/lib/household-profile'
-import type { HouseholdProfile, HouseholdSummary } from '@entities/family'
+import type { FamilyGoal, HouseholdProfile, HouseholdSummary } from '@entities/family'
 
-type ProfileTab = 'progress' | 'family' | 'history'
+type ProfileTab = 'progress' | 'family' | 'goal' | 'history'
 
 type HouseholdProfileModalProps = {
   actorName: string
   profile: HouseholdProfile
   household: HouseholdSummary
+  familyGoal: FamilyGoal | null
   customInviteCode: string
   busyAction: string | null
   onCustomInviteCodeChange: (value: string) => void
   onCopyInvite: () => void
   onCreateCustomInvite: () => void
   onReissueInvite: () => void
+  onOpenEditGoal: () => void
   onLeaveHousehold: () => void
+  onClearGoal: () => void
   onRemoveMember: (memberId: string) => void
   onClose: () => void
 }
@@ -52,20 +55,30 @@ export function HouseholdProfileModal({
   actorName,
   profile,
   household,
+  familyGoal,
   customInviteCode,
   busyAction,
   onCustomInviteCodeChange,
   onCopyInvite,
   onCreateCustomInvite,
   onReissueInvite,
+  onOpenEditGoal,
   onLeaveHousehold,
+  onClearGoal,
   onRemoveMember,
   onClose,
 }: HouseholdProfileModalProps) {
   const [activeTab, setActiveTab] = useState<ProfileTab>('progress')
+  const familyGoalProgress = familyGoal
+    ? Math.min(
+        100,
+        Math.round((familyGoal.currentValue / Math.max(familyGoal.targetValue, 1)) * 100),
+      )
+    : 0
   const tabs: Array<{ key: ProfileTab; label: string }> = [
     { key: 'progress', label: 'Прогресс' },
     { key: 'family', label: 'Семья' },
+    { key: 'goal', label: 'Цель' },
     { key: 'history', label: 'История' },
   ]
 
@@ -80,7 +93,7 @@ export function HouseholdProfileModal({
           </div>
         </div>
 
-        <div className='mt-4 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap'>
+        <div className='mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap'>
           {tabs.map(tab => (
             <button
               key={tab.key}
@@ -277,6 +290,81 @@ export function HouseholdProfileModal({
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        ) : null}
+
+        {activeTab === 'goal' ? (
+          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/6'>
+            <div className='min-h-0 flex-1 overflow-y-auto p-4'>
+              {familyGoal ? (
+                <div className='space-y-4'>
+                  <div>
+                    <div className='text-sm text-white/45'>
+                      {familyGoal.kind === 'spiritual' ? 'Для души' : 'Покупка'}
+                    </div>
+                    <div className='mt-2 text-2xl font-(--font-family-heading) text-white'>
+                      {familyGoal.title}
+                    </div>
+                    {familyGoal.description ? (
+                      <div className='mt-3 text-sm leading-6 text-white/65'>
+                        {familyGoal.description}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className='rounded-md border border-white/10 bg-black/15 p-4'>
+                    <div className='mb-2 flex items-center justify-between gap-3 text-sm text-white/65'>
+                      <span>
+                        {familyGoal.currentValue} / {familyGoal.targetValue}{' '}
+                        {familyGoal.kind === 'material'
+                          ? familyGoal.unitLabel || 'ед.'
+                          : 'общих баллов'}
+                      </span>
+                      <span>{familyGoalProgress}%</span>
+                    </div>
+                    <div className='h-3 overflow-hidden rounded-full bg-white/10'>
+                      <div
+                        className='h-full rounded-full bg-white transition-all duration-300'
+                        style={{ width: `${familyGoalProgress}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='flex flex-wrap gap-3'>
+                    <AppButton
+                      tone='secondary'
+                      className='w-auto min-w-44'
+                      disabled={busyAction !== null}
+                      onClick={onOpenEditGoal}
+                    >
+                      Редактировать цель
+                    </AppButton>
+                    <AppButton
+                      tone='ghost'
+                      className='min-w-40'
+                      disabled={busyAction !== null}
+                      onClick={onClearGoal}
+                    >
+                      {busyAction === 'clear-family-goal' ? 'Убираю...' : 'Убрать цель'}
+                    </AppButton>
+                  </div>
+                </div>
+              ) : (
+                <div className='space-y-4'>
+                  <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                    Пока нет общей цели семьи.
+                  </div>
+                  <AppButton
+                    tone='secondary'
+                    className='w-auto min-w-44'
+                    disabled={busyAction !== null}
+                    onClick={onOpenEditGoal}
+                  >
+                    Создать цель
+                  </AppButton>
+                </div>
+              )}
             </div>
           </div>
         ) : null}

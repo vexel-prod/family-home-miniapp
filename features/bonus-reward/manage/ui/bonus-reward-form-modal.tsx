@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { TextAreaField, TextInput } from '@shared/ui/form-field'
 
 type BonusRewardFormModalProps = {
@@ -29,14 +29,16 @@ export function BonusRewardFormModal({
 }: BonusRewardFormModalProps) {
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             {mode === 'create' ? 'Новый товар' : 'Редактировать товар'}
           </h2>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           <TextInput
             placeholder='Название награды'
             value={title}
@@ -55,7 +57,11 @@ export function BonusRewardFormModal({
             value={cost}
             onChange={event => onCostChange(event.target.value)}
           />
+        </div>
+      </ModalBody>
 
+      <ModalFooter>
+        <div className='space-y-3'>
           <AppButton
             tone='secondary'
             onClick={onSubmit}
@@ -77,7 +83,7 @@ export function BonusRewardFormModal({
             Назад
           </AppButton>
         </div>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

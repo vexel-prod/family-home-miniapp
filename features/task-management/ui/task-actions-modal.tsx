@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { StatusPill } from '@shared/ui/status-pill'
 import { formatRelativeDate } from '@entities/family'
 import type { HouseholdTask } from '@entities/family'
@@ -27,7 +27,7 @@ export function TaskActionsModal({
 
   return (
     <ModalPanel>
-      <div className='p-4 sm:p-6'>
+      <ModalHeader>
         <div className='space-y-2'>
           <div className='text-xs uppercase tracking-(--letter-spacing-wide) text-(--color-panel-text-faint)'>
             БЫТ
@@ -42,8 +42,10 @@ export function TaskActionsModal({
           <div className='text-sm text-white/65'>Дедлайн: {formatRelativeDate(task.deadlineAt)}</div>
           <div className='text-sm text-white/60'>Выбери действие для этой задачи.</div>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 space-y-4'>
+      <ModalBody>
+        <div className='space-y-4'>
           <AppButton tone='home' onClick={onComplete} disabled={busyKey === `task-${task.id}`}>
             {busyKey === `task-${task.id}` ? 'Обновляю...' : 'Отметить выполненной'}
           </AppButton>
@@ -67,12 +69,14 @@ export function TaskActionsModal({
           >
             {busyKey === `delete-task-${task.id}` ? 'Удаляю...' : 'Удалить'}
           </AppButton>
-
-          <AppButton tone='secondary' onClick={onClose}>
-            Закрыть
-          </AppButton>
         </div>
-      </div>
+      </ModalBody>
+
+      <ModalFooter>
+        <AppButton tone='secondary' onClick={onClose}>
+          Закрыть
+        </AppButton>
+      </ModalFooter>
     </ModalPanel>
   )
 }

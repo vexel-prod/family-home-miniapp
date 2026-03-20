@@ -8,7 +8,7 @@ type TypingTextProps = {
   className?: string
 }
 
-export function TypingText({ typedText, speed = 65, className = '' }: TypingTextProps) {
+export function TypingText({ typedText, speed = 75, className = '' }: TypingTextProps) {
   const [pos, setPos] = useState(0)
   const [, setIsCaretVisible] = useState(true)
 
@@ -34,15 +34,8 @@ export function TypingText({ typedText, speed = 65, className = '' }: TypingText
 
   const typedValue = typedText.slice(0, pos)
   return (
-    <div
-      className={[
-        'max-w-max flex min-h-12 items-center rounded-md border border-white/10 bg-black/10 px-4 py-3 backdrop-blur-md inset-shadow-amber-500',
-        className,
-      ].join(' ')}
-    >
-      <span className='text-sm text-white/70 sm:text-base text-shadow-md'>
-        {typedValue}
-      </span>
-    </div>
+    <span className={className}>
+      {typedValue}
+    </span>
   )
 }
