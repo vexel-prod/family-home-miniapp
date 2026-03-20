@@ -1,8 +1,8 @@
-import { createMonthlyReportIfNeeded, processTaskDeadlineEvents } from '@/lib/bonus-ledger'
-import { bumpHouseholdRevision } from '@/lib/household-revision'
-import { notifyHousehold } from '@/lib/household-notify'
-import { getElapsedMs, logApiEvent } from '@/lib/observability'
-import { getPrisma } from '@/lib/prisma'
+import { createMonthlyReportIfNeeded, processTaskDeadlineEvents } from '@entities/bonus/server/bonus-ledger'
+import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
+import { notifyHousehold } from '@entities/household/server/household-notify'
+import { getElapsedMs, logApiEvent } from '@shared/api/observability'
+import { getPrisma } from '@shared/api/prisma'
 import { NextResponse } from 'next/server'
 
 function getPreviousMonthKey(now = new Date()) {

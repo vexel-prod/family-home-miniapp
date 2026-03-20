@@ -1,10 +1,10 @@
-import { authenticateTelegramRequest } from '@/lib/auth'
-import { jsonRateLimited } from '@/lib/api-response'
-import { bumpHouseholdRevision } from '@/lib/household-revision'
-import { countActiveHouseholdMembers, MAX_HOUSEHOLD_MEMBERS } from '@/lib/household'
-import { getPrisma } from '@/lib/prisma'
-import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
-import { normalizeInviteCode } from '@/shared/lib/household'
+import { authenticateTelegramRequest } from '@entities/session/server/auth'
+import { jsonRateLimited } from '@shared/api/api-response'
+import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
+import { countActiveHouseholdMembers, MAX_HOUSEHOLD_MEMBERS } from '@entities/household/server/household'
+import { getPrisma } from '@shared/api/prisma'
+import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
+import { normalizeInviteCode } from '@entities/household'
 import {
   INVITE_CODE_MAX_LENGTH,
   INVITE_CODE_MIN_LENGTH,

@@ -1,8 +1,8 @@
-import { authorizeRequest } from '@/lib/auth'
-import { jsonRateLimited } from '@/lib/api-response'
-import { bumpHouseholdRevision } from '@/lib/household-revision'
-import { getPrisma } from '@/lib/prisma'
-import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
+import { authorizeRequest } from '@entities/session/server/auth'
+import { jsonRateLimited } from '@shared/api/api-response'
+import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
+import { getPrisma } from '@shared/api/prisma'
+import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {

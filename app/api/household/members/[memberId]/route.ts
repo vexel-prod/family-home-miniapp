@@ -1,6 +1,6 @@
-import { authorizeRequest } from '@/lib/auth'
-import { bumpHouseholdRevision } from '@/lib/household-revision'
-import { getPrisma } from '@/lib/prisma'
+import { authorizeRequest } from '@entities/session/server/auth'
+import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
+import { getPrisma } from '@shared/api/prisma'
 import { NextResponse } from 'next/server'
 
 export async function DELETE(

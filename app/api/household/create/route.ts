@@ -1,8 +1,8 @@
-import { authenticateTelegramRequest } from '@/lib/auth'
-import { jsonRateLimited } from '@/lib/api-response'
-import { generateInviteCode, HOUSEHOLD_INVITE_TTL_MS } from '@/lib/household'
-import { getPrisma } from '@/lib/prisma'
-import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
+import { authenticateTelegramRequest } from '@entities/session/server/auth'
+import { jsonRateLimited } from '@shared/api/api-response'
+import { generateInviteCode, HOUSEHOLD_INVITE_TTL_MS } from '@entities/household/server/household'
+import { getPrisma } from '@shared/api/prisma'
+import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
 import {
   HOUSEHOLD_NAME_MAX_LENGTH,
   validateRequiredText,

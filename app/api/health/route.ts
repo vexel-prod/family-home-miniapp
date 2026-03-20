@@ -1,5 +1,5 @@
-import { getElapsedMs, logApiEvent } from '@/lib/observability'
-import { getPrisma } from '@/lib/prisma'
+import { getElapsedMs, logApiEvent } from '@shared/api/observability'
+import { getPrisma } from '@shared/api/prisma'
 import { promises as fs } from 'node:fs'
 import { join } from 'node:path'
 import { NextResponse } from 'next/server'

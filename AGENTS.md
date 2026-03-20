@@ -26,6 +26,19 @@
 - Tailwind CSS v4
 - Framer Motion
 
+## Архитектура
+
+Проект теперь разложен по FSD-слоям:
+
+- `app/` — только route-layer
+- `pages-layer/` — orchestration страниц; использовать через алиас `@pages/*`
+- `widgets/` — крупные блоки главного экрана
+- `features/` — пользовательские сценарии и модалки
+- `entities/` — типы, доменные правила и server-side доменные сервисы
+- `shared/` — UI-kit, инфраструктура и общие утилиты
+
+Важно: физическая директория называется `pages-layer`, а не `pages`, потому что корневой `pages/` конфликтует с Next.js routing.
+
 ## Что важно не ломать
 
 - `Dashboard` должен оставаться верхней секцией главного экрана.
@@ -60,10 +73,12 @@
 ## Где лежит логика
 
 - [app/page.tsx](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/app/page.tsx)
+  Тонкий route-wrapper для главной страницы.
+- [pages-layer/home/ui/home-page.tsx](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/pages-layer/home/ui/home-page.tsx)
   Главный orchestration-файл клиента: bootstrap, onboarding, модалки, задачи, покупки, семейные действия.
-- [lib/auth.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/lib/auth.ts)
+- [entities/session/server/auth.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/session/server/auth.ts)
   Telegram auth и привязка пользователя к активному `Member`.
-- [lib/household.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/lib/household.ts)
+- [entities/household/server/household.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/household/server/household.ts)
   Invite-коды, лимиты семьи, household summary.
 - [prisma/schema.prisma](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/prisma/schema.prisma)
   Источник истины по модели данных.
@@ -79,20 +94,26 @@
   Выход из семьи. Последний участник удаляет household целиком.
 - [app/api/household/members/[memberId]/route.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/app/api/household/members/[memberId]/route.ts)
   Удаление участника главой семьи.
-- [shared/lib/monthly-rating.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/shared/lib/monthly-rating.ts)
+- [entities/monthly-rating/lib/monthly-rating.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/monthly-rating/lib/monthly-rating.ts)
   Правила месячного рейтинга.
-- [shared/lib/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/shared/lib/household-profile.ts)
+- [entities/profile/lib/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/profile/lib/household-profile.ts)
   Формулы exp и уровней.
-- [lib/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/lib/household-profile.ts)
+- [entities/profile/server/household-profile.ts](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/entities/profile/server/household-profile.ts)
   Серверная синхронизация опыта, уровня и бонусного баланса.
+- [widgets/dashboard-hero/ui/dashboard-hero.tsx](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/widgets/dashboard-hero/ui/dashboard-hero.tsx)
+  Верхний dashboard-блок.
+- [widgets/journal-summary/ui/journal-summary.tsx](/Users/vladimirpaskin/Developer/NEXTJS-projects/family-home-miniapp/widgets/journal-summary/ui/journal-summary.tsx)
+  Входы в журнал, рейтинг, бонус-шоп и профиль.
 
 ## Правила для следующих правок
 
-- Если меняется рейтинг, сначала проверять `shared/lib/monthly-rating.ts` и `GET /api/bootstrap`.
-- Если меняется семейная авторизация, сначала проверять `lib/auth.ts` и household API.
-- Если меняется invite-flow, сначала проверять `lib/household.ts` и `/api/household/*`.
-- Если меняется вход в лидерборд, сначала проверять `features/home/components/journal-summary.tsx`.
+- Если меняется рейтинг, сначала проверять `entities/monthly-rating/lib/monthly-rating.ts` и `GET /api/bootstrap`.
+- Если меняется семейная авторизация, сначала проверять `entities/session/server/auth.ts` и household API.
+- Если меняется invite-flow, сначала проверять `entities/household/server/household.ts` и `/api/household/*`.
+- Если меняется вход в лидерборд, сначала проверять `widgets/journal-summary/ui/journal-summary.tsx`.
 - Если меняется прокрутка лидерборда, править `monthly-rating-modal.tsx`, а не базовый `ModalPanel`.
+- Если меняется форматирование / сортировка household-данных, сначала проверять `entities/family/lib/format.ts`.
+- Если добавляется новый cross-slice импорт, он должен проходить FSD-ограничения из `eslint.config.mjs`.
 - Не смешивать журнал выполненных задач и месячный рейтинг в один и тот же набор данных.
 - Не убирать московскую привязку месяца без явного решения по timezone.
 - Не возвращать дефолтный household через env-переменные. Эта модель удалена.

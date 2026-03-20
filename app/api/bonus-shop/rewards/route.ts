@@ -1,9 +1,9 @@
-import { authorizeRequest } from '@/lib/auth'
-import { jsonRateLimited } from '@/lib/api-response'
-import { bumpHouseholdRevision } from '@/lib/household-revision'
-import { getPrisma } from '@/lib/prisma'
-import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
-import { POINT_UNITS } from '@/shared/lib/bonus-shop'
+import { authorizeRequest } from '@entities/session/server/auth'
+import { jsonRateLimited } from '@shared/api/api-response'
+import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
+import { getPrisma } from '@shared/api/prisma'
+import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
+import { POINT_UNITS } from '@entities/bonus'
 import {
   BONUS_REWARD_DESCRIPTION_MAX_LENGTH,
   BONUS_REWARD_TITLE_MAX_LENGTH,

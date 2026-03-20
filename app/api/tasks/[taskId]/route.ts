@@ -1,12 +1,12 @@
-import { authorizeRequest } from '@/lib/auth'
-import { jsonRateLimited } from '@/lib/api-response'
-import { awardTaskCompletionBonuses, clearTaskBonusTransactions } from '@/lib/bonus-ledger'
-import { bumpHouseholdRevision } from '@/lib/household-revision'
-import { syncHouseholdProfiles } from '@/lib/household-profile'
-import { getMemberDisplayName, notifyHousehold } from '@/lib/household-notify'
-import { getPrisma } from '@/lib/prisma'
-import { enforceRateLimit, RateLimitError } from '@/lib/rate-limit'
-import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@/shared/lib/bonus-shop'
+import { authorizeRequest } from '@entities/session/server/auth'
+import { jsonRateLimited } from '@shared/api/api-response'
+import { awardTaskCompletionBonuses, clearTaskBonusTransactions } from '@entities/bonus/server/bonus-ledger'
+import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
+import { syncHouseholdProfiles } from '@entities/profile/server/household-profile'
+import { getMemberDisplayName, notifyHousehold } from '@entities/household/server/household-notify'
+import { getPrisma } from '@shared/api/prisma'
+import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
+import { DEADLINE_LIMIT_MS, formatMoscowDeadlineLabel } from '@entities/bonus'
 import {
   sanitizeOptionalText,
   TASK_NOTE_MAX_LENGTH,
@@ -14,7 +14,7 @@ import {
   validateLength,
   validateRequiredText,
 } from '@/shared/lib/validation'
-import { formatElapsedLabel, formatMoscowDateTime } from '@/lib/partner-notify'
+import { formatElapsedLabel, formatMoscowDateTime } from '@/shared/lib/partner-notify'
 import { NextResponse } from 'next/server'
 
 type UpdateTaskPayload = {
