@@ -25,6 +25,7 @@ export function TaskActionsModal({
   onDelete,
 }: TaskActionsModalProps) {
   const deadlineAlertActive = Boolean(task.lastDeadlineReminderAt || task.penaltyAppliedAt)
+  const isPendingApproval = task.status === 'pending-approval'
 
   return (
     <ModalPanel>
@@ -36,8 +37,8 @@ export function TaskActionsModal({
           <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
             {task.title}
           </h2>
-          <StatusPill tone={deadlineAlertActive ? 'urgent' : 'soon'}>
-            {deadlineAlertActive ? 'Срок уже горит' : 'В работе'}
+          <StatusPill tone={isPendingApproval ? 'normal' : deadlineAlertActive ? 'urgent' : 'soon'}>
+            {isPendingApproval ? 'Ожидает подтверждения' : deadlineAlertActive ? 'Срок уже горит' : 'В работе'}
           </StatusPill>
           {task.note ? <div className='text-sm leading-6 text-white/65'>{task.note}</div> : null}
           {task.assignedMemberName ? (
@@ -45,30 +46,40 @@ export function TaskActionsModal({
           ) : null}
           <div className='text-sm text-white/65'>
             Награда:{' '}
-            {task.rewardUnits ? `${formatPoints(task.rewardUnits)} house-coin` : 'базовая'}
+            {task.rewardUnits ? `${formatPoints(task.rewardUnits)} HC` : 'базовая'}
           </div>
           <div className='text-sm text-white/65'>Дедлайн: {formatRelativeDate(task.deadlineAt)}</div>
-          <div className='text-sm text-white/60'>Выбери действие для этой задачи.</div>
+          <div className='text-sm text-white/60'>
+            {isPendingApproval
+              ? 'Задача уже отправлена на подтверждение автору.'
+              : 'Выбери действие для этой задачи.'}
+          </div>
         </div>
       </ModalHeader>
 
       <ModalBody>
         <div className='space-y-4'>
-          <AppButton tone='home' onClick={onComplete} disabled={busyKey === `task-${task.id}`}>
-            {busyKey === `task-${task.id}` ? 'Обновляю...' : 'Отметить выполненной'}
-          </AppButton>
+          {!isPendingApproval ? (
+            <AppButton tone='home' onClick={onComplete} disabled={busyKey === `task-${task.id}`}>
+              {busyKey === `task-${task.id}` ? 'Обновляю...' : 'Отметить выполненной'}
+            </AppButton>
+          ) : null}
 
-          <AppButton
-            tone='together'
-            onClick={onCompleteTogether}
-            disabled={busyKey === `task-together-${task.id}`}
-          >
-            {busyKey === `task-together-${task.id}` ? 'Отмечаю...' : 'Сделали вместе 🤝'}
-          </AppButton>
+          {!task.assignedMemberId && !isPendingApproval ? (
+            <AppButton
+              tone='together'
+              onClick={onCompleteTogether}
+              disabled={busyKey === `task-together-${task.id}`}
+            >
+              {busyKey === `task-together-${task.id}` ? 'Отмечаю...' : 'Сделали вместе 🤝'}
+            </AppButton>
+          ) : null}
 
-          <AppButton tone='success' onClick={onReplace}>
-            Редактировать
-          </AppButton>
+          {!isPendingApproval ? (
+            <AppButton tone='success' onClick={onReplace}>
+              Редактировать
+            </AppButton>
+          ) : null}
 
           <AppButton
             tone='danger'

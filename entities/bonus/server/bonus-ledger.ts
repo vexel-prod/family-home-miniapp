@@ -13,6 +13,7 @@ import {
   getTaskPenaltyUnits,
 } from '@entities/bonus'
 import { getMemberDisplayName, notifyHousehold } from '@entities/household/server/household-notify'
+import { getTaskExpResult } from '@entities/profile/lib/household-profile'
 
 function getCurrentMoscowMonthRange(now = new Date()) {
   const formatter = new Intl.DateTimeFormat('en-CA', {
@@ -125,6 +126,8 @@ export async function awardTaskCompletionBonuses(
     createdAt: Date
     completedAt: Date
     completedByName: string | null
+    assignedMemberId?: string | null
+    creditedMemberId?: string | null
     rewardUnits?: number | null
   },
   actorMemberId: string,
@@ -181,7 +184,7 @@ export async function awardTaskCompletionBonuses(
   await prisma.bonusTransaction.create({
     data: {
       householdId: task.householdId,
-      memberId: actorMemberId,
+      memberId: task.creditedMemberId ?? task.assignedMemberId ?? actorMemberId,
       taskId: task.id,
       monthKey,
       kind: 'task-complete',
@@ -363,6 +366,7 @@ export async function getMonthlyLeaderboardStats(
       },
       select: {
         memberId: true,
+        taskId: true,
         kind: true,
         amountUnits: true,
       },
@@ -383,7 +387,28 @@ export async function getMonthlyLeaderboardStats(
     nameByMemberId.set(member.id, displayName)
   }
 
+  const taskById = new Map(tasks.map(task => [task.id, task]))
+  const countedTaskMembers = new Set<string>()
+
   for (const transaction of transactions) {
+    if (transaction.kind !== 'task-complete' && transaction.kind !== 'task-complete-together') {
+      continue
+    }
+
+    const task = transaction.taskId ? taskById.get(transaction.taskId) : null
+
+    if (!task?.completedAt) {
+      continue
+    }
+
+    const countKey = `${transaction.memberId}:${task.id}`
+
+    if (countedTaskMembers.has(countKey)) {
+      continue
+    }
+
+    countedTaskMembers.add(countKey)
+
     const displayName = nameByMemberId.get(transaction.memberId)
 
     if (!displayName) {
@@ -396,34 +421,10 @@ export async function getMonthlyLeaderboardStats(
       continue
     }
 
-    current.points += Number(formatPoints(transaction.amountUnits))
-  }
-
-  for (const task of tasks) {
-    if (!task.completedAt || !task.completedByName) {
-      continue
-    }
-
-    const fastIncrement =
-      task.completedAt.getTime() - task.createdAt.getTime() <= FAST_COMPLETION_WINDOW_MS ? 1 : 0
-
-    if (task.completedByName === 'Сделано вместе') {
-      for (const current of standingsMap.values()) {
-        current.completedCount += 1
-        current.fastCount += fastIncrement
-      }
-
-      continue
-    }
-
-    const current = standingsMap.get(task.completedByName)
-
-    if (!current) {
-      continue
-    }
-
     current.completedCount += 1
-    current.fastCount += fastIncrement
+    current.points += getTaskExpResult(task).expDelta
+    current.fastCount +=
+      task.completedAt.getTime() - task.createdAt.getTime() <= FAST_COMPLETION_WINDOW_MS ? 1 : 0
   }
 
   const teamBonusUnits = transactions
@@ -518,7 +519,7 @@ export async function processTaskDeadlineEvents(
         `Household\n\n` +
           `Задача просрочена больше чем на час: ${task.title}\n` +
           `Дедлайн был: ${formatMoscowDeadlineLabel(task.deadlineAt)}\n` +
-          `Штраф применен ко всем участникам: -${formatPoints(penaltyUnits)} балла суммарно\n` +
+          `Штраф применен ко всем участникам: -${formatPoints(penaltyUnits)} HC суммарно\n` +
           `Участники: ${memberNames}`,
       )
 

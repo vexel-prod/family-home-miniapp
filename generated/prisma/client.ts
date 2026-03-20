@@ -57,6 +57,11 @@ export type Member = Prisma.MemberModel
  */
 export type HouseholdTask = Prisma.HouseholdTaskModel
 /**
+ * Model TaskCompletionApproval
+ * 
+ */
+export type TaskCompletionApproval = Prisma.TaskCompletionApprovalModel
+/**
  * Model ShoppingItem
  * 
  */

@@ -53,7 +53,7 @@ export function BonusRewardFormModal({
 
           <TextInput
             inputMode='numeric'
-            placeholder='Стоимость в баллах'
+            placeholder='Стоимость в HC'
             value={cost}
             onChange={event => onCostChange(event.target.value)}
           />

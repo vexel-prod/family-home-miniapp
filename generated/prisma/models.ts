@@ -11,6 +11,7 @@
 export type * from './models/Household'
 export type * from './models/Member'
 export type * from './models/HouseholdTask'
+export type * from './models/TaskCompletionApproval'
 export type * from './models/ShoppingItem'
 export type * from './models/BonusTransaction'
 export type * from './models/BonusPurchase'

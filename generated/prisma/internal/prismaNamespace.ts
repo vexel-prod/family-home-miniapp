@@ -387,6 +387,7 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
+  TaskCompletionApproval: 'TaskCompletionApproval',
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -633,6 +634,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HouseholdTaskCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HouseholdTaskCountAggregateOutputType> | number
+        }
+      }
+    }
+    TaskCompletionApproval: {
+      payload: Prisma.$TaskCompletionApprovalPayload<ExtArgs>
+      fields: Prisma.TaskCompletionApprovalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TaskCompletionApprovalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TaskCompletionApprovalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        findFirst: {
+          args: Prisma.TaskCompletionApprovalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TaskCompletionApprovalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        findMany: {
+          args: Prisma.TaskCompletionApprovalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>[]
+        }
+        create: {
+          args: Prisma.TaskCompletionApprovalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        createMany: {
+          args: Prisma.TaskCompletionApprovalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TaskCompletionApprovalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>[]
+        }
+        delete: {
+          args: Prisma.TaskCompletionApprovalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        update: {
+          args: Prisma.TaskCompletionApprovalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        deleteMany: {
+          args: Prisma.TaskCompletionApprovalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TaskCompletionApprovalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TaskCompletionApprovalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>[]
+        }
+        upsert: {
+          args: Prisma.TaskCompletionApprovalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        aggregate: {
+          args: Prisma.TaskCompletionApprovalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTaskCompletionApproval>
+        }
+        groupBy: {
+          args: Prisma.TaskCompletionApprovalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCompletionApprovalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TaskCompletionApprovalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCompletionApprovalCountAggregateOutputType> | number
         }
       }
     }
@@ -1319,6 +1394,7 @@ export const HouseholdTaskScalarFieldEnum = {
   rewardUnits: 'rewardUnits',
   status: 'status',
   priority: 'priority',
+  addedByMemberId: 'addedByMemberId',
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
@@ -1333,6 +1409,25 @@ export const HouseholdTaskScalarFieldEnum = {
 } as const
 
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
+
+
+export const TaskCompletionApprovalScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  taskId: 'taskId',
+  approverMemberId: 'approverMemberId',
+  requesterMemberId: 'requesterMemberId',
+  creditedMemberId: 'creditedMemberId',
+  creditedMemberName: 'creditedMemberName',
+  status: 'status',
+  telegramChatId: 'telegramChatId',
+  telegramMessageId: 'telegramMessageId',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskCompletionApprovalScalarFieldEnum = (typeof TaskCompletionApprovalScalarFieldEnum)[keyof typeof TaskCompletionApprovalScalarFieldEnum]
 
 
 export const ShoppingItemScalarFieldEnum = {
@@ -1654,6 +1749,7 @@ export type GlobalOmitConfig = {
   household?: Prisma.HouseholdOmit
   member?: Prisma.MemberOmit
   householdTask?: Prisma.HouseholdTaskOmit
+  taskCompletionApproval?: Prisma.TaskCompletionApprovalOmit
   shoppingItem?: Prisma.ShoppingItemOmit
   bonusTransaction?: Prisma.BonusTransactionOmit
   bonusPurchase?: Prisma.BonusPurchaseOmit

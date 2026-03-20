@@ -52,7 +52,6 @@ function getVariantLabel(variant: HouseholdProfile['recentEvents'][number]['vari
 }
 
 export function HouseholdProfileModal({
-  actorName,
   profile,
   household,
   familyGoal,
@@ -90,9 +89,6 @@ export function HouseholdProfileModal({
             <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
               {household.name} LVL {profile.currentLevel}
             </h2>
-            <div className='mt-2 text-sm text-white/55'>
-              Баланс участника: {actorName}
-            </div>
           </div>
         </div>
 
@@ -151,9 +147,7 @@ export function HouseholdProfileModal({
 
             <div className='grid gap-3 sm:grid-cols-2'>
               <div className='rounded-md border border-white/10 bg-white/6 p-4'>
-                <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
-                  Твой баланс
-                </div>
+                <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Твой баланс</div>
                 <div className='mt-2 text-2xl font-semibold text-white'>
                   {formatPoints(profile.bonusBalanceUnits)} HC
                 </div>
@@ -324,7 +318,7 @@ export function HouseholdProfileModal({
                         {familyGoal.currentValue} / {familyGoal.targetValue}{' '}
                         {familyGoal.kind === 'material'
                           ? familyGoal.unitLabel || 'ед.'
-                          : 'общих баллов'}
+                          : 'общих HC'}
                       </span>
                       <span>{familyGoalProgress}%</span>
                     </div>
@@ -360,14 +354,6 @@ export function HouseholdProfileModal({
                   <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
                     Пока нет общей цели семьи.
                   </div>
-                  <AppButton
-                    tone='secondary'
-                    className='w-auto min-w-44'
-                    disabled={busyAction !== null}
-                    onClick={onOpenEditGoal}
-                  >
-                    Создать цель
-                  </AppButton>
                 </div>
               )}
             </div>
@@ -413,7 +399,17 @@ export function HouseholdProfileModal({
         ) : null}
       </div>
 
-      <div className='border-t border-white/10 p-4 sm:p-6'>
+      <div className='border-t border-white/10 p-4 sm:p-6 space-y-3'>
+        {activeTab === 'goal' && (
+          <AppButton
+            tone='secondary'
+            className='w-auto min-w-44'
+            disabled={busyAction !== null}
+            onClick={onOpenEditGoal}
+          >
+            Создать цель
+          </AppButton>
+        )}
         <AppButton
           tone='ghost'
           onClick={onClose}

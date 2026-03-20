@@ -69,7 +69,7 @@ export function JournalSummary({
         />
         <TabButton
           label='Панель рейтинга'
-          caption={leaderPoints > 0 ? `${leaderPoints} баллов` : 'Рейтинг месяца'}
+          caption={leaderPoints > 0 ? `${leaderPoints} EXP` : 'Рейтинг месяца'}
           onClick={onOpenLeaderboard}
         />
         <TabButton

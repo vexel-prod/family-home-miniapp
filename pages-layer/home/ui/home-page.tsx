@@ -14,8 +14,8 @@ import {
   ShoppingListModal,
 } from '@features/shopping-management'
 import {
-  LastCompletedTaskModal,
   TaskActionsModal,
+  TaskCompletionConfirmModal,
   TaskFormModal,
   TaskJournalModal,
   TaskListModal,
@@ -53,6 +53,7 @@ import type {
 type TaskMutationResponse = {
   ok: boolean
   task: HouseholdTask
+  completionState?: 'completed' | 'pending-approval'
 }
 
 type ShoppingMutationResponse = {
@@ -252,6 +253,9 @@ export function HomePage({ version }: HomePageProps) {
     bonusRewards,
     getActorName(buyer),
   )
+  const currentMemberId = household?.currentUserMemberId ?? ''
+  const assignableMembers = household?.members.filter(member => !member.isCurrentUser) ?? []
+  const completionSelectableMembers = household?.members ?? []
 
   const upsertOpenTask = useCallback((task: HouseholdTask) => {
     setOpenTasks(current => {
@@ -315,7 +319,6 @@ export function HomePage({ version }: HomePageProps) {
       | 'household'
       | 'shopping-list'
       | 'task-journal'
-      | 'last-completed-task'
       | 'leaderboard'
       | 'bonus-shop'
       | 'profile'
@@ -841,6 +844,14 @@ export function HomePage({ version }: HomePageProps) {
   }
 
   async function completeTask(task: HouseholdTask, together = false) {
+    return completeTaskForMember(task, together ? null : undefined, together)
+  }
+
+  async function completeTaskForMember(
+    task: HouseholdTask,
+    creditedMemberId?: string | null,
+    together = false,
+  ) {
     setBusyKey(`${together ? 'task-together' : 'task'}-${task.id}`)
     setError('')
 
@@ -850,6 +861,7 @@ export function HomePage({ version }: HomePageProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: together ? 'complete-together' : 'complete',
+          creditedMemberId,
         }),
       })
 
@@ -867,7 +879,13 @@ export function HomePage({ version }: HomePageProps) {
       const payload = (await response.json()) as TaskMutationResponse
 
       closeTaskModals()
-      setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
+      setToast(
+        payload.completionState === 'pending-approval'
+          ? `Отправили на подтверждение: ${task.title}`
+          : together
+            ? `Сделано вместе: ${task.title}`
+            : `Задача закрыта: ${task.title}`,
+      )
       applyTaskUpdate(payload.task)
       void loadData({ silent: true })
     } catch (taskUpdateError) {
@@ -881,6 +899,26 @@ export function HomePage({ version }: HomePageProps) {
     } finally {
       setBusyKey(null)
     }
+  }
+
+  function requestTaskCompletion(task: HouseholdTask) {
+    if (task.status === 'pending-approval') {
+      setError('Эта задача уже ожидает подтверждения автора.')
+      return
+    }
+
+    if (!task.assignedMemberId) {
+      void completeTask(task)
+      return
+    }
+
+    if (task.assignedMemberId === currentMemberId) {
+      void completeTaskForMember(task, task.assignedMemberId)
+      return
+    }
+
+    setSelectedTask(task)
+    setModal('task-complete-confirm')
   }
 
   async function deleteTask(task: HouseholdTask) {
@@ -1689,7 +1727,7 @@ export function HomePage({ version }: HomePageProps) {
               loading={busyKey === 'create-task' || loading}
               submitLabel='Добавить задачу'
               busyLabel='Добавляю...'
-              members={household?.members ?? []}
+              members={assignableMembers}
               onTitleChange={setTaskTitle}
               onNoteChange={setTaskNote}
               onDeadlineAtChange={setTaskDeadlineAt}
@@ -1705,10 +1743,29 @@ export function HomePage({ version }: HomePageProps) {
               task={selectedTask}
               busyKey={busyKey}
               onClose={closeTaskModals}
-              onComplete={() => void completeTask(selectedTask)}
+              onComplete={() => requestTaskCompletion(selectedTask)}
               onCompleteTogether={() => void completeTask(selectedTask, true)}
               onReplace={openTaskReplaceModal}
               onDelete={() => void deleteTask(selectedTask)}
+            />
+          ) : null}
+
+          {(modal === 'task-complete-confirm' || modal === 'task-complete-select') && selectedTask ? (
+            <TaskCompletionConfirmModal
+              mode={modal === 'task-complete-confirm' ? 'confirm' : 'select'}
+              taskTitle={selectedTask.title}
+              assigneeName={selectedTask.assignedMemberName ?? 'адресат'}
+              loading={busyKey === `task-${selectedTask.id}`}
+              members={completionSelectableMembers}
+              onConfirmAssignee={() =>
+                void completeTaskForMember(selectedTask, selectedTask.assignedMemberId ?? null)
+              }
+              onSelectMember={memberId => {
+                void completeTaskForMember(selectedTask, memberId)
+              }}
+              onBack={() =>
+                setModal(modal === 'task-complete-confirm' ? 'task-complete-select' : 'task-actions')
+              }
             />
           ) : null}
 
@@ -1724,7 +1781,7 @@ export function HomePage({ version }: HomePageProps) {
               loading={busyKey === `replace-task-${selectedTask.id}`}
               submitLabel='Сохранить изменения'
               busyLabel='Сохраняю...'
-              members={household?.members ?? []}
+              members={assignableMembers}
               onTitleChange={setReplaceTaskTitle}
               onNoteChange={setReplaceTaskNote}
               onDeadlineAtChange={setReplaceTaskDeadlineAt}
@@ -1739,14 +1796,6 @@ export function HomePage({ version }: HomePageProps) {
             <TaskJournalModal
               tasks={sortedCompletedTasks}
               purchasedItems={sortedPurchasedShoppingItems}
-              participantCount={participantNames.length}
-              onClose={closeModalWithGuard}
-            />
-          ) : null}
-
-          {modal === 'last-completed-task' ? (
-            <LastCompletedTaskModal
-              task={sortedCompletedTasks[0] ?? null}
               participantCount={participantNames.length}
               onClose={closeModalWithGuard}
             />
@@ -1899,7 +1948,7 @@ export function HomePage({ version }: HomePageProps) {
         <JournalSummary
           completedTasksCount={completedTasks.length}
           leaderPoints={monthlyRatingSummary.leadingPoints}
-          balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} баллов`}
+          balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} HC`}
           profileLevel={currentUserProfile.currentLevel}
           profileExp={currentUserProfile.expIntoCurrentLevel}
           profileExpToNextLevel={currentUserProfile.expToNextLevel}

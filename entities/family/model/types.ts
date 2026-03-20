@@ -28,6 +28,7 @@ export type HouseholdTask = {
   id: string
   title: string
   note: string | null
+  status: 'open' | 'pending-approval' | 'done'
   assignedMemberId?: string | null
   assignedMemberName?: string | null
   rewardUnits?: number | null
@@ -167,9 +168,10 @@ export type ModalKey =
   | "household"
   | "task-create"
   | "task-actions"
+  | "task-complete-confirm"
+  | "task-complete-select"
   | "task-replace"
   | "task-journal"
-  | "last-completed-task"
   | "leaderboard"
   | "bonus-shop"
   | "bonus-reward-form"

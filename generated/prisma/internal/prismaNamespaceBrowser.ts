@@ -54,6 +54,7 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
+  TaskCompletionApproval: 'TaskCompletionApproval',
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
@@ -132,6 +133,7 @@ export const HouseholdTaskScalarFieldEnum = {
   rewardUnits: 'rewardUnits',
   status: 'status',
   priority: 'priority',
+  addedByMemberId: 'addedByMemberId',
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
@@ -146,6 +148,25 @@ export const HouseholdTaskScalarFieldEnum = {
 } as const
 
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
+
+
+export const TaskCompletionApprovalScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  taskId: 'taskId',
+  approverMemberId: 'approverMemberId',
+  requesterMemberId: 'requesterMemberId',
+  creditedMemberId: 'creditedMemberId',
+  creditedMemberName: 'creditedMemberName',
+  status: 'status',
+  telegramChatId: 'telegramChatId',
+  telegramMessageId: 'telegramMessageId',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskCompletionApprovalScalarFieldEnum = (typeof TaskCompletionApprovalScalarFieldEnum)[keyof typeof TaskCompletionApprovalScalarFieldEnum]
 
 
 export const ShoppingItemScalarFieldEnum = {

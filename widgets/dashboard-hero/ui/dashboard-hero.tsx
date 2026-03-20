@@ -20,7 +20,7 @@ export function DashboardHero({ actorName }: DashboardHeroProps) {
         <TypingText
           key={actorName}
           className='whitespace-pre-line bg-black/20 backdrop-blur-xs inline-block p-4 rounded-md text-left text-shadow-md'
-          typedText={`Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\n Отслеживайте прогресс\nЗарабатывайте очки лидера\nПокупайте крутые бонусы!`}
+          typedText={`Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\n Отслеживайте прогресс\nЗарабатывайте house-coin (HC)\nПокупайте крутые бонусы!`}
         />
       </div>
     </motion.section>
