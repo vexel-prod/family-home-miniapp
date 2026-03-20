@@ -30,8 +30,8 @@ export function BonusRewardFormModal({
   return (
     <ModalPanel>
       <ModalHeader>
-        <div className='space-y-2'>
-          <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+        <div className='flex items-center justify-center gap-4'>
+          <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
             {mode === 'create' ? 'Новый товар' : 'Редактировать товар'}
           </h2>
         </div>
@@ -53,7 +53,7 @@ export function BonusRewardFormModal({
 
           <TextInput
             inputMode='numeric'
-            placeholder='Стоимость в баллах'
+            placeholder='Стоимость в HC'
             value={cost}
             onChange={event => onCostChange(event.target.value)}
           />

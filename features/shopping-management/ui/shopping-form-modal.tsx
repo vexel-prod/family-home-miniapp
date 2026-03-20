@@ -38,11 +38,40 @@ export function ShoppingFormModal({
   onSubmit,
   onBack,
 }: ShoppingFormModalProps) {
+  const urgencyOptions: Array<{
+    value: 'soon' | 'out' | 'without'
+    label: string
+    activeClassName: string
+    text: string
+  }> = [
+    {
+      value: 'soon',
+      label: 'скоро закончится',
+      activeClassName:
+        'border-transparent bg-(--color-brand-home)/60 text-[#111827] shadow-(--shadow-card)',
+        text: 'мало'
+    },
+    {
+      value: 'out',
+      label: 'закончилось',
+      activeClassName:
+        'border-transparent bg-(--color-danger)/60 text-(--color-danger-text) shadow-(--shadow-card)',
+        text: 'кончилось'
+    },
+    {
+      value: 'without',
+      label: 'не срочно',
+      activeClassName: 'border-transparent bg-white/60 text-(--color-panel) shadow-(--shadow-card)',
+      text: 'без срока'
+    },
+    
+  ]
+
   return (
     <ModalPanel>
       <ModalHeader>
-        <div className='space-y-2'>
-          <h2 className='font-(--font-family-heading) text-3xl leading-(--line-height-snug)'>
+        <div className='flex items-center justify-center gap-4'>
+          <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
             {mode === 'create' ? 'Новая позиция' : 'Внести изменения'}
           </h2>
         </div>
@@ -58,41 +87,23 @@ export function ShoppingFormModal({
             onChange={event => onTitleChange(event.target.value)}
           />
 
-          <div className='grid grid-cols-3 gap-1 rounded-md border border-white/10 bg-white/6 p-1'>
-            <button
-              type='button'
-              onClick={() => onUrgencyChange('without')}
-              className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-1 text-center text-xs font-semibold transition-colors duration-150 ${
-                urgency === 'without'
-                  ? 'bg-(--color-brand-shopping)/60 text-(--color-panel) shadow-(--shadow-card)'
-                  : 'text-white/70'
-              }`}
-            >
-              не срочно
-            </button>
-            <button
-              type='button'
-              onClick={() => onUrgencyChange('soon')}
-              className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-1 text-center text-xs font-semibold transition-colors duration-150 ${
-                urgency === 'soon'
-                  ? 'bg-(--color-brand-home)/60 text-[#111827] shadow-(--shadow-card)'
-                  : 'text-white/70'
-              }`}
-            >
-              заканчивается
-            </button>
-
-            <button
-              type='button'
-              onClick={() => onUrgencyChange('out')}
-              className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-1 text-center text-xs font-semibold transition-colors duration-150 ${
-                urgency === 'out'
-                  ? 'bg-(--color-danger)/60 text-(--color-danger-text) shadow-(--shadow-card)'
-                  : 'text-white/70'
-              }`}
-            >
-              закончилось
-            </button>
+          <div className='space-y-3'>
+            <div className='grid grid-cols-3 gap-2 rounded-[1.2rem] border border-white/10 bg-white/6 p-1.5'>
+              {urgencyOptions.map(option => (
+                <button
+                  key={option.value}
+                  type='button'
+                  onClick={() => onUrgencyChange(option.value)}
+                  aria-label={option.label}
+                  title={option.label}
+                  className={`min-w-0 rounded-[0.95rem] border px-2 py-3 text-center transition-all duration-150 ${
+                    urgency === option.value
+                      ? option.activeClassName
+                      : 'border-white/10 bg-transparent text-white/68 hover:bg-white/8 hover:text-white/88'
+                  }`}
+                >{option.text}</button>
+              ))}
+            </div>
           </div>
 
           <TextInput

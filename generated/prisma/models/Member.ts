@@ -354,6 +354,10 @@ export type MemberWhereInput = {
   createdInvites?: Prisma.HouseholdInviteListRelationFilter
   createdBonusRewards?: Prisma.BonusRewardListRelationFilter
   createdFamilyGoals?: Prisma.FamilyGoalListRelationFilter
+  createdTasks?: Prisma.HouseholdTaskListRelationFilter
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -382,6 +386,10 @@ export type MemberOrderByWithRelationInput = {
   createdInvites?: Prisma.HouseholdInviteOrderByRelationAggregateInput
   createdBonusRewards?: Prisma.BonusRewardOrderByRelationAggregateInput
   createdFamilyGoals?: Prisma.FamilyGoalOrderByRelationAggregateInput
+  createdTasks?: Prisma.HouseholdTaskOrderByRelationAggregateInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -413,6 +421,10 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   createdInvites?: Prisma.HouseholdInviteListRelationFilter
   createdBonusRewards?: Prisma.BonusRewardListRelationFilter
   createdFamilyGoals?: Prisma.FamilyGoalListRelationFilter
+  createdTasks?: Prisma.HouseholdTaskListRelationFilter
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalListRelationFilter
 }, "id" | "telegramUserId" | "chatId">
 
 export type MemberOrderByWithAggregationInput = {
@@ -492,6 +504,10 @@ export type MemberCreateInput = {
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -519,6 +535,10 @@ export type MemberUncheckedCreateInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -546,6 +566,10 @@ export type MemberUpdateInput = {
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -573,6 +597,10 @@ export type MemberUncheckedUpdateInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -734,6 +762,11 @@ export type MemberSumOrderByAggregateInput = {
   overdueTasksCount?: Prisma.SortOrder
 }
 
+export type MemberNullableScalarRelationFilter = {
+  is?: Prisma.MemberWhereInput | null
+  isNot?: Prisma.MemberWhereInput | null
+}
+
 export type MemberScalarRelationFilter = {
   is?: Prisma.MemberWhereInput
   isNot?: Prisma.MemberWhereInput
@@ -791,6 +824,64 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type MemberCreateNestedOneWithoutCreatedTasksInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedTasksInput, Prisma.MemberUncheckedCreateWithoutCreatedTasksInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedTasksInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneWithoutCreatedTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutCreatedTasksInput, Prisma.MemberUncheckedCreateWithoutCreatedTasksInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCreatedTasksInput
+  upsert?: Prisma.MemberUpsertWithoutCreatedTasksInput
+  disconnect?: Prisma.MemberWhereInput | boolean
+  delete?: Prisma.MemberWhereInput | boolean
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutCreatedTasksInput, Prisma.MemberUpdateWithoutCreatedTasksInput>, Prisma.MemberUncheckedUpdateWithoutCreatedTasksInput>
+}
+
+export type MemberCreateNestedOneWithoutTaskCompletionApprovalsToReviewInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionApprovalsToReviewInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberCreateNestedOneWithoutTaskCompletionRequestsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionRequestsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionRequestsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionRequestsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberCreateNestedOneWithoutTaskCompletionCreditsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionCreditsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionCreditsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionCreditsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutTaskCompletionApprovalsToReviewNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionApprovalsToReviewInput
+  upsert?: Prisma.MemberUpsertWithoutTaskCompletionApprovalsToReviewInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUpdateWithoutTaskCompletionApprovalsToReviewInput>, Prisma.MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput>
+}
+
+export type MemberUpdateOneRequiredWithoutTaskCompletionRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionRequestsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionRequestsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionRequestsInput
+  upsert?: Prisma.MemberUpsertWithoutTaskCompletionRequestsInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTaskCompletionRequestsInput, Prisma.MemberUpdateWithoutTaskCompletionRequestsInput>, Prisma.MemberUncheckedUpdateWithoutTaskCompletionRequestsInput>
+}
+
+export type MemberUpdateOneRequiredWithoutTaskCompletionCreditsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionCreditsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionCreditsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionCreditsInput
+  upsert?: Prisma.MemberUpsertWithoutTaskCompletionCreditsInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTaskCompletionCreditsInput, Prisma.MemberUpdateWithoutTaskCompletionCreditsInput>, Prisma.MemberUncheckedUpdateWithoutTaskCompletionCreditsInput>
 }
 
 export type MemberCreateNestedOneWithoutBonusTransactionsInput = {
@@ -887,6 +978,10 @@ export type MemberCreateWithoutHouseholdInput = {
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateWithoutHouseholdInput = {
@@ -913,6 +1008,10 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberCreateOrConnectWithoutHouseholdInput = {
@@ -966,6 +1065,550 @@ export type MemberScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
 }
 
+export type MemberCreateWithoutCreatedTasksInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberUncheckedCreateWithoutCreatedTasksInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberCreateOrConnectWithoutCreatedTasksInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedTasksInput, Prisma.MemberUncheckedCreateWithoutCreatedTasksInput>
+}
+
+export type MemberUpsertWithoutCreatedTasksInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedTasksInput, Prisma.MemberUncheckedUpdateWithoutCreatedTasksInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutCreatedTasksInput, Prisma.MemberUncheckedCreateWithoutCreatedTasksInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutCreatedTasksInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutCreatedTasksInput, Prisma.MemberUncheckedUpdateWithoutCreatedTasksInput>
+}
+
+export type MemberUpdateWithoutCreatedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutCreatedTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberCreateWithoutTaskCompletionApprovalsToReviewInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberCreateOrConnectWithoutTaskCompletionApprovalsToReviewInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput>
+}
+
+export type MemberCreateWithoutTaskCompletionRequestsInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberUncheckedCreateWithoutTaskCompletionRequestsInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberCreateOrConnectWithoutTaskCompletionRequestsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionRequestsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionRequestsInput>
+}
+
+export type MemberCreateWithoutTaskCompletionCreditsInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+}
+
+export type MemberUncheckedCreateWithoutTaskCompletionCreditsInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  experiencePoints?: number
+  level?: number
+  bonusBalanceUnits?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+}
+
+export type MemberCreateOrConnectWithoutTaskCompletionCreditsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionCreditsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionCreditsInput>
+}
+
+export type MemberUpsertWithoutTaskCompletionApprovalsToReviewInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutTaskCompletionApprovalsToReviewInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput>
+}
+
+export type MemberUpdateWithoutTaskCompletionApprovalsToReviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberUpsertWithoutTaskCompletionRequestsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutTaskCompletionRequestsInput, Prisma.MemberUncheckedUpdateWithoutTaskCompletionRequestsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionRequestsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionRequestsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutTaskCompletionRequestsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutTaskCompletionRequestsInput, Prisma.MemberUncheckedUpdateWithoutTaskCompletionRequestsInput>
+}
+
+export type MemberUpdateWithoutTaskCompletionRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutTaskCompletionRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberUpsertWithoutTaskCompletionCreditsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutTaskCompletionCreditsInput, Prisma.MemberUncheckedUpdateWithoutTaskCompletionCreditsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionCreditsInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionCreditsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutTaskCompletionCreditsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutTaskCompletionCreditsInput, Prisma.MemberUncheckedUpdateWithoutTaskCompletionCreditsInput>
+}
+
+export type MemberUpdateWithoutTaskCompletionCreditsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutTaskCompletionCreditsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+}
+
 export type MemberCreateWithoutBonusTransactionsInput = {
   id?: string
   telegramUserId?: string | null
@@ -990,6 +1633,10 @@ export type MemberCreateWithoutBonusTransactionsInput = {
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
@@ -1016,6 +1663,10 @@ export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusTransactionsInput = {
@@ -1058,6 +1709,10 @@ export type MemberUpdateWithoutBonusTransactionsInput = {
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
@@ -1084,6 +1739,10 @@ export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberCreateWithoutBonusPurchasesInput = {
@@ -1110,6 +1769,10 @@ export type MemberCreateWithoutBonusPurchasesInput = {
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
@@ -1136,6 +1799,10 @@ export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusPurchasesInput = {
@@ -1178,6 +1845,10 @@ export type MemberUpdateWithoutBonusPurchasesInput = {
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
@@ -1204,6 +1875,10 @@ export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedBonusRewardsInput = {
@@ -1230,6 +1905,10 @@ export type MemberCreateWithoutCreatedBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedBonusRewardsInput = {
@@ -1256,6 +1935,10 @@ export type MemberUncheckedCreateWithoutCreatedBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedBonusRewardsInput = {
@@ -1298,6 +1981,10 @@ export type MemberUpdateWithoutCreatedBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedBonusRewardsInput = {
@@ -1324,6 +2011,10 @@ export type MemberUncheckedUpdateWithoutCreatedBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedFamilyGoalsInput = {
@@ -1350,6 +2041,10 @@ export type MemberCreateWithoutCreatedFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedFamilyGoalsInput = {
@@ -1376,6 +2071,10 @@ export type MemberUncheckedCreateWithoutCreatedFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
   createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedFamilyGoalsInput = {
@@ -1418,6 +2117,10 @@ export type MemberUpdateWithoutCreatedFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput = {
@@ -1444,6 +2147,10 @@ export type MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedInvitesInput = {
@@ -1470,6 +2177,10 @@ export type MemberCreateWithoutCreatedInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
   createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
@@ -1496,6 +2207,10 @@ export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedInvitesInput = {
@@ -1538,6 +2253,10 @@ export type MemberUpdateWithoutCreatedInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
@@ -1564,6 +2283,10 @@ export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberCreateManyHouseholdInput = {
@@ -1611,6 +2334,10 @@ export type MemberUpdateWithoutHouseholdInput = {
   createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutHouseholdInput = {
@@ -1637,6 +2364,10 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
 }
 
 export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
@@ -1671,6 +2402,10 @@ export type MemberCountOutputType = {
   createdInvites: number
   createdBonusRewards: number
   createdFamilyGoals: number
+  createdTasks: number
+  taskCompletionApprovalsToReview: number
+  taskCompletionRequests: number
+  taskCompletionCredits: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1679,6 +2414,10 @@ export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   createdInvites?: boolean | MemberCountOutputTypeCountCreatedInvitesArgs
   createdBonusRewards?: boolean | MemberCountOutputTypeCountCreatedBonusRewardsArgs
   createdFamilyGoals?: boolean | MemberCountOutputTypeCountCreatedFamilyGoalsArgs
+  createdTasks?: boolean | MemberCountOutputTypeCountCreatedTasksArgs
+  taskCompletionApprovalsToReview?: boolean | MemberCountOutputTypeCountTaskCompletionApprovalsToReviewArgs
+  taskCompletionRequests?: boolean | MemberCountOutputTypeCountTaskCompletionRequestsArgs
+  taskCompletionCredits?: boolean | MemberCountOutputTypeCountTaskCompletionCreditsArgs
 }
 
 /**
@@ -1726,6 +2465,34 @@ export type MemberCountOutputTypeCountCreatedFamilyGoalsArgs<ExtArgs extends run
   where?: Prisma.FamilyGoalWhereInput
 }
 
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountCreatedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HouseholdTaskWhereInput
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountTaskCompletionApprovalsToReviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskCompletionApprovalWhereInput
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountTaskCompletionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskCompletionApprovalWhereInput
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountTaskCompletionCreditsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskCompletionApprovalWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1753,6 +2520,10 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdInvites?: boolean | Prisma.Member$createdInvitesArgs<ExtArgs>
   createdBonusRewards?: boolean | Prisma.Member$createdBonusRewardsArgs<ExtArgs>
   createdFamilyGoals?: boolean | Prisma.Member$createdFamilyGoalsArgs<ExtArgs>
+  createdTasks?: boolean | Prisma.Member$createdTasksArgs<ExtArgs>
+  taskCompletionApprovalsToReview?: boolean | Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs>
+  taskCompletionRequests?: boolean | Prisma.Member$taskCompletionRequestsArgs<ExtArgs>
+  taskCompletionCredits?: boolean | Prisma.Member$taskCompletionCreditsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -1832,6 +2603,10 @@ export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdInvites?: boolean | Prisma.Member$createdInvitesArgs<ExtArgs>
   createdBonusRewards?: boolean | Prisma.Member$createdBonusRewardsArgs<ExtArgs>
   createdFamilyGoals?: boolean | Prisma.Member$createdFamilyGoalsArgs<ExtArgs>
+  createdTasks?: boolean | Prisma.Member$createdTasksArgs<ExtArgs>
+  taskCompletionApprovalsToReview?: boolean | Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs>
+  taskCompletionRequests?: boolean | Prisma.Member$taskCompletionRequestsArgs<ExtArgs>
+  taskCompletionCredits?: boolean | Prisma.Member$taskCompletionCreditsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1850,6 +2625,10 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     createdInvites: Prisma.$HouseholdInvitePayload<ExtArgs>[]
     createdBonusRewards: Prisma.$BonusRewardPayload<ExtArgs>[]
     createdFamilyGoals: Prisma.$FamilyGoalPayload<ExtArgs>[]
+    createdTasks: Prisma.$HouseholdTaskPayload<ExtArgs>[]
+    taskCompletionApprovalsToReview: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
+    taskCompletionRequests: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
+    taskCompletionCredits: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2271,6 +3050,10 @@ export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.T
   createdInvites<T extends Prisma.Member$createdInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdBonusRewards<T extends Prisma.Member$createdBonusRewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdBonusRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdFamilyGoals<T extends Prisma.Member$createdFamilyGoalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdFamilyGoalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FamilyGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdTasks<T extends Prisma.Member$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HouseholdTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskCompletionApprovalsToReview<T extends Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskCompletionRequests<T extends Prisma.Member$taskCompletionRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskCompletionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskCompletionCredits<T extends Prisma.Member$taskCompletionCreditsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskCompletionCreditsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2837,6 +3620,102 @@ export type Member$createdFamilyGoalsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.FamilyGoalScalarFieldEnum | Prisma.FamilyGoalScalarFieldEnum[]
+}
+
+/**
+ * Member.createdTasks
+ */
+export type Member$createdTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HouseholdTask
+   */
+  select?: Prisma.HouseholdTaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HouseholdTask
+   */
+  omit?: Prisma.HouseholdTaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HouseholdTaskInclude<ExtArgs> | null
+  where?: Prisma.HouseholdTaskWhereInput
+  orderBy?: Prisma.HouseholdTaskOrderByWithRelationInput | Prisma.HouseholdTaskOrderByWithRelationInput[]
+  cursor?: Prisma.HouseholdTaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HouseholdTaskScalarFieldEnum | Prisma.HouseholdTaskScalarFieldEnum[]
+}
+
+/**
+ * Member.taskCompletionApprovalsToReview
+ */
+export type Member$taskCompletionApprovalsToReviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskCompletionApproval
+   */
+  select?: Prisma.TaskCompletionApprovalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskCompletionApproval
+   */
+  omit?: Prisma.TaskCompletionApprovalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskCompletionApprovalInclude<ExtArgs> | null
+  where?: Prisma.TaskCompletionApprovalWhereInput
+  orderBy?: Prisma.TaskCompletionApprovalOrderByWithRelationInput | Prisma.TaskCompletionApprovalOrderByWithRelationInput[]
+  cursor?: Prisma.TaskCompletionApprovalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskCompletionApprovalScalarFieldEnum | Prisma.TaskCompletionApprovalScalarFieldEnum[]
+}
+
+/**
+ * Member.taskCompletionRequests
+ */
+export type Member$taskCompletionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskCompletionApproval
+   */
+  select?: Prisma.TaskCompletionApprovalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskCompletionApproval
+   */
+  omit?: Prisma.TaskCompletionApprovalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskCompletionApprovalInclude<ExtArgs> | null
+  where?: Prisma.TaskCompletionApprovalWhereInput
+  orderBy?: Prisma.TaskCompletionApprovalOrderByWithRelationInput | Prisma.TaskCompletionApprovalOrderByWithRelationInput[]
+  cursor?: Prisma.TaskCompletionApprovalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskCompletionApprovalScalarFieldEnum | Prisma.TaskCompletionApprovalScalarFieldEnum[]
+}
+
+/**
+ * Member.taskCompletionCredits
+ */
+export type Member$taskCompletionCreditsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskCompletionApproval
+   */
+  select?: Prisma.TaskCompletionApprovalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskCompletionApproval
+   */
+  omit?: Prisma.TaskCompletionApprovalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskCompletionApprovalInclude<ExtArgs> | null
+  where?: Prisma.TaskCompletionApprovalWhereInput
+  orderBy?: Prisma.TaskCompletionApprovalOrderByWithRelationInput | Prisma.TaskCompletionApprovalOrderByWithRelationInput[]
+  cursor?: Prisma.TaskCompletionApprovalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskCompletionApprovalScalarFieldEnum | Prisma.TaskCompletionApprovalScalarFieldEnum[]
 }
 
 /**

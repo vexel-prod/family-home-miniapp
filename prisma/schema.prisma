@@ -29,6 +29,7 @@ model Household {
   bonusTransactions BonusTransaction[]
   bonusPurchases BonusPurchase[]
   monthlyReports MonthlyReport[]
+  taskCompletionApprovals TaskCompletionApproval[]
 }
 
 model Member {
@@ -57,6 +58,10 @@ model Member {
   createdInvites HouseholdInvite[] @relation("InviteCreator")
   createdBonusRewards BonusReward[] @relation("RewardCreator")
   createdFamilyGoals FamilyGoal[]  @relation("GoalCreator")
+  createdTasks     HouseholdTask[] @relation("TaskCreator")
+  taskCompletionApprovalsToReview TaskCompletionApproval[] @relation("TaskCompletionApprover")
+  taskCompletionRequests TaskCompletionApproval[] @relation("TaskCompletionRequester")
+  taskCompletionCredits TaskCompletionApproval[] @relation("TaskCompletionCredited")
 
   @@index([householdId, isActive])
 }
@@ -71,6 +76,7 @@ model HouseholdTask {
   rewardUnits       Int?
   status            String    @default("open")
   priority          String    @default("normal")
+  addedByMemberId   String?
   addedByName       String
   addedByUsername   String?
   addedByTelegramId String?
@@ -83,10 +89,37 @@ model HouseholdTask {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   household         Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  addedByMember     Member?   @relation("TaskCreator", fields: [addedByMemberId], references: [id], onDelete: SetNull)
   bonusTransactions BonusTransaction[]
+  completionApprovals TaskCompletionApproval[]
 
   @@index([householdId, status, createdAt])
   @@index([householdId, status, deadlineAt])
+}
+
+model TaskCompletionApproval {
+  id               String       @id @default(cuid())
+  householdId      String
+  taskId           String
+  approverMemberId String
+  requesterMemberId String
+  creditedMemberId String
+  creditedMemberName String
+  status           String       @default("pending")
+  telegramChatId   String?
+  telegramMessageId Int?
+  resolvedAt       DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  household        Household    @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  task             HouseholdTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  approverMember   Member       @relation("TaskCompletionApprover", fields: [approverMemberId], references: [id], onDelete: Cascade)
+  requesterMember  Member       @relation("TaskCompletionRequester", fields: [requesterMemberId], references: [id], onDelete: Cascade)
+  creditedMember   Member       @relation("TaskCompletionCredited", fields: [creditedMemberId], references: [id], onDelete: Cascade)
+
+  @@index([approverMemberId, status, createdAt])
+  @@index([taskId, status])
+  @@index([householdId, status, createdAt])
 }
 
 model ShoppingItem {
@@ -211,6 +244,22 @@ model ActionRateLimit {
 
   @@index([action, scope])
   @@index([blockedUntil])
+}
+
+model BrowserLoginSession {
+  id             String   @id @default(cuid())
+  token          String   @unique
+  telegramUserId String?
+  firstName      String?
+  lastName       String?
+  username       String?
+  approvedAt     DateTime?
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([expiresAt])
+  @@index([telegramUserId, approvedAt])
 }
 
 model MonthlyReport {

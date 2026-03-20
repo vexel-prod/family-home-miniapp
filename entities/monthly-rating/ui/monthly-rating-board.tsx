@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 
 import { reveal } from '@/shared/lib/animations'
-import { formatPoints } from '@entities/bonus'
 import type { MonthlyRatingSummary } from '@entities/monthly-rating'
 
 type MonthlyRatingBoardProps = {
@@ -25,8 +24,8 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
           value={summary.leadingName}
         />
         <SimpleMetric
-          label='Очки лидера'
-          value={formatPoints(Math.round(summary.leadingPoints * 4))}
+          label='EXP лидера'
+          value={String(summary.leadingPoints)}
         />
         <SimpleMetric
           label='Всего задач'
@@ -34,7 +33,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
         />
         <SimpleMetric
           label='Командный бонус'
-          value={formatPoints(summary.teamBonusPoints * 4)}
+          value={`${summary.teamBonusPoints} HC`}
         />
       </div>
 
@@ -49,14 +48,14 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
               value={`#${summary.currentUser.place}`}
             />
             <SimpleMetric
-              label='Очки'
-              value={formatPoints(Math.round(summary.currentUser.points * 4))}
+              label='EXP'
+              value={String(summary.currentUser.points)}
             />
             <SimpleMetric
               label='Отставание'
               value={
                 summary.currentUser.gapToLeader > 0
-                  ? formatPoints(Math.round(summary.currentUser.gapToLeader * 4))
+                  ? `${summary.currentUser.gapToLeader} EXP`
                   : '0'
               }
             />
@@ -64,16 +63,10 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
         ) : (
           <div className='mt-3 text-sm text-white/65'>
             {leader
-              ? `Сейчас лидирует ${leader.name} с ${formatPoints(Math.round(leader.points * 4))} баллами.`
+              ? `Сейчас лидирует ${leader.name} с ${leader.points} EXP.`
               : 'Пока нет выполненных задач в этом месяце.'}
           </div>
         )}
-        {summary.currentUser?.nextMilestone ? (
-          <div className='mt-3 text-sm text-white/65'>
-            До &quot;{summary.currentUser.nextMilestone.label}&quot; осталось{' '}
-            {formatPoints(Math.round(summary.currentUser.nextMilestone.pointsLeft * 4))} балла.
-          </div>
-        ) : null}
       </div>
 
       <div className='rounded-md border border-white/10 bg-white/6 p-4'>
@@ -93,7 +86,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
                   Задачи: {member.completedCount}, быстрые: {member.fastCount}
                 </div>
                 <div className='text-sm font-semibold text-white'>
-                  {formatPoints(Math.round(member.points * 4))}
+                  {member.points} EXP
                 </div>
               </div>
             ))

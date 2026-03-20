@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { TextInput } from '@shared/ui/form-field'
 import { formatPoints } from '@entities/bonus'
 import { formatRelativeDate } from '@entities/family'
@@ -52,7 +52,6 @@ function getVariantLabel(variant: HouseholdProfile['recentEvents'][number]['vari
 }
 
 export function HouseholdProfileModal({
-  actorName,
   profile,
   household,
   familyGoal,
@@ -84,37 +83,15 @@ export function HouseholdProfileModal({
 
   return (
     <ModalPanel>
-      <div className='border-b border-white/10 p-4 sm:p-6'>
-        <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
-          <div>
-            <h2 className='uppercase font-(--font-family-heading) text-xl leading-(--line-height-snug)'>
-              {household.name} LVL {profile.currentLevel}
-            </h2>
-            <div className='mt-2 text-sm text-white/55'>
-              Баланс участника: {actorName}
-            </div>
-          </div>
+      <ModalHeader>
+        <div className='flex items-center justify-center gap-4'>
+          <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
+            {household.name} LVL {profile.currentLevel}
+          </h2>
         </div>
+      </ModalHeader>
 
-        <div className='mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap'>
-          {tabs.map(tab => (
-            <button
-              key={tab.key}
-              type='button'
-              onClick={() => setActiveTab(tab.key)}
-              className={`rounded-md border px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                activeTab === tab.key
-                  ? 'border-transparent bg-white text-(--color-page-text) shadow-(--shadow-card)'
-                  : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
+      <ModalBody>
         {activeTab === 'progress' ? (
           <div className='space-y-4'>
             <div className='flex flex-col gap-2 rounded-md border border-white/10 bg-white/6 p-5'>
@@ -151,9 +128,7 @@ export function HouseholdProfileModal({
 
             <div className='grid gap-3 sm:grid-cols-2'>
               <div className='rounded-md border border-white/10 bg-white/6 p-4'>
-                <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
-                  Твой баланс
-                </div>
+                <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Твой баланс</div>
                 <div className='mt-2 text-2xl font-semibold text-white'>
                   {formatPoints(profile.bonusBalanceUnits)} HC
                 </div>
@@ -187,19 +162,9 @@ export function HouseholdProfileModal({
         ) : null}
 
         {activeTab === 'family' ? (
-          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/6'>
+          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/4'>
             <div className='min-h-0 flex-1 overflow-y-auto p-4'>
               <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
-                <div>
-                  <div className='mt-2 text-2xl font-(--font-family-heading) text-white'>
-                    {household.name}
-                  </div>
-                  <div className='mt-2 text-sm text-white/65'>
-                    Текущая роль:{' '}
-                    {household.currentUserRole === 'head' ? 'глава семьи' : 'участник'}
-                  </div>
-                </div>
-
                 <div className='rounded-md border border-white/10 bg-black/15 px-4 py-3 text-right'>
                   <div className='text-xs uppercase tracking-[0.24em] text-white/45'>
                     Инвайт-код
@@ -300,88 +265,76 @@ export function HouseholdProfileModal({
         ) : null}
 
         {activeTab === 'goal' ? (
-          <div className='flex min-h-0 flex-col rounded-md border border-white/10 bg-white/6'>
-            <div className='min-h-0 flex-1 overflow-y-auto p-4'>
-              {familyGoal ? (
-                <div className='space-y-4'>
-                  <div>
-                    <div className='text-sm text-white/45'>
-                      {familyGoal.kind === 'spiritual' ? 'Для души' : 'Покупка'}
-                    </div>
-                    <div className='mt-2 text-2xl font-(--font-family-heading) text-white'>
-                      {familyGoal.title}
-                    </div>
-                    {familyGoal.description ? (
-                      <div className='mt-3 text-sm leading-6 text-white/65'>
-                        {familyGoal.description}
-                      </div>
-                    ) : null}
+          <div className='min-h-0 flex-1 overflow-y-auto'>
+            {familyGoal ? (
+              <div className='space-y-4'>
+                <div>
+                  <div className='text-sm text-white/45'>
+                    {familyGoal.kind === 'spiritual' ? 'Для души' : 'Покупка'}
                   </div>
-
-                  <div className='rounded-md border border-white/10 bg-black/15 p-4'>
-                    <div className='mb-2 flex items-center justify-between gap-3 text-sm text-white/65'>
-                      <span>
-                        {familyGoal.currentValue} / {familyGoal.targetValue}{' '}
-                        {familyGoal.kind === 'material'
-                          ? familyGoal.unitLabel || 'ед.'
-                          : 'общих баллов'}
-                      </span>
-                      <span>{familyGoalProgress}%</span>
-                    </div>
-                    <div className='h-3 overflow-hidden rounded-full bg-white/10'>
-                      <div
-                        className='h-full rounded-full bg-white transition-all duration-300'
-                        style={{ width: `${familyGoalProgress}%` }}
-                      />
-                    </div>
+                  <div className='mt-2 text-2xl font-(--font-family-heading) text-white'>
+                    {familyGoal.title}
                   </div>
+                  {familyGoal.description ? (
+                    <div className='mt-3 text-sm leading-6 text-white/65'>
+                      {familyGoal.description}
+                    </div>
+                  ) : null}
+                </div>
 
-                  <div className='flex flex-wrap gap-3'>
-                    <AppButton
-                      tone='secondary'
-                      className='w-auto min-w-44'
-                      disabled={busyAction !== null}
-                      onClick={onOpenEditGoal}
-                    >
-                      Редактировать цель
-                    </AppButton>
-                    <AppButton
-                      tone='ghost'
-                      className='min-w-40'
-                      disabled={busyAction !== null}
-                      onClick={onClearGoal}
-                    >
-                      {busyAction === 'clear-family-goal' ? 'Убираю...' : 'Убрать цель'}
-                    </AppButton>
+                <div className='rounded-md border border-white/10 bg-black/15 p-4'>
+                  <div className='mb-2 flex items-center justify-between gap-3 text-sm text-white/65'>
+                    <span>
+                      {familyGoal.currentValue} / {familyGoal.targetValue}{' '}
+                      {familyGoal.kind === 'material' ? familyGoal.unitLabel || 'ед.' : 'общих HC'}
+                    </span>
+                    <span>{familyGoalProgress}%</span>
+                  </div>
+                  <div className='h-3 overflow-hidden rounded-full bg-white/10'>
+                    <div
+                      className='h-full rounded-full bg-white transition-all duration-300'
+                      style={{ width: `${familyGoalProgress}%` }}
+                    />
                   </div>
                 </div>
-              ) : (
-                <div className='space-y-4'>
-                  <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
-                    Пока нет общей цели семьи.
-                  </div>
+
+                <div className='flex flex-wrap gap-3'>
                   <AppButton
                     tone='secondary'
                     className='w-auto min-w-44'
                     disabled={busyAction !== null}
                     onClick={onOpenEditGoal}
                   >
-                    Создать цель
+                    Редактировать цель
+                  </AppButton>
+                  <AppButton
+                    tone='ghost'
+                    className='min-w-40'
+                    disabled={busyAction !== null}
+                    onClick={onClearGoal}
+                  >
+                    {busyAction === 'clear-family-goal' ? 'Убираю...' : 'Убрать цель'}
                   </AppButton>
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className='space-y-4'>
+                <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+                  Пока нет общей цели семьи.
+                </div>
+              </div>
+            )}
           </div>
         ) : null}
 
         {activeTab === 'history' ? (
           <>
             {profile.recentEvents.length ? (
-              <div className='flex flex-col gap-4'>
+              <div className='flex flex-col space-y-3'>
                 {profile.recentEvents.map(event => (
                   <div
                     key={event.id}
-                    className='rounded-md border border-white/10 bg-black/15 p-4'
+                    className='rounded-md border border-white/10 bg-white/4 p-4'
                   >
                     <div className='flex items-start justify-between gap-4'>
                       <div>
@@ -405,22 +358,49 @@ export function HouseholdProfileModal({
                 ))}
               </div>
             ) : (
-              <div className='rounded-md border border-dashed border-white/12 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
+              <div className='rounded-md border border-dashed border-white/10 bg-white/4 px-4 py-8 text-center text-sm text-white/60'>
                 Как только появятся выполненные задачи, здесь появится история семейного прогресса.
               </div>
             )}
           </>
         ) : null}
-      </div>
+      </ModalBody>
 
-      <div className='border-t border-white/10 p-4 sm:p-6'>
+      <ModalFooter className='space-y-3'>
+        <div className='grid grid-cols-2 gap-3'>
+          {tabs.map(tab => (
+            <button
+              key={tab.key}
+              type='button'
+              onClick={() => setActiveTab(tab.key)}
+              className={`rounded-md border px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                activeTab === tab.key
+                  ? 'border-transparent bg-white text-(--color-page-text) shadow-(--shadow-card)'
+                  : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'goal' && (
+          <AppButton
+            tone='secondary'
+            className='w-auto min-w-44'
+            disabled={busyAction !== null}
+            onClick={onOpenEditGoal}
+          >
+            Создать цель
+          </AppButton>
+        )}
         <AppButton
           tone='ghost'
           onClick={onClose}
         >
           Закрыть кабинет
         </AppButton>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

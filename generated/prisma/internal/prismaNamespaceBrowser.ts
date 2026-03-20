@@ -54,6 +54,7 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
+  TaskCompletionApproval: 'TaskCompletionApproval',
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
@@ -61,6 +62,7 @@ export const ModelName = {
   FamilyGoal: 'FamilyGoal',
   HouseholdInvite: 'HouseholdInvite',
   ActionRateLimit: 'ActionRateLimit',
+  BrowserLoginSession: 'BrowserLoginSession',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -132,6 +134,7 @@ export const HouseholdTaskScalarFieldEnum = {
   rewardUnits: 'rewardUnits',
   status: 'status',
   priority: 'priority',
+  addedByMemberId: 'addedByMemberId',
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
@@ -146,6 +149,25 @@ export const HouseholdTaskScalarFieldEnum = {
 } as const
 
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
+
+
+export const TaskCompletionApprovalScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  taskId: 'taskId',
+  approverMemberId: 'approverMemberId',
+  requesterMemberId: 'requesterMemberId',
+  creditedMemberId: 'creditedMemberId',
+  creditedMemberName: 'creditedMemberName',
+  status: 'status',
+  telegramChatId: 'telegramChatId',
+  telegramMessageId: 'telegramMessageId',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskCompletionApprovalScalarFieldEnum = (typeof TaskCompletionApprovalScalarFieldEnum)[keyof typeof TaskCompletionApprovalScalarFieldEnum]
 
 
 export const ShoppingItemScalarFieldEnum = {
@@ -261,6 +283,22 @@ export const ActionRateLimitScalarFieldEnum = {
 } as const
 
 export type ActionRateLimitScalarFieldEnum = (typeof ActionRateLimitScalarFieldEnum)[keyof typeof ActionRateLimitScalarFieldEnum]
+
+
+export const BrowserLoginSessionScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  telegramUserId: 'telegramUserId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  username: 'username',
+  approvedAt: 'approvedAt',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrowserLoginSessionScalarFieldEnum = (typeof BrowserLoginSessionScalarFieldEnum)[keyof typeof BrowserLoginSessionScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {

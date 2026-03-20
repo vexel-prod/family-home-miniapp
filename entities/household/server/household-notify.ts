@@ -39,3 +39,40 @@ export async function notifyHousehold(
     ),
   )
 }
+
+export async function notifyMember(
+  prisma: PrismaClient,
+  memberId: string,
+  text: string,
+  replyMarkup?: {
+    inline_keyboard: Array<
+      Array<
+        | { text: string; callback_data: string }
+        | { text: string; url: string }
+      >
+    >
+  },
+) {
+  const member = await prisma.member.findFirst({
+    where: {
+      id: memberId,
+      isActive: true,
+      chatId: {
+        not: null,
+      },
+    },
+    select: {
+      chatId: true,
+    },
+  })
+
+  if (!member?.chatId) {
+    return null
+  }
+
+  return sendTelegramMessage({
+    chatId: member.chatId,
+    text,
+    replyMarkup,
+  })
+}

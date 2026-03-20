@@ -107,7 +107,12 @@ export async function GET(request: Request) {
       household,
     ] = await Promise.all([
       prisma.householdTask.findMany({
-        where: { householdId: auth.member.householdId, status: 'open' },
+        where: {
+          householdId: auth.member.householdId,
+          status: {
+            in: ['open', 'pending-approval'],
+          },
+        },
         orderBy: [{ deadlineAt: 'asc' }, { createdAt: 'desc' }],
       }),
       prisma.householdTask.findMany({

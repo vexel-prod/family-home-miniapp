@@ -90,7 +90,7 @@ export function FamilyGoalFormModal({
 
           <TextInput
             inputMode='numeric'
-            placeholder={kind === 'spiritual' ? 'Сколько общих баллов нужно' : 'Целевое значение'}
+            placeholder={kind === 'spiritual' ? 'Сколько общих HC нужно' : 'Целевое значение'}
             value={targetValue}
             onChange={event => onTargetValueChange(event.target.value)}
           />

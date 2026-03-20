@@ -1,5 +1,5 @@
 import { AppButton } from '@shared/ui/app-button'
-import { ModalPanel } from '@shared/ui/app-modal'
+import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { StatusPill } from '@shared/ui/status-pill'
 import { formatRelativeDate } from '@entities/family'
 import type { ShoppingItem } from '@entities/family'
@@ -14,17 +14,15 @@ type ShoppingListModalProps = {
 export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: ShoppingListModalProps) {
   return (
     <ModalPanel>
-      <div className='border-b border-white/10 p-4 sm:p-6'>
+      <ModalHeader>
         <div className='flex items-center justify-center gap-4'>
-          {items.length > 0 && (
-            <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
-              Всего: {items.length}
-            </h2>
-          )}
+          <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
+            Предстоящие покупки{items.length > 0 && `: ${items.length}`}
+          </h2>
         </div>
-      </div>
+      </ModalHeader>
 
-      <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
+      <ModalBody>
         {items.length ? (
           <div className='space-y-4'>
             {items.map(item => (
@@ -63,9 +61,9 @@ export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: Shopp
             Список пуст
           </div>
         )}
-      </div>
+      </ModalBody>
 
-      <div className='space-y-3 border-t border-white/10 p-4 sm:p-6'>
+      <ModalFooter className='space-y-3'>
         <AppButton
           tone='shopping'
           onClick={onAdd}
@@ -78,7 +76,7 @@ export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: Shopp
         >
           Закрыть
         </AppButton>
-      </div>
+      </ModalFooter>
     </ModalPanel>
   )
 }

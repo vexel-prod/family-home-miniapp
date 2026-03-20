@@ -1,5 +1,4 @@
 import type { BonusReward, HouseholdTask, MonthlyLeaderboardEntry } from '@entities/family'
-import { POINT_UNITS } from '@entities/bonus'
 
 const MOSCOW_UTC_OFFSET_HOURS = 3
 
@@ -66,7 +65,7 @@ export function isTaskInCurrentMoscowMonth(task: HouseholdTask, now = new Date()
 export function buildMonthlyRatingSummary(
   leaderboardEntries: MonthlyLeaderboardEntry[],
   teamBonusPoints: number,
-  rewards: BonusReward[],
+  _rewards: BonusReward[],
   currentUserName?: string,
 ): MonthlyRatingSummary {
   const leaderboard = [...leaderboardEntries].sort((left, right) => {
@@ -92,14 +91,6 @@ export function buildMonthlyRatingSummary(
       )
     : -1
   const currentUser = currentUserIndex >= 0 ? leaderboard[currentUserIndex] : undefined
-  const milestones = rewards.map(reward => ({
-    label: reward.title,
-    target: reward.costUnits / POINT_UNITS,
-  }))
-  const nextMilestone = currentUser
-    ? milestones.find(milestone => currentUser.points < milestone.target)
-    : undefined
-
   return {
     monthLabel: monthLabel.slice(0, 1).toUpperCase() + monthLabel.slice(1),
     leaderboard,
@@ -115,14 +106,8 @@ export function buildMonthlyRatingSummary(
           points: currentUser.points,
           place: currentUserIndex + 1,
           gapToLeader: Math.max((leader?.points ?? 0) - currentUser.points, 0),
-          nextMilestone: nextMilestone
-            ? {
-                label: nextMilestone.label,
-                pointsLeft: nextMilestone.target - currentUser.points,
-              }
-            : undefined,
         }
       : undefined,
-    milestones,
+    milestones: [],
   }
 }

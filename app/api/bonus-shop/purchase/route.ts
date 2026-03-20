@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     auth.member.householdId,
     `Household\n\n` +
       `${auth.member.firstName} купил(а) бонус: ${reward.title}\n` +
-      `Стоимость: ${formatPoints(reward.costUnits)} баллов`,
+      `Стоимость: ${formatPoints(reward.costUnits)} HC`,
   )
 
   return NextResponse.json({

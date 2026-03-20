@@ -387,6 +387,7 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
+  TaskCompletionApproval: 'TaskCompletionApproval',
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
@@ -394,6 +395,7 @@ export const ModelName = {
   FamilyGoal: 'FamilyGoal',
   HouseholdInvite: 'HouseholdInvite',
   ActionRateLimit: 'ActionRateLimit',
+  BrowserLoginSession: 'BrowserLoginSession',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -633,6 +635,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HouseholdTaskCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HouseholdTaskCountAggregateOutputType> | number
+        }
+      }
+    }
+    TaskCompletionApproval: {
+      payload: Prisma.$TaskCompletionApprovalPayload<ExtArgs>
+      fields: Prisma.TaskCompletionApprovalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TaskCompletionApprovalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TaskCompletionApprovalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        findFirst: {
+          args: Prisma.TaskCompletionApprovalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TaskCompletionApprovalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        findMany: {
+          args: Prisma.TaskCompletionApprovalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>[]
+        }
+        create: {
+          args: Prisma.TaskCompletionApprovalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        createMany: {
+          args: Prisma.TaskCompletionApprovalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TaskCompletionApprovalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>[]
+        }
+        delete: {
+          args: Prisma.TaskCompletionApprovalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        update: {
+          args: Prisma.TaskCompletionApprovalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        deleteMany: {
+          args: Prisma.TaskCompletionApprovalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TaskCompletionApprovalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TaskCompletionApprovalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>[]
+        }
+        upsert: {
+          args: Prisma.TaskCompletionApprovalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionApprovalPayload>
+        }
+        aggregate: {
+          args: Prisma.TaskCompletionApprovalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTaskCompletionApproval>
+        }
+        groupBy: {
+          args: Prisma.TaskCompletionApprovalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCompletionApprovalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TaskCompletionApprovalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCompletionApprovalCountAggregateOutputType> | number
         }
       }
     }
@@ -1154,6 +1230,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BrowserLoginSession: {
+      payload: Prisma.$BrowserLoginSessionPayload<ExtArgs>
+      fields: Prisma.BrowserLoginSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BrowserLoginSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BrowserLoginSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.BrowserLoginSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BrowserLoginSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>
+        }
+        findMany: {
+          args: Prisma.BrowserLoginSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>[]
+        }
+        create: {
+          args: Prisma.BrowserLoginSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>
+        }
+        createMany: {
+          args: Prisma.BrowserLoginSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BrowserLoginSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.BrowserLoginSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>
+        }
+        update: {
+          args: Prisma.BrowserLoginSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.BrowserLoginSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BrowserLoginSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BrowserLoginSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.BrowserLoginSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrowserLoginSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.BrowserLoginSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBrowserLoginSession>
+        }
+        groupBy: {
+          args: Prisma.BrowserLoginSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrowserLoginSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BrowserLoginSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrowserLoginSessionCountAggregateOutputType> | number
+        }
+      }
+    }
     MonthlyReport: {
       payload: Prisma.$MonthlyReportPayload<ExtArgs>
       fields: Prisma.MonthlyReportFieldRefs
@@ -1319,6 +1469,7 @@ export const HouseholdTaskScalarFieldEnum = {
   rewardUnits: 'rewardUnits',
   status: 'status',
   priority: 'priority',
+  addedByMemberId: 'addedByMemberId',
   addedByName: 'addedByName',
   addedByUsername: 'addedByUsername',
   addedByTelegramId: 'addedByTelegramId',
@@ -1333,6 +1484,25 @@ export const HouseholdTaskScalarFieldEnum = {
 } as const
 
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
+
+
+export const TaskCompletionApprovalScalarFieldEnum = {
+  id: 'id',
+  householdId: 'householdId',
+  taskId: 'taskId',
+  approverMemberId: 'approverMemberId',
+  requesterMemberId: 'requesterMemberId',
+  creditedMemberId: 'creditedMemberId',
+  creditedMemberName: 'creditedMemberName',
+  status: 'status',
+  telegramChatId: 'telegramChatId',
+  telegramMessageId: 'telegramMessageId',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskCompletionApprovalScalarFieldEnum = (typeof TaskCompletionApprovalScalarFieldEnum)[keyof typeof TaskCompletionApprovalScalarFieldEnum]
 
 
 export const ShoppingItemScalarFieldEnum = {
@@ -1448,6 +1618,22 @@ export const ActionRateLimitScalarFieldEnum = {
 } as const
 
 export type ActionRateLimitScalarFieldEnum = (typeof ActionRateLimitScalarFieldEnum)[keyof typeof ActionRateLimitScalarFieldEnum]
+
+
+export const BrowserLoginSessionScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  telegramUserId: 'telegramUserId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  username: 'username',
+  approvedAt: 'approvedAt',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrowserLoginSessionScalarFieldEnum = (typeof BrowserLoginSessionScalarFieldEnum)[keyof typeof BrowserLoginSessionScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {
@@ -1654,6 +1840,7 @@ export type GlobalOmitConfig = {
   household?: Prisma.HouseholdOmit
   member?: Prisma.MemberOmit
   householdTask?: Prisma.HouseholdTaskOmit
+  taskCompletionApproval?: Prisma.TaskCompletionApprovalOmit
   shoppingItem?: Prisma.ShoppingItemOmit
   bonusTransaction?: Prisma.BonusTransactionOmit
   bonusPurchase?: Prisma.BonusPurchaseOmit
@@ -1661,6 +1848,7 @@ export type GlobalOmitConfig = {
   familyGoal?: Prisma.FamilyGoalOmit
   householdInvite?: Prisma.HouseholdInviteOmit
   actionRateLimit?: Prisma.ActionRateLimitOmit
+  browserLoginSession?: Prisma.BrowserLoginSessionOmit
   monthlyReport?: Prisma.MonthlyReportOmit
 }
 

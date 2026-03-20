@@ -48,7 +48,7 @@ export function ModalPanel({ children, className }: ModalProps) {
 export function ModalHeader({ children, className }: ModalProps) {
   return (
     <div
-      className={['flex-none border-b border-white/10 bg-white/[0.02] p-4 sm:p-6', className]
+      className={['flex-none border-b border-white/10 bg-white/2 p-4 sm:p-6', className]
         .filter(Boolean)
         .join(' ')}
     >

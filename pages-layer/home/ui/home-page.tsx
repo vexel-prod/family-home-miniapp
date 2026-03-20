@@ -2,8 +2,34 @@
 
 import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
 
+import { formatPoints } from '@entities/bonus'
+import type {
+  BonusPurchase,
+  BonusReward,
+  BootstrapResponse,
+  FamilyGoal,
+  FetchOptions,
+  HouseholdProfile,
+  HouseholdSummary,
+  HouseholdTask,
+  ModalKey,
+  MonthlyLeaderboardEntry,
+  ShoppingItem,
+  TelegramUser,
+  TelegramWindow,
+} from '@entities/family'
+import {
+  sortCompletedTasks,
+  sortPurchasedShoppingItems,
+  sortShoppingItems,
+  sortTasks,
+} from '@entities/family'
+import { normalizeInviteCode } from '@entities/household'
+import { buildMonthlyRatingSummary } from '@entities/monthly-rating'
+import { getActorName, getTelegramInitData, getTelegramUser } from '@entities/telegram'
 import { BonusRewardFormModal } from '@features/bonus-reward/manage'
-import { BonusShopModal } from '@features/bonus-shop/view'
+import { BonusRewardDetailsModal, BonusShopModal } from '@features/bonus-shop/view'
+import { BrowserTelegramAuthPanel } from '@features/browser-telegram-auth'
 import { FamilyGoalFormModal } from '@features/family-goal/manage'
 import { HouseholdOnboarding } from '@features/household/onboarding'
 import { HouseholdProfileModal } from '@features/household/profile'
@@ -14,45 +40,21 @@ import {
   ShoppingListModal,
 } from '@features/shopping-management'
 import {
-  LastCompletedTaskModal,
   TaskActionsModal,
+  TaskCompletionConfirmModal,
   TaskFormModal,
   TaskJournalModal,
   TaskListModal,
 } from '@features/task-management'
-import { DashboardHero } from '@widgets/dashboard-hero'
-import { JournalSummary } from '@widgets/journal-summary'
 import { ModalOverlay } from '@shared/ui/app-modal'
 import { NoticeToast } from '@shared/ui/notice-toast'
-import { formatPoints } from '@entities/bonus'
-import { buildMonthlyRatingSummary } from '@entities/monthly-rating'
-import { normalizeInviteCode } from '@entities/household'
-import {
-  sortCompletedTasks,
-  sortPurchasedShoppingItems,
-  sortShoppingItems,
-  sortTasks,
-} from '@entities/family'
-import { getActorName, getTelegramInitData, getTelegramUser } from '@entities/telegram'
-import type {
-  BonusReward,
-  BonusPurchase,
-  BootstrapResponse,
-  FamilyGoal,
-  FetchOptions,
-  HouseholdProfile,
-  HouseholdSummary,
-  HouseholdTask,
-  MonthlyLeaderboardEntry,
-  ModalKey,
-  ShoppingItem,
-  TelegramUser,
-  TelegramWindow,
-} from '@entities/family'
+import { DashboardHero } from '@widgets/dashboard-hero'
+import { JournalSummary } from '@widgets/journal-summary'
 
 type TaskMutationResponse = {
   ok: boolean
   task: HouseholdTask
+  completionState?: 'completed' | 'pending-approval'
 }
 
 type ShoppingMutationResponse = {
@@ -178,7 +180,7 @@ export function HomePage({ version }: HomePageProps) {
   >([])
   const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
   const [participantNames, setParticipantNames] = useState<string[]>([])
-  const [appState, setAppState] = useState<'loading' | 'onboarding' | 'active'>('loading')
+  const [appState, setAppState] = useState<'loading' | 'auth' | 'onboarding' | 'active'>('loading')
   const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
   const [household, setHousehold] = useState<HouseholdSummary | null>(null)
   const [bonusRewards, setBonusRewards] = useState<BonusReward[]>([])
@@ -198,6 +200,7 @@ export function HomePage({ version }: HomePageProps) {
     recentEvents: [],
   })
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
+  const [selectedBonusReward, setSelectedBonusReward] = useState<BonusReward | null>(null)
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [purchasedShoppingItems, setPurchasedShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
@@ -233,7 +236,9 @@ export function HomePage({ version }: HomePageProps) {
   const [goalTargetValue, setGoalTargetValue] = useState('')
   const [goalCurrentValue, setGoalCurrentValue] = useState('')
   const [goalUnitLabel, setGoalUnitLabel] = useState('')
-  const [familyGoalSubmitModal, setFamilyGoalSubmitModal] = useState<'bonus-shop' | 'profile'>('bonus-shop')
+  const [familyGoalSubmitModal, setFamilyGoalSubmitModal] = useState<'bonus-shop' | 'profile'>(
+    'bonus-shop',
+  )
   const [onboardingStatus, setOnboardingStatus] = useState('')
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [taskCreateStatus, setTaskCreateStatus] = useState('')
@@ -252,6 +257,9 @@ export function HomePage({ version }: HomePageProps) {
     bonusRewards,
     getActorName(buyer),
   )
+  const currentMemberId = household?.currentUserMemberId ?? ''
+  const assignableMembers = household?.members.filter(member => !member.isCurrentUser) ?? []
+  const completionSelectableMembers = household?.members ?? []
 
   const upsertOpenTask = useCallback((task: HouseholdTask) => {
     setOpenTasks(current => {
@@ -315,9 +323,9 @@ export function HomePage({ version }: HomePageProps) {
       | 'household'
       | 'shopping-list'
       | 'task-journal'
-      | 'last-completed-task'
       | 'leaderboard'
       | 'bonus-shop'
+      | 'bonus-reward-details'
       | 'profile'
     >,
   ) {
@@ -380,6 +388,15 @@ export function HomePage({ version }: HomePageProps) {
     setModal('bonus-reward-form')
   }
 
+  function openBonusRewardDetailsModal(reward: BonusReward) {
+    if (!canOpenModal()) {
+      return
+    }
+
+    setSelectedBonusReward(reward)
+    setModal('bonus-reward-details')
+  }
+
   function openBonusRewardEditModal(reward: BonusReward) {
     if (!canOpenModal()) {
       return
@@ -426,7 +443,9 @@ export function HomePage({ version }: HomePageProps) {
     setReplaceTaskNote(selectedTask.note ?? '')
     setReplaceTaskDeadlineAt(toDateTimeLocalValue(selectedTask.deadlineAt))
     setReplaceTaskAssigneeMemberId(selectedTask.assignedMemberId ?? '')
-    setReplaceTaskRewardPoints(selectedTask.rewardUnits ? formatPoints(selectedTask.rewardUnits) : '')
+    setReplaceTaskRewardPoints(
+      selectedTask.rewardUnits ? formatPoints(selectedTask.rewardUnits) : '',
+    )
     setModal('task-replace')
   }
 
@@ -475,6 +494,25 @@ export function HomePage({ version }: HomePageProps) {
         )
 
         if (!response.ok) {
+          if (response.status === 401) {
+            setAppState('auth')
+            setOpenTasks([])
+            setCompletedTasks([])
+            setMonthlyLeaderboardEntries([])
+            setMonthlyTeamBonusPoints(0)
+            setParticipantNames([])
+            setCurrentUserBonusBalanceUnits(0)
+            setHousehold(null)
+            setBonusRewards([])
+            setFamilyGoal(null)
+            setBonusPurchases([])
+            setShoppingItems([])
+            setPurchasedShoppingItems([])
+            throw new Error(
+              'Сессия не найдена. Войди через Telegram, чтобы открыть household в браузере.',
+            )
+          }
+
           throw new Error(
             getApiErrorMessage(
               await readApiErrorPayload(response),
@@ -576,19 +614,11 @@ export function HomePage({ version }: HomePageProps) {
     setBuyer(getTelegramUser())
     const nextInitData = getTelegramInitData()
     setTelegramInitData(nextInitData)
-
-    if (nextInitData) {
-      void loadData({ initDataOverride: nextInitData })
-    } else {
-      setLoading(false)
-      setError(
-        'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
-      )
-    }
+    void loadData({ initDataOverride: nextInitData || undefined })
   }, [loadData])
 
   useEffect(() => {
-    if (!telegramInitData || appState !== 'active') {
+    if (appState !== 'active') {
       return
     }
 
@@ -603,9 +633,10 @@ export function HomePage({ version }: HomePageProps) {
     }
 
     const connectToEventStream = () => {
-      const eventSource = new EventSource(
-        `/api/events?initData=${encodeURIComponent(telegramInitData)}`,
-      )
+      const eventsUrl = telegramInitData
+        ? `/api/events?initData=${encodeURIComponent(telegramInitData)}`
+        : '/api/events'
+      const eventSource = new EventSource(eventsUrl)
 
       eventSourceRef.current = eventSource
 
@@ -841,6 +872,14 @@ export function HomePage({ version }: HomePageProps) {
   }
 
   async function completeTask(task: HouseholdTask, together = false) {
+    return completeTaskForMember(task, together ? null : undefined, together)
+  }
+
+  async function completeTaskForMember(
+    task: HouseholdTask,
+    creditedMemberId?: string | null,
+    together = false,
+  ) {
     setBusyKey(`${together ? 'task-together' : 'task'}-${task.id}`)
     setError('')
 
@@ -850,6 +889,7 @@ export function HomePage({ version }: HomePageProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: together ? 'complete-together' : 'complete',
+          creditedMemberId,
         }),
       })
 
@@ -867,7 +907,13 @@ export function HomePage({ version }: HomePageProps) {
       const payload = (await response.json()) as TaskMutationResponse
 
       closeTaskModals()
-      setToast(together ? `Сделано вместе: ${task.title}` : `Задача закрыта: ${task.title}`)
+      setToast(
+        payload.completionState === 'pending-approval'
+          ? `Отправили на подтверждение: ${task.title}`
+          : together
+            ? `Сделано вместе: ${task.title}`
+            : `Задача закрыта: ${task.title}`,
+      )
       applyTaskUpdate(payload.task)
       void loadData({ silent: true })
     } catch (taskUpdateError) {
@@ -881,6 +927,26 @@ export function HomePage({ version }: HomePageProps) {
     } finally {
       setBusyKey(null)
     }
+  }
+
+  function requestTaskCompletion(task: HouseholdTask) {
+    if (task.status === 'pending-approval') {
+      setError('Эта задача уже ожидает подтверждения автора.')
+      return
+    }
+
+    if (!task.assignedMemberId) {
+      void completeTask(task)
+      return
+    }
+
+    if (task.assignedMemberId === currentMemberId) {
+      void completeTaskForMember(task, task.assignedMemberId)
+      return
+    }
+
+    setSelectedTask(task)
+    setModal('task-complete-confirm')
   }
 
   async function deleteTask(task: HouseholdTask) {
@@ -1006,6 +1072,9 @@ export function HomePage({ version }: HomePageProps) {
       setCurrentUserBonusBalanceUnits(payload.balanceUnits)
       setBonusPurchases(current => [payload.purchase, ...current])
       setToast(`Куплен бонус: ${payload.purchase.rewardTitle}`)
+      setSelectedBonusReward(current =>
+        current?.id === payload.purchase.rewardKey ? current : current,
+      )
       void loadData({ silent: true })
     } catch (purchaseError) {
       setError(
@@ -1047,7 +1116,7 @@ export function HomePage({ version }: HomePageProps) {
             await readApiErrorPayload(response),
             editingRewardId
               ? 'Не удалось обновить товар в магазине.'
-              : 'Не удалось добавить ништяк в магазин.',
+              : 'Не удалось добавить товар в магазин.',
           ),
         )
       }
@@ -1056,7 +1125,8 @@ export function HomePage({ version }: HomePageProps) {
       setRewardTitle('')
       setRewardDescription('')
       setRewardCost('')
-      setToast(editingRewardId ? 'Товар обновлен' : 'Ништяк добавлен в магазин')
+      setToast(editingRewardId ? 'Товар обновлен' : 'Товар добавлен в магазин')
+      setSelectedBonusReward(null)
       setModal('bonus-shop')
       await loadData({ silent: true })
     } catch (rewardError) {
@@ -1065,7 +1135,7 @@ export function HomePage({ version }: HomePageProps) {
           ? rewardError.message
           : editingRewardId
             ? 'Не удалось обновить товар в магазине.'
-            : 'Не удалось добавить ништяк в магазин.',
+            : 'Не удалось добавить товар в магазин.',
       )
     } finally {
       setBusyKey(null)
@@ -1073,7 +1143,7 @@ export function HomePage({ version }: HomePageProps) {
   }
 
   async function deleteBonusReward(rewardId: string) {
-    const shouldDelete = window.confirm('Удалить этот ништяк из магазина?')
+    const shouldDelete = window.confirm('Удалить этот товар из магазина?')
 
     if (!shouldDelete) {
       return
@@ -1089,17 +1159,18 @@ export function HomePage({ version }: HomePageProps) {
 
       if (!response.ok) {
         throw new Error(
-          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось удалить ништяк.'),
+          getApiErrorMessage(await readApiErrorPayload(response), 'Не удалось удалить товар.'),
         )
       }
 
-      setToast('Ништяк удален из магазина')
+      setToast('Товар удален из магазина')
+      setSelectedBonusReward(null)
       await loadData({ silent: true })
     } catch (rewardDeleteError) {
       setError(
         rewardDeleteError instanceof Error
           ? rewardDeleteError.message
-          : 'Не удалось удалить ништяк.',
+          : 'Не удалось удалить товар.',
       )
     } finally {
       setBusyKey(null)
@@ -1645,8 +1716,32 @@ export function HomePage({ version }: HomePageProps) {
     )
   }
 
+  if (appState === 'auth') {
+    return (
+      <main className='min-h-screen bg-(--color-page-bg) text-(--color-page-text)'>
+        <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
+          {toast ? (
+            <NoticeToast
+              tone='success'
+              label='Готово'
+              title={toast}
+              icon='✓'
+            />
+          ) : null}
+        </div>
+
+        <BrowserTelegramAuthPanel
+          loading={loading}
+          onAuthenticated={async () => {
+            window.location.reload()
+          }}
+        />
+      </main>
+    )
+  }
+
   return (
-    <main className='min-h-dvh flex justify-between items-center bg-(--color-page-bg) text-(--color-page-text) px-4 relative'>
+    <main className='relative min-h-dvh flex flex-col justify-between items-center bg-(--color-page-bg) text-(--color-page-text) px-4'>
       <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
         {toast ? (
           <NoticeToast
@@ -1689,7 +1784,7 @@ export function HomePage({ version }: HomePageProps) {
               loading={busyKey === 'create-task' || loading}
               submitLabel='Добавить задачу'
               busyLabel='Добавляю...'
-              members={household?.members ?? []}
+              members={assignableMembers}
               onTitleChange={setTaskTitle}
               onNoteChange={setTaskNote}
               onDeadlineAtChange={setTaskDeadlineAt}
@@ -1705,10 +1800,32 @@ export function HomePage({ version }: HomePageProps) {
               task={selectedTask}
               busyKey={busyKey}
               onClose={closeTaskModals}
-              onComplete={() => void completeTask(selectedTask)}
+              onComplete={() => requestTaskCompletion(selectedTask)}
               onCompleteTogether={() => void completeTask(selectedTask, true)}
               onReplace={openTaskReplaceModal}
               onDelete={() => void deleteTask(selectedTask)}
+            />
+          ) : null}
+
+          {(modal === 'task-complete-confirm' || modal === 'task-complete-select') &&
+          selectedTask ? (
+            <TaskCompletionConfirmModal
+              mode={modal === 'task-complete-confirm' ? 'confirm' : 'select'}
+              taskTitle={selectedTask.title}
+              assigneeName={selectedTask.assignedMemberName ?? 'адресат'}
+              loading={busyKey === `task-${selectedTask.id}`}
+              members={completionSelectableMembers}
+              onConfirmAssignee={() =>
+                void completeTaskForMember(selectedTask, selectedTask.assignedMemberId ?? null)
+              }
+              onSelectMember={memberId => {
+                void completeTaskForMember(selectedTask, memberId)
+              }}
+              onBack={() =>
+                setModal(
+                  modal === 'task-complete-confirm' ? 'task-complete-select' : 'task-actions',
+                )
+              }
             />
           ) : null}
 
@@ -1724,12 +1841,14 @@ export function HomePage({ version }: HomePageProps) {
               loading={busyKey === `replace-task-${selectedTask.id}`}
               submitLabel='Сохранить изменения'
               busyLabel='Сохраняю...'
-              members={household?.members ?? []}
+              members={assignableMembers}
               onTitleChange={setReplaceTaskTitle}
               onNoteChange={setReplaceTaskNote}
               onDeadlineAtChange={setReplaceTaskDeadlineAt}
               onAssigneeMemberIdChange={setReplaceTaskAssigneeMemberId}
-              onRewardPointsChange={value => setReplaceTaskRewardPoints(normalizePointsInput(value))}
+              onRewardPointsChange={value =>
+                setReplaceTaskRewardPoints(normalizePointsInput(value))
+              }
               onSubmit={() => void replaceTask()}
               onBack={() => setModal('task-actions')}
             />
@@ -1739,14 +1858,6 @@ export function HomePage({ version }: HomePageProps) {
             <TaskJournalModal
               tasks={sortedCompletedTasks}
               purchasedItems={sortedPurchasedShoppingItems}
-              participantCount={participantNames.length}
-              onClose={closeModalWithGuard}
-            />
-          ) : null}
-
-          {modal === 'last-completed-task' ? (
-            <LastCompletedTaskModal
-              task={sortedCompletedTasks[0] ?? null}
               participantCount={participantNames.length}
               onClose={closeModalWithGuard}
             />
@@ -1764,14 +1875,26 @@ export function HomePage({ version }: HomePageProps) {
               balanceUnits={currentUserBonusBalanceUnits}
               rewards={bonusRewards}
               purchases={bonusPurchases}
+              onOpenReward={openBonusRewardDetailsModal}
+              onOpenAddElement={openBonusRewardCreateModal}
+              onClose={closeModalWithGuard}
+            />
+          ) : null}
+
+          {modal === 'bonus-reward-details' && selectedBonusReward ? (
+            <BonusRewardDetailsModal
+              reward={selectedBonusReward}
+              balanceUnits={currentUserBonusBalanceUnits}
               busyRewardKey={
                 busyKey?.startsWith('buy-reward-') ? busyKey.replace('buy-reward-', '') : null
               }
               onBuy={rewardKey => void buyBonusReward(rewardKey)}
-              onOpenAddElement={openBonusRewardCreateModal}
-              onOpenEditReward={openBonusRewardEditModal}
-              onDeleteReward={rewardId => void deleteBonusReward(rewardId)}
-              onClose={closeModalWithGuard}
+              onEdit={reward => {
+                setSelectedBonusReward(null)
+                openBonusRewardEditModal(reward)
+              }}
+              onDelete={rewardId => void deleteBonusReward(rewardId)}
+              onBack={() => setModal('bonus-shop')}
             />
           ) : null}
 
@@ -1899,7 +2022,7 @@ export function HomePage({ version }: HomePageProps) {
         <JournalSummary
           completedTasksCount={completedTasks.length}
           leaderPoints={monthlyRatingSummary.leadingPoints}
-          balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} баллов`}
+          balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} HC`}
           profileLevel={currentUserProfile.currentLevel}
           profileExp={currentUserProfile.expIntoCurrentLevel}
           profileExpToNextLevel={currentUserProfile.expToNextLevel}
@@ -1912,10 +2035,9 @@ export function HomePage({ version }: HomePageProps) {
           openTasksCount={openTasks.length}
           shoppingItemsCount={shoppingItems.length}
         />
-
       </div>
 
-      <div className='pointer-events-none absolute inset-x-0 bottom-4 flex justify-center px-4'>
+      <div className='absolute bottom-0 mb-4 flex justify-center px-4'>
         <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md'>
           <span>Household</span>
           <span className='h-1 w-1 animate-pulse rounded-full bg-green-500/70' />

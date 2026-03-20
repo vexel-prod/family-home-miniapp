@@ -123,6 +123,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid task assignee' }, { status: 400 })
   }
 
+  if (assignee?.id === auth.member.id) {
+    return NextResponse.json(
+      { ok: false, error: 'Self-assignment is not allowed' },
+      { status: 400 },
+    )
+  }
+
   const task = await prisma.householdTask.create({
     data: {
       householdId: auth.member.householdId,
@@ -137,6 +144,7 @@ export async function POST(request: Request) {
             assignee.firstName
           : null,
       rewardUnits: rewardPoints ? rewardPoints * POINT_UNITS : null,
+      addedByMemberId: auth.member.id,
       addedByName: actorName,
       addedByUsername: auth.user.username ?? null,
       addedByTelegramId: String(auth.user.id),
@@ -153,7 +161,7 @@ export async function POST(request: Request) {
       `Задача: ${task.title}\n` +
       `Сделать до: ${formatMoscowDeadlineLabel(task.deadlineAt)}` +
       `${task.assignedMemberName ? `\nАдресат: ${task.assignedMemberName}` : ''}` +
-      `${task.rewardUnits ? `\nНаграда: ${formatPoints(task.rewardUnits)} house-coin` : ''}` +
+      `${task.rewardUnits ? `\nНаграда: ${formatPoints(task.rewardUnits)} HC` : ''}` +
       `${task.note ? `\nКомментарий: ${task.note}` : ''}`,
   )
 
