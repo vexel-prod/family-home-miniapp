@@ -3,6 +3,11 @@ import { jsonRateLimited } from '@shared/api/api-response'
 import { getMemberProfileSnapshot } from '@entities/profile/server/household-profile'
 import { getHouseholdSummary } from '@entities/household/server/household'
 import { getMonthlyLeaderboardStats } from '@entities/bonus/server/bonus-ledger'
+import { toFamilyRewardKey, toGlobalRewardKey } from '@entities/bonus'
+import {
+  cleanupLegacySeededFamilyRewards,
+  syncGlobalBonusRewards,
+} from '@entities/bonus/server/external-rewards'
 import { getElapsedMs, logApiEvent } from '@shared/api/observability'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
@@ -91,6 +96,8 @@ export async function GET(request: Request) {
   try {
     const { start, end } = getCurrentMoscowMonthRange()
 
+    await cleanupLegacySeededFamilyRewards(prisma, auth.member.householdId)
+
     const currentUserProfile = await getMemberProfileSnapshot(prisma, auth.member.id)
 
     const [
@@ -100,7 +107,8 @@ export async function GET(request: Request) {
       activeShoppingItems,
       purchasedShoppingItems,
       monthlyStats,
-      bonusRewards,
+      familyBonusRewards,
+      globalBonusRewards,
       householdGoalState,
       familyGoal,
       bonusPurchases,
@@ -148,6 +156,7 @@ export async function GET(request: Request) {
         },
         orderBy: [{ createdAt: 'asc' }],
       }),
+      syncGlobalBonusRewards(prisma),
       prisma.household.findUnique({
         where: {
           id: auth.member.householdId,
@@ -185,13 +194,25 @@ export async function GET(request: Request) {
       currentUserBonusBalanceUnits: currentUserProfile.bonusBalanceUnits,
       currentUserProfile,
       household,
-      bonusRewards: bonusRewards.map(reward => ({
-        id: reward.id,
-        title: reward.title,
-        description: reward.description,
-        costUnits: reward.costUnits,
-        createdByMemberId: reward.createdByMemberId,
-      })),
+      bonusRewards: [
+        ...globalBonusRewards.map(reward => ({
+          id: toGlobalRewardKey(reward.id),
+          title: reward.title,
+          description: reward.description,
+          costUnits: reward.costUnits,
+          createdByMemberId: 'global-store',
+          isSystem: true,
+          sourceLabel: reward.sourceLabel ?? 'Глобальный магазин',
+        })),
+        ...familyBonusRewards.map(reward => ({
+          id: toFamilyRewardKey(reward.id),
+          title: reward.title,
+          description: reward.description,
+          costUnits: reward.costUnits,
+          createdByMemberId: reward.createdByMemberId,
+          sourceLabel: 'Ваша семья',
+        })),
+      ],
       familyGoal: familyGoal
         ? {
             id: familyGoal.id,

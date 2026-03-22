@@ -27,21 +27,11 @@ export type AggregateMember = {
 }
 
 export type MemberAvgAggregateOutputType = {
-  experiencePoints: number | null
-  level: number | null
   bonusBalanceUnits: number | null
-  completedTasksCount: number | null
-  fastTasksCount: number | null
-  overdueTasksCount: number | null
 }
 
 export type MemberSumAggregateOutputType = {
-  experiencePoints: number | null
-  level: number | null
   bonusBalanceUnits: number | null
-  completedTasksCount: number | null
-  fastTasksCount: number | null
-  overdueTasksCount: number | null
 }
 
 export type MemberMinAggregateOutputType = {
@@ -56,12 +46,7 @@ export type MemberMinAggregateOutputType = {
   isActive: boolean | null
   joinedAt: Date | null
   leftAt: Date | null
-  experiencePoints: number | null
-  level: number | null
   bonusBalanceUnits: number | null
-  completedTasksCount: number | null
-  fastTasksCount: number | null
-  overdueTasksCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,12 +63,7 @@ export type MemberMaxAggregateOutputType = {
   isActive: boolean | null
   joinedAt: Date | null
   leftAt: Date | null
-  experiencePoints: number | null
-  level: number | null
   bonusBalanceUnits: number | null
-  completedTasksCount: number | null
-  fastTasksCount: number | null
-  overdueTasksCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -100,12 +80,7 @@ export type MemberCountAggregateOutputType = {
   isActive: number
   joinedAt: number
   leftAt: number
-  experiencePoints: number
-  level: number
   bonusBalanceUnits: number
-  completedTasksCount: number
-  fastTasksCount: number
-  overdueTasksCount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -113,21 +88,11 @@ export type MemberCountAggregateOutputType = {
 
 
 export type MemberAvgAggregateInputType = {
-  experiencePoints?: true
-  level?: true
   bonusBalanceUnits?: true
-  completedTasksCount?: true
-  fastTasksCount?: true
-  overdueTasksCount?: true
 }
 
 export type MemberSumAggregateInputType = {
-  experiencePoints?: true
-  level?: true
   bonusBalanceUnits?: true
-  completedTasksCount?: true
-  fastTasksCount?: true
-  overdueTasksCount?: true
 }
 
 export type MemberMinAggregateInputType = {
@@ -142,12 +107,7 @@ export type MemberMinAggregateInputType = {
   isActive?: true
   joinedAt?: true
   leftAt?: true
-  experiencePoints?: true
-  level?: true
   bonusBalanceUnits?: true
-  completedTasksCount?: true
-  fastTasksCount?: true
-  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -164,12 +124,7 @@ export type MemberMaxAggregateInputType = {
   isActive?: true
   joinedAt?: true
   leftAt?: true
-  experiencePoints?: true
-  level?: true
   bonusBalanceUnits?: true
-  completedTasksCount?: true
-  fastTasksCount?: true
-  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -186,12 +141,7 @@ export type MemberCountAggregateInputType = {
   isActive?: true
   joinedAt?: true
   leftAt?: true
-  experiencePoints?: true
-  level?: true
   bonusBalanceUnits?: true
-  completedTasksCount?: true
-  fastTasksCount?: true
-  overdueTasksCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -295,12 +245,7 @@ export type MemberGroupByOutputType = {
   isActive: boolean
   joinedAt: Date
   leftAt: Date | null
-  experiencePoints: number
-  level: number
   bonusBalanceUnits: number
-  completedTasksCount: number
-  fastTasksCount: number
-  overdueTasksCount: number
   createdAt: Date
   updatedAt: Date
   _count: MemberCountAggregateOutputType | null
@@ -340,12 +285,7 @@ export type MemberWhereInput = {
   isActive?: Prisma.BoolFilter<"Member"> | boolean
   joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   leftAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
-  experiencePoints?: Prisma.IntFilter<"Member"> | number
-  level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
-  completedTasksCount?: Prisma.IntFilter<"Member"> | number
-  fastTasksCount?: Prisma.IntFilter<"Member"> | number
-  overdueTasksCount?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
@@ -372,12 +312,7 @@ export type MemberOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   leftAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   household?: Prisma.HouseholdOrderByWithRelationInput
@@ -407,12 +342,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Member"> | boolean
   joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   leftAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
-  experiencePoints?: Prisma.IntFilter<"Member"> | number
-  level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
-  completedTasksCount?: Prisma.IntFilter<"Member"> | number
-  fastTasksCount?: Prisma.IntFilter<"Member"> | number
-  overdueTasksCount?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
@@ -439,12 +369,7 @@ export type MemberOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   leftAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
@@ -469,12 +394,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"Member"> | boolean
   joinedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   leftAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
-  experiencePoints?: Prisma.IntWithAggregatesFilter<"Member"> | number
-  level?: Prisma.IntWithAggregatesFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntWithAggregatesFilter<"Member"> | number
-  completedTasksCount?: Prisma.IntWithAggregatesFilter<"Member"> | number
-  fastTasksCount?: Prisma.IntWithAggregatesFilter<"Member"> | number
-  overdueTasksCount?: Prisma.IntWithAggregatesFilter<"Member"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
 }
@@ -490,12 +410,7 @@ export type MemberCreateInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -522,12 +437,7 @@ export type MemberUncheckedCreateInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -552,12 +462,7 @@ export type MemberUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -584,12 +489,7 @@ export type MemberUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -615,12 +515,7 @@ export type MemberCreateManyInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -636,12 +531,7 @@ export type MemberUpdateManyMutationInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -658,12 +548,7 @@ export type MemberUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -690,23 +575,13 @@ export type MemberCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   leftAt?: Prisma.SortOrder
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type MemberAvgOrderByAggregateInput = {
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
 }
 
 export type MemberMaxOrderByAggregateInput = {
@@ -721,12 +596,7 @@ export type MemberMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   leftAt?: Prisma.SortOrder
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -743,23 +613,13 @@ export type MemberMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   leftAt?: Prisma.SortOrder
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type MemberSumOrderByAggregateInput = {
-  experiencePoints?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   bonusBalanceUnits?: Prisma.SortOrder
-  completedTasksCount?: Prisma.SortOrder
-  fastTasksCount?: Prisma.SortOrder
-  overdueTasksCount?: Prisma.SortOrder
 }
 
 export type MemberNullableScalarRelationFilter = {
@@ -965,12 +825,7 @@ export type MemberCreateWithoutHouseholdInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
@@ -995,12 +850,7 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1055,12 +905,7 @@ export type MemberScalarWhereInput = {
   isActive?: Prisma.BoolFilter<"Member"> | boolean
   joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   leftAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
-  experiencePoints?: Prisma.IntFilter<"Member"> | number
-  level?: Prisma.IntFilter<"Member"> | number
   bonusBalanceUnits?: Prisma.IntFilter<"Member"> | number
-  completedTasksCount?: Prisma.IntFilter<"Member"> | number
-  fastTasksCount?: Prisma.IntFilter<"Member"> | number
-  overdueTasksCount?: Prisma.IntFilter<"Member"> | number
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
 }
@@ -1076,12 +921,7 @@ export type MemberCreateWithoutCreatedTasksInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1107,12 +947,7 @@ export type MemberUncheckedCreateWithoutCreatedTasksInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1152,12 +987,7 @@ export type MemberUpdateWithoutCreatedTasksInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1183,12 +1013,7 @@ export type MemberUncheckedUpdateWithoutCreatedTasksInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -1212,12 +1037,7 @@ export type MemberCreateWithoutTaskCompletionApprovalsToReviewInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1243,12 +1063,7 @@ export type MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1277,12 +1092,7 @@ export type MemberCreateWithoutTaskCompletionRequestsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1308,12 +1118,7 @@ export type MemberUncheckedCreateWithoutTaskCompletionRequestsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1342,12 +1147,7 @@ export type MemberCreateWithoutTaskCompletionCreditsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1373,12 +1173,7 @@ export type MemberUncheckedCreateWithoutTaskCompletionCreditsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1418,12 +1213,7 @@ export type MemberUpdateWithoutTaskCompletionApprovalsToReviewInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1449,12 +1239,7 @@ export type MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -1489,12 +1274,7 @@ export type MemberUpdateWithoutTaskCompletionRequestsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1520,12 +1300,7 @@ export type MemberUncheckedUpdateWithoutTaskCompletionRequestsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -1560,12 +1335,7 @@ export type MemberUpdateWithoutTaskCompletionCreditsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1591,12 +1361,7 @@ export type MemberUncheckedUpdateWithoutTaskCompletionCreditsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -1620,12 +1385,7 @@ export type MemberCreateWithoutBonusTransactionsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1651,12 +1411,7 @@ export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
@@ -1696,12 +1451,7 @@ export type MemberUpdateWithoutBonusTransactionsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1727,12 +1477,7 @@ export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
@@ -1756,12 +1501,7 @@ export type MemberCreateWithoutBonusPurchasesInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1787,12 +1527,7 @@ export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1832,12 +1567,7 @@ export type MemberUpdateWithoutBonusPurchasesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1863,12 +1593,7 @@ export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -1892,12 +1617,7 @@ export type MemberCreateWithoutCreatedBonusRewardsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -1923,12 +1643,7 @@ export type MemberUncheckedCreateWithoutCreatedBonusRewardsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -1968,12 +1683,7 @@ export type MemberUpdateWithoutCreatedBonusRewardsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -1999,12 +1709,7 @@ export type MemberUncheckedUpdateWithoutCreatedBonusRewardsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -2028,12 +1733,7 @@ export type MemberCreateWithoutCreatedFamilyGoalsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -2059,12 +1759,7 @@ export type MemberUncheckedCreateWithoutCreatedFamilyGoalsInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -2104,12 +1799,7 @@ export type MemberUpdateWithoutCreatedFamilyGoalsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -2135,12 +1825,7 @@ export type MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -2164,12 +1849,7 @@ export type MemberCreateWithoutCreatedInvitesInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
@@ -2195,12 +1875,7 @@ export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
@@ -2240,12 +1915,7 @@ export type MemberUpdateWithoutCreatedInvitesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
@@ -2271,12 +1941,7 @@ export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -2300,12 +1965,7 @@ export type MemberCreateManyHouseholdInput = {
   isActive?: boolean
   joinedAt?: Date | string
   leftAt?: Date | string | null
-  experiencePoints?: number
-  level?: number
   bonusBalanceUnits?: number
-  completedTasksCount?: number
-  fastTasksCount?: number
-  overdueTasksCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2321,12 +1981,7 @@ export type MemberUpdateWithoutHouseholdInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
@@ -2351,12 +2006,7 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
@@ -2381,12 +2031,7 @@ export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
-  level?: Prisma.IntFieldUpdateOperationsInput | number
   bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
-  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
-  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2506,12 +2151,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   isActive?: boolean
   joinedAt?: boolean
   leftAt?: boolean
-  experiencePoints?: boolean
-  level?: boolean
   bonusBalanceUnits?: boolean
-  completedTasksCount?: boolean
-  fastTasksCount?: boolean
-  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -2539,12 +2179,7 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   isActive?: boolean
   joinedAt?: boolean
   leftAt?: boolean
-  experiencePoints?: boolean
-  level?: boolean
   bonusBalanceUnits?: boolean
-  completedTasksCount?: boolean
-  fastTasksCount?: boolean
-  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -2562,12 +2197,7 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   isActive?: boolean
   joinedAt?: boolean
   leftAt?: boolean
-  experiencePoints?: boolean
-  level?: boolean
   bonusBalanceUnits?: boolean
-  completedTasksCount?: boolean
-  fastTasksCount?: boolean
-  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -2585,17 +2215,12 @@ export type MemberSelectScalar = {
   isActive?: boolean
   joinedAt?: boolean
   leftAt?: boolean
-  experiencePoints?: boolean
-  level?: boolean
   bonusBalanceUnits?: boolean
-  completedTasksCount?: boolean
-  fastTasksCount?: boolean
-  overdueTasksCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "role" | "isActive" | "joinedAt" | "leftAt" | "experiencePoints" | "level" | "bonusBalanceUnits" | "completedTasksCount" | "fastTasksCount" | "overdueTasksCount" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "householdId" | "telegramUserId" | "chatId" | "firstName" | "lastName" | "username" | "role" | "isActive" | "joinedAt" | "leftAt" | "bonusBalanceUnits" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.Member$bonusTransactionsArgs<ExtArgs>
@@ -2642,12 +2267,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     isActive: boolean
     joinedAt: Date
     leftAt: Date | null
-    experiencePoints: number
-    level: number
     bonusBalanceUnits: number
-    completedTasksCount: number
-    fastTasksCount: number
-    overdueTasksCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["member"]>
@@ -3094,12 +2714,7 @@ export interface MemberFieldRefs {
   readonly isActive: Prisma.FieldRef<"Member", 'Boolean'>
   readonly joinedAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly leftAt: Prisma.FieldRef<"Member", 'DateTime'>
-  readonly experiencePoints: Prisma.FieldRef<"Member", 'Int'>
-  readonly level: Prisma.FieldRef<"Member", 'Int'>
   readonly bonusBalanceUnits: Prisma.FieldRef<"Member", 'Int'>
-  readonly completedTasksCount: Prisma.FieldRef<"Member", 'Int'>
-  readonly fastTasksCount: Prisma.FieldRef<"Member", 'Int'>
-  readonly overdueTasksCount: Prisma.FieldRef<"Member", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Member", 'DateTime'>
 }

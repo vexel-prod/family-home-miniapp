@@ -82,6 +82,11 @@ export type BonusPurchase = Prisma.BonusPurchaseModel
  */
 export type BonusReward = Prisma.BonusRewardModel
 /**
+ * Model GlobalBonusReward
+ * 
+ */
+export type GlobalBonusReward = Prisma.GlobalBonusRewardModel
+/**
  * Model FamilyGoal
  * 
  */

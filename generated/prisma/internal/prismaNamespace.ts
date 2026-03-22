@@ -392,6 +392,7 @@ export const ModelName = {
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
   BonusReward: 'BonusReward',
+  GlobalBonusReward: 'GlobalBonusReward',
   FamilyGoal: 'FamilyGoal',
   HouseholdInvite: 'HouseholdInvite',
   ActionRateLimit: 'ActionRateLimit',
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "globalBonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1008,6 +1009,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GlobalBonusReward: {
+      payload: Prisma.$GlobalBonusRewardPayload<ExtArgs>
+      fields: Prisma.GlobalBonusRewardFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GlobalBonusRewardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GlobalBonusRewardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>
+        }
+        findFirst: {
+          args: Prisma.GlobalBonusRewardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GlobalBonusRewardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>
+        }
+        findMany: {
+          args: Prisma.GlobalBonusRewardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>[]
+        }
+        create: {
+          args: Prisma.GlobalBonusRewardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>
+        }
+        createMany: {
+          args: Prisma.GlobalBonusRewardCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GlobalBonusRewardCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>[]
+        }
+        delete: {
+          args: Prisma.GlobalBonusRewardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>
+        }
+        update: {
+          args: Prisma.GlobalBonusRewardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>
+        }
+        deleteMany: {
+          args: Prisma.GlobalBonusRewardDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GlobalBonusRewardUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GlobalBonusRewardUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>[]
+        }
+        upsert: {
+          args: Prisma.GlobalBonusRewardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalBonusRewardPayload>
+        }
+        aggregate: {
+          args: Prisma.GlobalBonusRewardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGlobalBonusReward>
+        }
+        groupBy: {
+          args: Prisma.GlobalBonusRewardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GlobalBonusRewardGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GlobalBonusRewardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GlobalBonusRewardCountAggregateOutputType> | number
+        }
+      }
+    }
     FamilyGoal: {
       payload: Prisma.$FamilyGoalPayload<ExtArgs>
       fields: Prisma.FamilyGoalFieldRefs
@@ -1424,6 +1499,7 @@ export const HouseholdScalarFieldEnum = {
   sharedGoalUnits: 'sharedGoalUnits',
   experiencePoints: 'experiencePoints',
   level: 'level',
+  rewardedLevel: 'rewardedLevel',
   completedTasksCount: 'completedTasksCount',
   fastTasksCount: 'fastTasksCount',
   overdueTasksCount: 'overdueTasksCount',
@@ -1446,12 +1522,7 @@ export const MemberScalarFieldEnum = {
   isActive: 'isActive',
   joinedAt: 'joinedAt',
   leftAt: 'leftAt',
-  experiencePoints: 'experiencePoints',
-  level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
-  completedTasksCount: 'completedTasksCount',
-  fastTasksCount: 'fastTasksCount',
-  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1570,6 +1641,21 @@ export const BonusRewardScalarFieldEnum = {
 } as const
 
 export type BonusRewardScalarFieldEnum = (typeof BonusRewardScalarFieldEnum)[keyof typeof BonusRewardScalarFieldEnum]
+
+
+export const GlobalBonusRewardScalarFieldEnum = {
+  id: 'id',
+  sourceKey: 'sourceKey',
+  title: 'title',
+  description: 'description',
+  costUnits: 'costUnits',
+  sourceLabel: 'sourceLabel',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GlobalBonusRewardScalarFieldEnum = (typeof GlobalBonusRewardScalarFieldEnum)[keyof typeof GlobalBonusRewardScalarFieldEnum]
 
 
 export const FamilyGoalScalarFieldEnum = {
@@ -1845,6 +1931,7 @@ export type GlobalOmitConfig = {
   bonusTransaction?: Prisma.BonusTransactionOmit
   bonusPurchase?: Prisma.BonusPurchaseOmit
   bonusReward?: Prisma.BonusRewardOmit
+  globalBonusReward?: Prisma.GlobalBonusRewardOmit
   familyGoal?: Prisma.FamilyGoalOmit
   householdInvite?: Prisma.HouseholdInviteOmit
   actionRateLimit?: Prisma.ActionRateLimitOmit

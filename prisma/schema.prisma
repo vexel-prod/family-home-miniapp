@@ -15,6 +15,7 @@ model Household {
   sharedGoalUnits Int           @default(0)
   experiencePoints Int         @default(0)
   level         Int             @default(0)
+  rewardedLevel Int             @default(0)
   completedTasksCount Int      @default(0)
   fastTasksCount Int           @default(0)
   overdueTasksCount Int        @default(0)
@@ -44,12 +45,7 @@ model Member {
   isActive       Boolean   @default(true)
   joinedAt       DateTime  @default(now())
   leftAt         DateTime?
-  experiencePoints Int     @default(0)
-  level          Int       @default(0)
   bonusBalanceUnits Int    @default(0)
-  completedTasksCount Int  @default(0)
-  fastTasksCount   Int     @default(0)
-  overdueTasksCount Int    @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   household      Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
@@ -194,6 +190,21 @@ model BonusReward {
   createdByMember   Member    @relation("RewardCreator", fields: [createdByMemberId], references: [id], onDelete: Cascade)
 
   @@index([householdId, isArchived, createdAt])
+}
+
+model GlobalBonusReward {
+  id          String   @id @default(cuid())
+  sourceKey   String
+  title       String
+  description String?
+  costUnits   Int
+  sourceLabel String?
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([sourceKey])
+  @@index([isArchived, createdAt])
 }
 
 model FamilyGoal {

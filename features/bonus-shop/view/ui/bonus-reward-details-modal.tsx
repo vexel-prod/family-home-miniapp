@@ -26,6 +26,7 @@ export function BonusRewardDetailsModal({
   const canBuy = enoughBalance && !busyRewardKey
   const balanceAfterPurchase = balanceUnits - reward.costUnits
   const missingUnits = Math.max(reward.costUnits - balanceUnits, 0)
+  const isSystemReward = Boolean(reward.isSystem)
 
   return (
     <ModalPanel className='max-w-xl'>
@@ -42,7 +43,7 @@ export function BonusRewardDetailsModal({
               <div className='grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:gap-6'>
                 <div className='min-w-0'>
                   <div className='rounded-full border border-black/10 bg-black/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-black/55 w-fit'>
-                    Bonus reward
+                    {reward.sourceLabel || 'Bonus reward'}
                   </div>
 
                   <h3 className='mt-4 text-xl font-black uppercase leading-[0.9] tracking-[-0.04em] text-black/85 sm:text-[3.5rem]'>
@@ -125,25 +126,27 @@ export function BonusRewardDetailsModal({
           {busyRewardKey === reward.id ? 'Покупаю...' : canBuy ? 'Купить товар' : 'Недостаточно HC'}
         </AppButton>
 
-        <div className='grid grid-cols-2 gap-2'>
-          <AppButton
-            type='button'
-            tone='secondary'
-            onClick={() => onEdit(reward)}
-            className='rounded-[1.35rem] py-4 text-sm font-semibold uppercase tracking-[0.08em]'
-          >
-            Изменить
-          </AppButton>
+        {isSystemReward ? null : (
+          <div className='grid grid-cols-2 gap-2'>
+            <AppButton
+              type='button'
+              tone='secondary'
+              onClick={() => onEdit(reward)}
+              className='rounded-[1.35rem] py-4 text-sm font-semibold uppercase tracking-[0.08em]'
+            >
+              Изменить
+            </AppButton>
 
-          <AppButton
-            type='button'
-            tone='danger'
-            onClick={() => onDelete(reward.id)}
-            className='rounded-[1.35rem] py-4 text-sm font-semibold uppercase tracking-[0.08em]'
-          >
-            Удалить
-          </AppButton>
-        </div>
+            <AppButton
+              type='button'
+              tone='danger'
+              onClick={() => onDelete(reward.id)}
+              className='rounded-[1.35rem] py-4 text-sm font-semibold uppercase tracking-[0.08em]'
+            >
+              Удалить
+            </AppButton>
+          </div>
+        )}
 
         <AppButton
           type='button'

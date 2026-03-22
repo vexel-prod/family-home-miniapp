@@ -1,11 +1,13 @@
 import {
   createTelegramAuthSessionCookie,
+  shouldUseSecureTelegramCookie,
   TELEGRAM_AUTH_COOKIE_NAME,
 } from '@entities/session/server/auth'
 import { getPrisma } from '@shared/api/prisma'
 import { NextResponse } from 'next/server'
 
 function setSessionCookie(
+  request: Request,
   response: NextResponse,
   sessionCookie: ReturnType<typeof createTelegramAuthSessionCookie>,
 ) {
@@ -14,20 +16,20 @@ function setSessionCookie(
     value: sessionCookie.value,
     httpOnly: true,
     sameSite: 'lax',
-    secure: true,
+    secure: shouldUseSecureTelegramCookie(request),
     path: '/',
     maxAge: sessionCookie.maxAgeSeconds,
     expires: new Date(sessionCookie.expiresAt),
   })
 }
 
-function clearSessionCookie(response: NextResponse) {
+function clearSessionCookie(request: Request, response: NextResponse) {
   response.cookies.set({
     name: TELEGRAM_AUTH_COOKIE_NAME,
     value: '',
     httpOnly: true,
     sameSite: 'lax',
-    secure: true,
+    secure: shouldUseSecureTelegramCookie(request),
     path: '/',
     maxAge: 0,
     expires: new Date(0),
@@ -57,7 +59,7 @@ export async function GET(
 
   if (!session || session.token !== token) {
     const response = NextResponse.json({ ok: false, error: 'Not found' }, { status: 404 })
-    clearSessionCookie(response)
+    clearSessionCookie(request, response)
     return response
   }
 
@@ -71,6 +73,7 @@ export async function GET(
 
   const response = NextResponse.json({ ok: true, status: 'approved' })
   setSessionCookie(
+    request,
     response,
     createTelegramAuthSessionCookie({
       id: Number(session.telegramUserId),

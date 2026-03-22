@@ -1,22 +1,15 @@
 'use client'
 
-import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { formatPoints } from '@entities/bonus'
+import { formatPoints, fromFamilyRewardKey, isFamilyRewardKey } from '@entities/bonus'
 import type {
   BonusPurchase,
   BonusReward,
-  BootstrapResponse,
-  FamilyGoal,
-  FetchOptions,
-  HouseholdProfile,
   HouseholdSummary,
   HouseholdTask,
   ModalKey,
-  MonthlyLeaderboardEntry,
   ShoppingItem,
-  TelegramUser,
-  TelegramWindow,
 } from '@entities/family'
 import {
   sortCompletedTasks,
@@ -26,7 +19,7 @@ import {
 } from '@entities/family'
 import { normalizeInviteCode } from '@entities/household'
 import { buildMonthlyRatingSummary } from '@entities/monthly-rating'
-import { getActorName, getTelegramInitData, getTelegramUser } from '@entities/telegram'
+import { getActorName } from '@entities/telegram'
 import { BonusRewardFormModal } from '@features/bonus-reward/manage'
 import { BonusRewardDetailsModal, BonusShopModal } from '@features/bonus-shop/view'
 import { BrowserTelegramAuthPanel } from '@features/browser-telegram-auth'
@@ -50,6 +43,7 @@ import { ModalOverlay } from '@shared/ui/app-modal'
 import { NoticeToast } from '@shared/ui/notice-toast'
 import { DashboardHero } from '@widgets/dashboard-hero'
 import { JournalSummary } from '@widgets/journal-summary'
+import { useHomeBootstrap } from '@pages/home/model/use-home-bootstrap'
 
 type TaskMutationResponse = {
   ok: boolean
@@ -167,42 +161,9 @@ type HomePageProps = {
 }
 
 export function HomePage({ version }: HomePageProps) {
-  const bootstrapRequestInFlight = useRef(false)
-  const eventSourceRef = useRef<EventSource | null>(null)
-  const [buyer, setBuyer] = useState<TelegramUser | undefined>()
-  const [telegramInitData, setTelegramInitData] = useState('')
   const [modal, setModal] = useState<ModalKey>(null)
   const [modalGuardUntil, setModalGuardUntil] = useState(0)
-  const [openTasks, setOpenTasks] = useState<HouseholdTask[]>([])
-  const [completedTasks, setCompletedTasks] = useState<HouseholdTask[]>([])
-  const [monthlyLeaderboardEntries, setMonthlyLeaderboardEntries] = useState<
-    MonthlyLeaderboardEntry[]
-  >([])
-  const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
-  const [participantNames, setParticipantNames] = useState<string[]>([])
-  const [appState, setAppState] = useState<'loading' | 'auth' | 'onboarding' | 'active'>('loading')
-  const [currentUserBonusBalanceUnits, setCurrentUserBonusBalanceUnits] = useState(0)
-  const [household, setHousehold] = useState<HouseholdSummary | null>(null)
-  const [bonusRewards, setBonusRewards] = useState<BonusReward[]>([])
-  const [familyGoal, setFamilyGoal] = useState<FamilyGoal | null>(null)
-  const [currentUserProfile, setCurrentUserProfile] = useState<HouseholdProfile>({
-    totalExp: 0,
-    currentLevel: 0,
-    bonusBalanceUnits: 0,
-    currentLevelThreshold: 0,
-    nextLevel: 1,
-    nextLevelThreshold: 100,
-    expIntoCurrentLevel: 0,
-    expToNextLevel: 100,
-    completedTasksCount: 0,
-    fastTasksCount: 0,
-    overdueTasksCount: 0,
-    recentEvents: [],
-  })
-  const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
   const [selectedBonusReward, setSelectedBonusReward] = useState<BonusReward | null>(null)
-  const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
-  const [purchasedShoppingItems, setPurchasedShoppingItems] = useState<ShoppingItem[]>([])
   const [selectedTask, setSelectedTask] = useState<HouseholdTask | null>(null)
   const [selectedShoppingItem, setSelectedShoppingItem] = useState<ShoppingItem | null>(null)
   const [taskTitle, setTaskTitle] = useState('')
@@ -245,12 +206,40 @@ export function HomePage({ version }: HomePageProps) {
   const [toast, setToast] = useState('')
   const [error, setError] = useState('')
   const [shoppingCreateStatus, setShoppingCreateStatus] = useState('')
-  const [loading, setLoading] = useState(true)
+  const {
+    buyer,
+    appState,
+    openTasks,
+    setOpenTasks,
+    completedTasks,
+    setCompletedTasks,
+    monthlyLeaderboardEntries,
+    monthlyTeamBonusPoints,
+    participantNames,
+    currentUserBonusBalanceUnits,
+    setCurrentUserBonusBalanceUnits,
+    household,
+    bonusRewards,
+    familyGoal,
+    currentUserProfile,
+    bonusPurchases,
+    setBonusPurchases,
+    shoppingItems,
+    setShoppingItems,
+    purchasedShoppingItems,
+    setPurchasedShoppingItems,
+    loading,
+    refreshing,
+    telegramFetch,
+    loadData,
+  } = useHomeBootstrap({ setError })
 
   const sortedTasks = sortTasks(openTasks)
   const sortedCompletedTasks = sortCompletedTasks(completedTasks)
   const sortedShoppingItems = sortShoppingItems(shoppingItems)
   const sortedPurchasedShoppingItems = sortPurchasedShoppingItems(purchasedShoppingItems)
+  const isInitialShellLoading = loading && appState === 'loading'
+  const isBrowserBootstrapGate = appState === 'loading' && !buyer && !household
   const monthlyRatingSummary = buildMonthlyRatingSummary(
     monthlyLeaderboardEntries,
     monthlyTeamBonusPoints,
@@ -260,6 +249,11 @@ export function HomePage({ version }: HomePageProps) {
   const currentMemberId = household?.currentUserMemberId ?? ''
   const assignableMembers = household?.members.filter(member => !member.isCurrentUser) ?? []
   const completionSelectableMembers = household?.members ?? []
+  const actorName = getActorName(buyer)
+  const isEmptyHomeState = openTasks.length === 0 && shoppingItems.length === 0
+  const heroTypedText = isEmptyHomeState
+    ? `Привет, ${actorName}!\nСегодня дома спокойно.\nАктивных задач и покупок пока нет.\nМожно просто выдохнуть\nили добавить что-то новое.`
+    : `Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\nОтслеживайте прогресс\nЗарабатывайте house-coin (HC)\nПокупайте крутые бонусы!`
 
   const upsertOpenTask = useCallback((task: HouseholdTask) => {
     setOpenTasks(current => {
@@ -267,7 +261,7 @@ export function HomePage({ version }: HomePageProps) {
       next.push(task)
       return sortTasks(next)
     })
-  }, [])
+  }, [setOpenTasks])
 
   const upsertCompletedTask = useCallback((task: HouseholdTask) => {
     setCompletedTasks(current => {
@@ -275,12 +269,12 @@ export function HomePage({ version }: HomePageProps) {
       next.push(task)
       return sortCompletedTasks(next).slice(0, 30)
     })
-  }, [])
+  }, [setCompletedTasks])
 
   const removeTaskFromLists = useCallback((taskId: string) => {
     setOpenTasks(current => current.filter(task => task.id !== taskId))
     setCompletedTasks(current => current.filter(task => task.id !== taskId))
-  }, [])
+  }, [setCompletedTasks, setOpenTasks])
 
   const applyTaskUpdate = useCallback(
     (task: HouseholdTask) => {
@@ -293,7 +287,7 @@ export function HomePage({ version }: HomePageProps) {
       setCompletedTasks(current => current.filter(currentTask => currentTask.id !== task.id))
       upsertOpenTask(task)
     },
-    [upsertCompletedTask, upsertOpenTask],
+    [setCompletedTasks, setOpenTasks, upsertCompletedTask, upsertOpenTask],
   )
 
   const upsertShoppingItem = useCallback((item: ShoppingItem) => {
@@ -302,11 +296,11 @@ export function HomePage({ version }: HomePageProps) {
       next.push(item)
       return sortShoppingItems(next)
     })
-  }, [])
+  }, [setShoppingItems])
 
   const removeShoppingItemFromList = useCallback((itemId: string) => {
     setShoppingItems(current => current.filter(item => item.id !== itemId))
-  }, [])
+  }, [setShoppingItems])
 
   function canOpenModal() {
     return Date.now() >= modalGuardUntil
@@ -335,23 +329,6 @@ export function HomePage({ version }: HomePageProps) {
 
     setModal(nextModal)
   }
-
-  const telegramFetch = useCallback(
-    async (input: string, init?: FetchOptions, initDataOverride?: string) => {
-      const headers = new Headers(init?.headers)
-      const resolvedInitData = initDataOverride || telegramInitData || getTelegramInitData()
-
-      if (resolvedInitData) {
-        headers.set('x-telegram-init-data', resolvedInitData)
-      }
-
-      return fetch(input, {
-        ...init,
-        headers,
-      })
-    },
-    [telegramInitData],
-  )
 
   function openTaskActions(task: HouseholdTask) {
     if (!canOpenModal()) {
@@ -402,7 +379,7 @@ export function HomePage({ version }: HomePageProps) {
       return
     }
 
-    setEditingRewardId(reward.id)
+    setEditingRewardId(isFamilyRewardKey(reward.id) ? fromFamilyRewardKey(reward.id) : reward.id)
     setRewardTitle(reward.title)
     setRewardDescription(reward.description ?? '')
     setRewardCost(String(Math.round(reward.costUnits / 4)))
@@ -466,227 +443,6 @@ export function HomePage({ version }: HomePageProps) {
     setTaskCreateStatus('')
   }
 
-  const loadData = useCallback(
-    async ({
-      initDataOverride,
-      silent = false,
-    }: {
-      initDataOverride?: string
-      silent?: boolean
-    } = {}) => {
-      if (bootstrapRequestInFlight.current) {
-        return
-      }
-
-      bootstrapRequestInFlight.current = true
-
-      if (!silent) {
-        setLoading(true)
-      }
-
-      setError('')
-
-      try {
-        const response = await telegramFetch(
-          '/api/bootstrap',
-          { cache: 'no-store' },
-          initDataOverride,
-        )
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            setAppState('auth')
-            setOpenTasks([])
-            setCompletedTasks([])
-            setMonthlyLeaderboardEntries([])
-            setMonthlyTeamBonusPoints(0)
-            setParticipantNames([])
-            setCurrentUserBonusBalanceUnits(0)
-            setHousehold(null)
-            setBonusRewards([])
-            setFamilyGoal(null)
-            setBonusPurchases([])
-            setShoppingItems([])
-            setPurchasedShoppingItems([])
-            throw new Error(
-              'Сессия не найдена. Войди через Telegram, чтобы открыть household в браузере.',
-            )
-          }
-
-          throw new Error(
-            getApiErrorMessage(
-              await readApiErrorPayload(response),
-              'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
-            ),
-          )
-        }
-
-        const payload = (await response.json()) as BootstrapResponse
-
-        if (payload.state === 'onboarding') {
-          setAppState('onboarding')
-          setOpenTasks([])
-          setCompletedTasks([])
-          setMonthlyLeaderboardEntries([])
-          setMonthlyTeamBonusPoints(0)
-          setParticipantNames([])
-          setCurrentUserBonusBalanceUnits(0)
-          setHousehold(null)
-          setBonusRewards([])
-          setFamilyGoal(null)
-          setCurrentUserProfile({
-            totalExp: 0,
-            currentLevel: 0,
-            bonusBalanceUnits: 0,
-            currentLevelThreshold: 0,
-            nextLevel: 1,
-            nextLevelThreshold: 100,
-            expIntoCurrentLevel: 0,
-            expToNextLevel: 100,
-            completedTasksCount: 0,
-            fastTasksCount: 0,
-            overdueTasksCount: 0,
-            recentEvents: [],
-          })
-          setBonusPurchases([])
-          setShoppingItems([])
-          setPurchasedShoppingItems([])
-          setRewardTitle('')
-          setRewardDescription('')
-          setRewardCost('')
-          setGoalKind('spiritual')
-          setGoalTitle('')
-          setGoalDescription('')
-          setGoalTargetValue('')
-          setGoalCurrentValue('')
-          setGoalUnitLabel('')
-          setModal(null)
-          return
-        }
-
-        setAppState('active')
-        setOnboardingStatus('')
-        setOpenTasks(payload.openTasks)
-        setCompletedTasks(payload.completedTasks)
-        setMonthlyLeaderboardEntries(payload.monthlyLeaderboardEntries)
-        setMonthlyTeamBonusPoints(payload.monthlyTeamBonusPoints)
-        setParticipantNames(payload.participantNames)
-        setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
-        setHousehold(payload.household)
-        setBonusRewards(payload.bonusRewards)
-        setFamilyGoal(payload.familyGoal)
-        setCustomInviteCode(payload.household.activeInvite?.code ?? '')
-        setCurrentUserProfile(payload.currentUserProfile)
-        setBonusPurchases(payload.bonusPurchases)
-        setShoppingItems(payload.activeShoppingItems)
-        setPurchasedShoppingItems(payload.purchasedShoppingItems)
-        setGoalKind(payload.familyGoal?.kind ?? 'spiritual')
-        setGoalTitle(payload.familyGoal?.title ?? '')
-        setGoalDescription(payload.familyGoal?.description ?? '')
-        setGoalTargetValue(payload.familyGoal ? String(payload.familyGoal.targetValue) : '')
-        setGoalCurrentValue(
-          payload.familyGoal?.kind === 'material' ? String(payload.familyGoal.currentValue) : '',
-        )
-        setGoalUnitLabel(
-          payload.familyGoal?.kind === 'material' ? (payload.familyGoal.unitLabel ?? '') : '',
-        )
-      } catch (loadError) {
-        setError(
-          loadError instanceof Error
-            ? loadError.message
-            : 'Не получилось загрузить текущие списки. Открой приложение через Telegram и проверь доступ участника.',
-        )
-      } finally {
-        bootstrapRequestInFlight.current = false
-
-        if (!silent) {
-          setLoading(false)
-        }
-      }
-    },
-    [telegramFetch],
-  )
-
-  useEffect(() => {
-    const telegram = (window as TelegramWindow).Telegram?.WebApp
-    telegram?.ready?.()
-    telegram?.expand?.()
-    setBuyer(getTelegramUser())
-    const nextInitData = getTelegramInitData()
-    setTelegramInitData(nextInitData)
-    void loadData({ initDataOverride: nextInitData || undefined })
-  }, [loadData])
-
-  useEffect(() => {
-    if (appState !== 'active') {
-      return
-    }
-
-    let disposed = false
-    let reconnectTimeoutId: number | null = null
-    let reconnectDelayMs = 2000
-
-    const refreshData = () => {
-      startTransition(() => {
-        void loadData({ silent: true })
-      })
-    }
-
-    const connectToEventStream = () => {
-      const eventsUrl = telegramInitData
-        ? `/api/events?initData=${encodeURIComponent(telegramInitData)}`
-        : '/api/events'
-      const eventSource = new EventSource(eventsUrl)
-
-      eventSourceRef.current = eventSource
-
-      eventSource.onopen = () => {
-        reconnectDelayMs = 2000
-      }
-
-      eventSource.addEventListener('household-updated', () => {
-        refreshData()
-      })
-
-      eventSource.onerror = () => {
-        eventSource.close()
-
-        if (!disposed) {
-          const currentDelay = reconnectDelayMs
-          reconnectDelayMs = Math.min(reconnectDelayMs * 2, 30000)
-          reconnectTimeoutId = window.setTimeout(() => {
-            connectToEventStream()
-          }, currentDelay)
-        }
-      }
-    }
-
-    const refreshOnFocus = () => {
-      if (document.visibilityState !== 'visible') {
-        return
-      }
-
-      refreshData()
-    }
-
-    connectToEventStream()
-    window.addEventListener('focus', refreshOnFocus)
-    document.addEventListener('visibilitychange', refreshOnFocus)
-
-    return () => {
-      disposed = true
-      eventSourceRef.current?.close()
-      eventSourceRef.current = null
-
-      if (reconnectTimeoutId !== null) {
-        window.clearTimeout(reconnectTimeoutId)
-      }
-
-      window.removeEventListener('focus', refreshOnFocus)
-      document.removeEventListener('visibilitychange', refreshOnFocus)
-    }
-  }, [appState, telegramInitData, loadData])
-
   useEffect(() => {
     if (!toast) {
       return
@@ -704,6 +460,36 @@ export function HomePage({ version }: HomePageProps) {
     const timeout = window.setTimeout(() => setError(''), 3200)
     return () => window.clearTimeout(timeout)
   }, [error])
+
+  useEffect(() => {
+    if (appState === 'onboarding') {
+      setRewardTitle('')
+      setRewardDescription('')
+      setRewardCost('')
+      setGoalKind('spiritual')
+      setGoalTitle('')
+      setGoalDescription('')
+      setGoalTargetValue('')
+      setGoalCurrentValue('')
+      setGoalUnitLabel('')
+      setCustomInviteCode('')
+      setModal(null)
+      return
+    }
+
+    if (appState !== 'active') {
+      return
+    }
+
+    setOnboardingStatus('')
+    setCustomInviteCode(household?.activeInvite?.code ?? '')
+    setGoalKind(familyGoal?.kind ?? 'spiritual')
+    setGoalTitle(familyGoal?.title ?? '')
+    setGoalDescription(familyGoal?.description ?? '')
+    setGoalTargetValue(familyGoal ? String(familyGoal.targetValue) : '')
+    setGoalCurrentValue(familyGoal?.kind === 'material' ? String(familyGoal.currentValue) : '')
+    setGoalUnitLabel(familyGoal?.kind === 'material' ? (familyGoal.unitLabel ?? '') : '')
+  }, [appState, familyGoal, household])
 
   function openShoppingActions(item: ShoppingItem) {
     if (!canOpenModal()) {
@@ -1143,6 +929,7 @@ export function HomePage({ version }: HomePageProps) {
   }
 
   async function deleteBonusReward(rewardId: string) {
+    const resolvedRewardId = isFamilyRewardKey(rewardId) ? fromFamilyRewardKey(rewardId) : rewardId
     const shouldDelete = window.confirm('Удалить этот товар из магазина?')
 
     if (!shouldDelete) {
@@ -1153,7 +940,7 @@ export function HomePage({ version }: HomePageProps) {
     setError('')
 
     try {
-      const response = await telegramFetch(`/api/bonus-shop/rewards/${rewardId}`, {
+      const response = await telegramFetch(`/api/bonus-shop/rewards/${resolvedRewardId}`, {
         method: 'DELETE',
       })
 
@@ -1606,6 +1393,36 @@ export function HomePage({ version }: HomePageProps) {
     }
   }
 
+  async function sendMonthlyReport() {
+    setBusyKey('send-monthly-report')
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/household/monthly-report', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            'Не удалось отправить отчет за текущий месяц.',
+          ),
+        )
+      }
+
+      setToast('Отчет за текущий месяц отправлен в Telegram')
+    } catch (reportError) {
+      setError(
+        reportError instanceof Error
+          ? reportError.message
+          : 'Не удалось отправить отчет за текущий месяц.',
+      )
+    } finally {
+      setBusyKey(null)
+    }
+  }
+
   async function leaveHousehold() {
     const isLastMember = household?.members.length === 1
     const shouldLeave = window.confirm(
@@ -1740,8 +1557,32 @@ export function HomePage({ version }: HomePageProps) {
     )
   }
 
+  if (isBrowserBootstrapGate) {
+    return (
+      <main className='min-h-screen bg-(--color-page-bg) text-(--color-page-text)'>
+        <section className='mx-auto flex min-h-screen w-full max-w-xl items-center px-4 sm:px-6'>
+          <div className='w-full rounded-md border border-white/10 bg-white/6 p-6 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:p-7'>
+            <div className='text-xs uppercase tracking-[0.28em] text-white/45'>Household</div>
+            <h1 className='mt-4 font-(--font-family-heading) text-3xl leading-none text-white sm:text-4xl'>
+              Проверяю доступ
+            </h1>
+            <p className='mt-4 text-sm leading-6 text-white/68 sm:text-base'>
+              Подготавливаю вход через Telegram и проверяю доступ к семье.
+            </p>
+            <div className='mt-5 h-2 overflow-hidden rounded-full bg-white/8'>
+              <div className='h-full w-1/3 animate-pulse rounded-full bg-white/55' />
+            </div>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
   return (
-    <main className='relative min-h-dvh flex flex-col justify-between items-center bg-(--color-page-bg) text-(--color-page-text) px-4'>
+    <main
+      aria-busy={isInitialShellLoading || refreshing}
+      className='relative min-h-dvh flex flex-col justify-between items-center bg-(--color-page-bg) text-(--color-page-text) px-4'
+    >
       <div className='pointer-events-none fixed inset-0 z-70 flex items-center justify-center px-4'>
         {toast ? (
           <NoticeToast
@@ -1766,6 +1607,7 @@ export function HomePage({ version }: HomePageProps) {
           {modal === 'household' ? (
             <TaskListModal
               tasks={sortedTasks}
+              loading={isInitialShellLoading}
               onClose={closeModalWithGuard}
               onAdd={openTaskCreateModal}
               onSelectTask={openTaskActions}
@@ -1866,6 +1708,7 @@ export function HomePage({ version }: HomePageProps) {
           {modal === 'leaderboard' ? (
             <MonthlyRatingModal
               summary={monthlyRatingSummary}
+              loading={isInitialShellLoading}
               onClose={closeModalWithGuard}
             />
           ) : null}
@@ -1875,6 +1718,7 @@ export function HomePage({ version }: HomePageProps) {
               balanceUnits={currentUserBonusBalanceUnits}
               rewards={bonusRewards}
               purchases={bonusPurchases}
+              loading={isInitialShellLoading}
               onOpenReward={openBonusRewardDetailsModal}
               onOpenAddElement={openBonusRewardCreateModal}
               onClose={closeModalWithGuard}
@@ -1942,10 +1786,12 @@ export function HomePage({ version }: HomePageProps) {
               familyGoal={familyGoal}
               customInviteCode={customInviteCode}
               busyAction={busyKey}
+              loading={isInitialShellLoading}
               onCustomInviteCodeChange={value => setCustomInviteCode(normalizeInviteCode(value))}
               onCopyInvite={() => void copyInviteCode()}
               onCreateCustomInvite={() => void createCustomInvite()}
               onReissueInvite={() => void reissueInvite()}
+              onSendMonthlyReport={() => void sendMonthlyReport()}
               onOpenEditGoal={() => openFamilyGoalEditModal('profile')}
               onLeaveHousehold={() => void leaveHousehold()}
               onClearGoal={() => void clearFamilyGoal()}
@@ -1957,6 +1803,7 @@ export function HomePage({ version }: HomePageProps) {
           {modal === 'shopping-list' ? (
             <ShoppingListModal
               items={sortedShoppingItems}
+              loading={isInitialShellLoading}
               onClose={closeModalWithGuard}
               onAdd={openShoppingCreateModal}
               onSelectItem={openShoppingActions}
@@ -2017,21 +1864,28 @@ export function HomePage({ version }: HomePageProps) {
       ) : null}
 
       <div className='mx-auto flex min-h-screen w-full max-w-(--page-max-width) flex-col items-center justify-center gap-4'>
-        <DashboardHero actorName={getActorName(buyer)} />
+        <DashboardHero
+          actorName={actorName}
+          typedText={heroTypedText}
+        />
 
         <JournalSummary
+          loading={isInitialShellLoading}
           completedTasksCount={completedTasks.length}
           leaderPoints={monthlyRatingSummary.leadingPoints}
           balanceLabel={`${formatPoints(currentUserBonusBalanceUnits)} HC`}
           profileLevel={currentUserProfile.currentLevel}
-          profileExp={currentUserProfile.expIntoCurrentLevel}
-          profileExpToNextLevel={currentUserProfile.expToNextLevel}
-          onOpenJournal={() => openMainModal('task-journal')}
-          onOpenLeaderboard={() => openMainModal('leaderboard')}
-          onOpenBonusShop={() => openMainModal('bonus-shop')}
-          onOpenProfile={() => openMainModal('profile')}
-          onOpenHousehold={() => openMainModal('household')}
-          onOpenShopping={() => openMainModal('shopping-list')}
+          profileTotalExp={currentUserProfile.totalExp}
+          onOpenJournal={() => (appState === 'active' ? openMainModal('task-journal') : undefined)}
+          onOpenLeaderboard={() =>
+            appState === 'active' ? openMainModal('leaderboard') : undefined
+          }
+          onOpenBonusShop={() => (appState === 'active' ? openMainModal('bonus-shop') : undefined)}
+          onOpenProfile={() => (appState === 'active' ? openMainModal('profile') : undefined)}
+          onOpenHousehold={() => (appState === 'active' ? openMainModal('household') : undefined)}
+          onOpenShopping={() =>
+            appState === 'active' ? openMainModal('shopping-list') : undefined
+          }
           openTasksCount={openTasks.length}
           shoppingItemsCount={shoppingItems.length}
         />
@@ -2040,7 +1894,11 @@ export function HomePage({ version }: HomePageProps) {
       <div className='absolute bottom-0 mb-4 flex justify-center px-4'>
         <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md'>
           <span>Household</span>
-          <span className='h-1 w-1 animate-pulse rounded-full bg-green-500/70' />
+          <span
+            className={`h-1 w-1 rounded-full ${
+              refreshing ? 'animate-pulse bg-amber-400/80' : 'animate-pulse bg-green-500/70'
+            }`}
+          />
           <span>v{version}</span>
         </div>
       </div>

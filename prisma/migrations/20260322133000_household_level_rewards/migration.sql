@@ -1,0 +1,2 @@
+ALTER TABLE "Household"
+ADD COLUMN "rewardedLevel" INTEGER NOT NULL DEFAULT 0;

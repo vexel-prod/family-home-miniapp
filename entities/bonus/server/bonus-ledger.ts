@@ -1,18 +1,12 @@
 import type { PrismaClient } from '@/generated/prisma/client'
 import { syncActiveSpiritualGoal } from '@entities/family-goal/server/family-goal'
-import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
-import { syncHouseholdProfiles } from '@entities/profile/server/household-profile'
 import {
-  DEADLINE_PENALTY_DELAY_MS,
-  DEADLINE_REMINDER_INTERVAL_MS,
   FAST_COMPLETION_WINDOW_MS,
-  formatMoscowDeadlineLabel,
   formatPoints,
   getMonthKey,
   getTaskAwardUnits,
-  getTaskPenaltyUnits,
 } from '@entities/bonus'
-import { getMemberDisplayName, notifyHousehold } from '@entities/household/server/household-notify'
+import { getMemberDisplayName } from '@entities/household/server/household-notify'
 import { getTaskExpResult } from '@entities/profile/lib/household-profile'
 
 function getCurrentMoscowMonthRange(now = new Date()) {
@@ -25,6 +19,21 @@ function getCurrentMoscowMonthRange(now = new Date()) {
   const parts = formatter.formatToParts(now)
   const year = Number(parts.find(part => part.type === 'year')?.value ?? now.getUTCFullYear())
   const month = Number(parts.find(part => part.type === 'month')?.value ?? now.getUTCMonth() + 1)
+  const start = new Date(Date.UTC(year, month - 1, 1, -3))
+  const end = new Date(Date.UTC(year, month, 1, -3))
+
+  return { start, end }
+}
+
+function getMoscowMonthRangeByMonthKey(monthKey: string) {
+  const [rawYear, rawMonth] = monthKey.split('-')
+  const year = Number(rawYear)
+  const month = Number(rawMonth)
+
+  if (!year || !month || month < 1 || month > 12) {
+    throw new Error(`Invalid month key: ${monthKey}`)
+  }
+
   const start = new Date(Date.UTC(year, month - 1, 1, -3))
   const end = new Date(Date.UTC(year, month, 1, -3))
 
@@ -444,137 +453,13 @@ export async function getMonthlyLeaderboardStats(
   }
 }
 
-export async function processTaskDeadlineEvents(
-  prisma: PrismaClient,
-  now = new Date(),
-) {
-  const overdueTasks = await prisma.householdTask.findMany({
-    where: {
-      status: 'open',
-      deadlineAt: {
-        lte: now,
-      },
-    },
-    include: {
-      household: true,
-    },
-    orderBy: [{ deadlineAt: 'asc' }],
-  })
-
-  for (const task of overdueTasks) {
-    const members = await prisma.member.findMany({
-      where: { householdId: task.householdId },
-      orderBy: [{ createdAt: 'asc' }],
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        username: true,
-      },
-    })
-
-    const deadlinePassedMs = now.getTime() - task.deadlineAt.getTime()
-
-    if (
-      !task.penaltyAppliedAt &&
-      deadlinePassedMs >= DEADLINE_PENALTY_DELAY_MS
-    ) {
-      const penaltyUnits = getTaskPenaltyUnits()
-      const memberShares = splitUnitsEvenly(
-        penaltyUnits,
-        members.map(member => member.id),
-      )
-
-      if (memberShares.length) {
-        await prisma.$transaction([
-          prisma.bonusTransaction.createMany({
-            data: memberShares.map(share => ({
-              householdId: task.householdId,
-              memberId: share.memberId,
-              taskId: task.id,
-              monthKey: getMonthKey(now),
-              kind: 'overdue-penalty',
-              amountUnits: -share.units,
-              note: `Штраф за просрочку задачи "${task.title}"`,
-            })),
-          }),
-          prisma.householdTask.update({
-            where: { id: task.id },
-            data: {
-              penaltyAppliedAt: now,
-              penaltyAppliedUnits: penaltyUnits,
-            },
-          }),
-        ])
-
-        await syncHouseholdProfiles(prisma, task.householdId)
-        await bumpHouseholdRevision(prisma, task.householdId)
-      }
-
-      const memberNames = members.map(getMemberDisplayName).join(', ')
-
-      await notifyHousehold(
-        prisma,
-        task.householdId,
-        `Household\n\n` +
-          `Задача просрочена больше чем на час: ${task.title}\n` +
-          `Дедлайн был: ${formatMoscowDeadlineLabel(task.deadlineAt)}\n` +
-          `Штраф применен ко всем участникам: -${formatPoints(penaltyUnits)} HC суммарно\n` +
-          `Участники: ${memberNames}`,
-      )
-
-      continue
-    }
-
-    const canSendReminder =
-      !task.penaltyAppliedAt &&
-      (!task.lastDeadlineReminderAt ||
-        now.getTime() - task.lastDeadlineReminderAt.getTime() >= DEADLINE_REMINDER_INTERVAL_MS)
-
-    if (!canSendReminder) {
-      continue
-    }
-
-    await prisma.householdTask.update({
-      where: { id: task.id },
-      data: {
-        lastDeadlineReminderAt: now,
-      },
-    })
-
-    await bumpHouseholdRevision(prisma, task.householdId)
-
-    await notifyHousehold(
-      prisma,
-      task.householdId,
-      `Household\n\n` +
-        `Горят сроки по задаче: ${task.title}\n` +
-        `Нужно завершить до: ${formatMoscowDeadlineLabel(task.deadlineAt)}\n` +
-        `Если задача провисит еще час после дедлайна, всем участникам будет начислен штраф.`,
-    )
-  }
-}
-
-export async function createMonthlyReportIfNeeded(
+export async function buildHouseholdMonthReport(
   prisma: PrismaClient,
   householdId: string,
   monthKey: string,
 ) {
-  const existing = await prisma.monthlyReport.findUnique({
-    where: {
-      householdId_monthKey: {
-        householdId,
-        monthKey,
-      },
-    },
-  })
-
-  if (existing) {
-    return existing
-  }
-
   const members = await prisma.member.findMany({
-    where: { householdId },
+    where: { householdId, isActive: true },
     orderBy: [{ createdAt: 'asc' }],
     select: {
       id: true,
@@ -584,67 +469,81 @@ export async function createMonthlyReportIfNeeded(
     },
   })
 
-  const monthStart = new Date(`${monthKey}-01T00:00:00.000Z`)
-  const nextMonthStart = new Date(monthStart)
-  nextMonthStart.setUTCMonth(nextMonthStart.getUTCMonth() + 1)
+  const { start: monthStart, end: nextMonthStart } = getMoscowMonthRangeByMonthKey(monthKey)
 
-  const tasks = await prisma.householdTask.findMany({
-    where: {
-      householdId,
-      completedAt: {
-        gte: monthStart,
-        lt: nextMonthStart,
+  const [tasks, transactions] = await Promise.all([
+    prisma.householdTask.findMany({
+      where: {
+        householdId,
+        status: 'done',
+        completedAt: {
+          gte: monthStart,
+          lt: nextMonthStart,
+        },
       },
-    },
-  })
+      orderBy: [{ completedAt: 'asc' }],
+    }),
+    prisma.bonusTransaction.findMany({
+      where: {
+        householdId,
+        monthKey,
+      },
+      orderBy: [{ createdAt: 'asc' }],
+      select: {
+        memberId: true,
+        taskId: true,
+        amountUnits: true,
+        kind: true,
+      },
+    }),
+  ])
 
-  const lines: string[] = [`Отчет за ${monthKey}`, '', `Выполнено задач: ${tasks.length}`, '']
+  const lines: string[] = [`Выполнено задач: ${tasks.length}`, '']
+  const taskById = new Map(tasks.map(task => [task.id, task]))
 
   for (const member of members) {
     const memberName = getMemberDisplayName(member)
-    const taskCount = tasks.filter(task => task.completedByName === memberName).length
-    const earnedAggregate = await prisma.bonusTransaction.aggregate({
-      where: {
-        memberId: member.id,
-        monthKey,
-        amountUnits: {
-          gt: 0,
-        },
-      },
-      _sum: {
-        amountUnits: true,
-      },
-    })
-    const spentAggregate = await prisma.bonusTransaction.aggregate({
-      where: {
-        memberId: member.id,
-        monthKey,
-        amountUnits: {
-          lt: 0,
-        },
-      },
-      _sum: {
-        amountUnits: true,
-      },
-    })
+    const memberTransactions = transactions.filter(transaction => transaction.memberId === member.id)
+    const countedTaskIds = new Set<string>()
+    let taskCount = 0
+    let memberExp = 0
+
+    for (const transaction of memberTransactions) {
+      if (transaction.kind !== 'task-complete' && transaction.kind !== 'task-complete-together') {
+        continue
+      }
+
+      if (!transaction.taskId || countedTaskIds.has(transaction.taskId)) {
+        continue
+      }
+
+      const task = taskById.get(transaction.taskId)
+
+      if (!task) {
+        continue
+      }
+
+      countedTaskIds.add(transaction.taskId)
+      taskCount += 1
+      memberExp += getTaskExpResult(task).expDelta
+    }
+
+    const earnedUnits = memberTransactions
+      .filter(transaction => transaction.amountUnits > 0)
+      .reduce((sum, transaction) => sum + transaction.amountUnits, 0)
+    const spentUnits = memberTransactions
+      .filter(transaction => transaction.amountUnits < 0)
+      .reduce((sum, transaction) => sum + Math.abs(transaction.amountUnits), 0)
 
     lines.push(
-      `${memberName}: выполнено ${taskCount}, заработано ${formatPoints(
-        earnedAggregate._sum.amountUnits ?? 0,
-      )}, потрачено ${formatPoints(Math.abs(spentAggregate._sum.amountUnits ?? 0))}`,
+      `${memberName}: выполнено ${taskCount}, exp ${memberExp}, заработано ${formatPoints(
+        earnedUnits,
+      )}, потрачено ${formatPoints(spentUnits)}`,
     )
   }
 
-  const report = await prisma.monthlyReport.create({
-    data: {
-      householdId,
-      monthKey,
-      title: `Отчет за ${monthKey}`,
-      reportBody: lines.join('\n'),
-    },
-  })
-
-  await bumpHouseholdRevision(prisma, householdId)
-
-  return report
+  return {
+    title: `Отчет за ${monthKey}`,
+    reportBody: lines.join('\n'),
+  }
 }

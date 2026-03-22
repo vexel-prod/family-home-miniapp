@@ -27,32 +27,39 @@ export function HouseholdOnboarding({
 }: HouseholdOnboardingProps) {
   return (
     <div className='mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center gap-4 p-4 sm:p-6'>
-      <section className='rounded-md border border-white/10 bg-(--dashboard-panel) p-6 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:p-8'>
-        <div className='max-w-3xl'>
-          <div className='text-xs uppercase tracking-[0.28em] text-white/45'>Household</div>
-          <h1 className='mt-4 font-(--font-family-heading) text-4xl leading-none text-white sm:text-5xl'>
-            {actorName}, сначала создай семью или войди по коду
-          </h1>
-          <p className='mt-4 max-w-2xl text-sm leading-6 text-white/70 sm:text-base'>
-            Доступ к задачам, покупкам, рейтингу и уровню появляется только после создания семьи
-            или входа по инвайт-коду действующего участника.
-          </p>
-        </div>
+      <section className='rounded-3xl border border-white/10 bg-(--dashboard-panel) px-5 py-5 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:px-6'>
+        <div className='text-xs uppercase tracking-[0.24em] text-white/42'>Household</div>
+        <h1 className='mt-3 font-(--font-family-heading) text-3xl leading-none text-white sm:text-4xl'>
+          {actorName}, выбери вход
+        </h1>
       </section>
 
       {statusMessage ? <StatusMessage text={statusMessage} /> : null}
 
       <div className='grid gap-4 lg:grid-cols-2'>
-        <section className='rounded-md border border-white/10 bg-(--color-surface) p-5 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:p-6'>
-          <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Создать семью</div>
-          <div className='mt-3 text-2xl font-(--font-family-heading)'>Новый семейный контур</div>
-          <p className='mt-3 text-sm leading-6 text-white/65'>
-            Ты станешь главой семьи и получишь свой инвайт-код для приглашения остальных.
+        <section className='relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-white/12 via-white/8 to-white/4 p-5 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:p-6'>
+          <div className='absolute inset-x-0 top-0 h-1 bg-(--color-brand-home)/80' />
+          <div className='flex items-start justify-between gap-4'>
+            <div>
+              <div className='text-xs uppercase tracking-[0.24em] text-white/42'>Создать семью</div>
+              <div className='mt-3 text-2xl font-(--font-family-heading) sm:text-3xl'>
+                Своя семья
+              </div>
+            </div>
+            <div className='rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/55'>
+              Head
+            </div>
+          </div>
+          <p className='mt-4 max-w-md text-sm leading-6 text-white/68'>
+            Создай семью и получи код для остальных.
           </p>
+          <div className='mt-4 rounded-[1.1rem] border border-white/8 bg-black/16 px-3 py-2.5 text-sm text-white/60'>
+            Подходит для нового старта.
+          </div>
           <div className='mt-5'>
             <TextInput
               value={createHouseholdName}
-              placeholder='Название семьи, например Paskin Home'
+              placeholder='Название семьи '
               onChange={event => onCreateHouseholdNameChange(event.target.value)}
             />
           </div>
@@ -67,13 +74,25 @@ export function HouseholdOnboarding({
           </div>
         </section>
 
-        <section className='rounded-md border border-white/10 bg-(--color-surface) p-5 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:p-6'>
-          <div className='text-xs uppercase tracking-[0.24em] text-white/45'>Войти по коду</div>
-          <div className='mt-3 text-2xl font-(--font-family-heading)'>Присоединение к семье</div>
-          <p className='mt-3 text-sm leading-6 text-white/65'>
-            Введи инвайт-код главы семьи. Код действует 24 часа и привязывает тебя к общей
-            семье, задачам, покупкам и рейтингу.
+        <section className='relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-linear-to-br from-[#132432]/95 via-[#101a24]/95 to-[#0d141c]/95 p-5 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:p-6'>
+          <div className='absolute inset-x-0 top-0 h-1 bg-white/35' />
+          <div className='flex items-start justify-between gap-4'>
+            <div>
+              <div className='text-xs uppercase tracking-[0.24em] text-white/42'>Войти по коду</div>
+              <div className='mt-3 text-2xl font-(--font-family-heading) sm:text-3xl'>
+                Уже есть семья
+              </div>
+            </div>
+            <div className='rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/55'>
+              Invite
+            </div>
+          </div>
+          <p className='mt-4 max-w-md text-sm leading-6 text-white/68'>
+            Введи код и сразу подключись к семье.
           </p>
+          <div className='mt-4 rounded-[1.1rem] border border-white/8 bg-white/6 px-3 py-2.5 text-sm text-white/60'>
+            Нужен только актуальный invite.
+          </div>
           <div className='mt-5'>
             <TextInput
               value={joinCode}

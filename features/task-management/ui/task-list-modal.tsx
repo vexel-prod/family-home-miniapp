@@ -7,24 +7,44 @@ import type { HouseholdTask } from '@entities/family'
 
 type TaskListModalProps = {
   tasks: HouseholdTask[]
+  loading?: boolean
   onClose: () => void
   onAdd: () => void
   onSelectTask: (task: HouseholdTask) => void
 }
 
-export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListModalProps) {
+export function TaskListModal({
+  tasks,
+  loading = false,
+  onClose,
+  onAdd,
+  onSelectTask,
+}: TaskListModalProps) {
   return (
     <ModalPanel>
       <div className='border-b border-white/10 p-4 sm:p-6'>
         <div className='flex items-center justify-center gap-4'>
           <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
-            Активные задачи{tasks.length > 0 && `: ${tasks.length}`}
+            Активные задачи{!loading && tasks.length > 0 && `: ${tasks.length}`}
           </h2>
         </div>
       </div>
 
       <div className='min-h-0 flex-1 overflow-y-auto p-4 sm:p-6'>
-        {tasks.length ? (
+        {loading ? (
+          <div className='space-y-4'>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className='rounded-xl border border-white/10 bg-white/6 p-5'>
+                <div className='skeleton h-6 w-32 rounded-full bg-white/15' />
+                <div className='mt-4 skeleton h-8 w-2/3 rounded-full bg-white/15' />
+                <div className='mt-4 space-y-2'>
+                  <div className='skeleton h-4 w-full rounded-full bg-white/15' />
+                  <div className='skeleton h-4 w-10/12 rounded-full bg-white/15' />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : tasks.length ? (
           <div className='space-y-4'>
             {tasks.map(task =>
               (() => {
@@ -92,6 +112,7 @@ export function TaskListModal({ tasks, onClose, onAdd, onSelectTask }: TaskListM
       <div className='space-y-3 border-t border-white/10 p-4 sm:p-6'>
         <AppButton
           tone='home'
+          disabled={loading}
           onClick={onAdd}
         >
           Добавить

@@ -113,6 +113,35 @@ main {
   position: relative;
 }
 
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-image: none !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 35%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 65%,
+    transparent 100%
+  );
+  animation: skeleton-soft-shimmer 1.9s ease-in-out infinite;
+}
+
+@keyframes skeleton-soft-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @media (min-width: 640px) {
   :root {
     --page-gutter: 1.5rem;

@@ -18,10 +18,12 @@ type HouseholdProfileModalProps = {
   familyGoal: FamilyGoal | null
   customInviteCode: string
   busyAction: string | null
+  loading?: boolean
   onCustomInviteCodeChange: (value: string) => void
   onCopyInvite: () => void
   onCreateCustomInvite: () => void
   onReissueInvite: () => void
+  onSendMonthlyReport: () => void
   onOpenEditGoal: () => void
   onLeaveHousehold: () => void
   onClearGoal: () => void
@@ -57,10 +59,12 @@ export function HouseholdProfileModal({
   familyGoal,
   customInviteCode,
   busyAction,
+  loading = false,
   onCustomInviteCodeChange,
   onCopyInvite,
   onCreateCustomInvite,
   onReissueInvite,
+  onSendMonthlyReport,
   onOpenEditGoal,
   onLeaveHousehold,
   onClearGoal,
@@ -68,6 +72,10 @@ export function HouseholdProfileModal({
   onClose,
 }: HouseholdProfileModalProps) {
   const [activeTab, setActiveTab] = useState<ProfileTab>('progress')
+  const monthLabel = new Intl.DateTimeFormat('ru-RU', {
+    timeZone: 'Europe/Moscow',
+    month: 'long',
+  }).format(new Date())
   const familyGoalProgress = familyGoal
     ? Math.min(
         100,
@@ -86,13 +94,29 @@ export function HouseholdProfileModal({
       <ModalHeader>
         <div className='flex items-center justify-center gap-4'>
           <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
-            {household.name} LVL {profile.currentLevel}
+            {loading ? 'Семейный кабинет' : `${household.name} LVL ${profile.currentLevel}`}
           </h2>
         </div>
       </ModalHeader>
 
       <ModalBody>
-        {activeTab === 'progress' ? (
+        {loading ? (
+          <div className='space-y-4'>
+            <div className='rounded-md border border-white/10 bg-white/6 p-5'>
+              <div className='skeleton h-4 w-36 rounded-full bg-white/15' />
+              <div className='mt-4 skeleton h-10 w-52 rounded-full bg-white/15' />
+              <div className='mt-5 skeleton h-3 w-full rounded-full bg-white/15' />
+            </div>
+            <div className='grid gap-3 sm:grid-cols-2'>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className='rounded-md border border-white/10 bg-white/6 p-4'>
+                  <div className='skeleton h-3 w-24 rounded-full bg-white/15' />
+                  <div className='mt-3 skeleton h-8 w-20 rounded-full bg-white/15' />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : activeTab === 'progress' ? (
           <div className='space-y-4'>
             <div className='flex flex-col gap-2 rounded-md border border-white/10 bg-white/6 p-5'>
               <div className='flex items-end justify-between gap-4'>
@@ -116,7 +140,7 @@ export function HouseholdProfileModal({
                 />
               </div>
               <div className='mt-2 rounded-md border border-white/10 bg-white/6 px-4 py-4 text-xs text-white/70'>
-                exp начисляется в общий уровень семьи
+                exp начисляется в общий уровень семьи за всё время
                 <br />
                 обычная задача +10 exp
                 <br />
@@ -157,6 +181,19 @@ export function HouseholdProfileModal({
                   {profile.overdueTasksCount}
                 </div>
               </div>
+            </div>
+
+            <div className='pt-2'>
+              <AppButton
+                tone='secondary'
+                className='w-full'
+                disabled={busyAction !== null}
+                onClick={onSendMonthlyReport}
+              >
+                {busyAction === 'send-monthly-report'
+                  ? 'Отправляю отчет...'
+                  : `Отчет за ${monthLabel}`}
+              </AppButton>
             </div>
           </div>
         ) : null}
@@ -388,7 +425,7 @@ export function HouseholdProfileModal({
           <AppButton
             tone='secondary'
             className='w-auto min-w-44'
-            disabled={busyAction !== null}
+            disabled={busyAction !== null || loading}
             onClick={onOpenEditGoal}
           >
             Создать цель

@@ -59,6 +59,7 @@ export const ModelName = {
   BonusTransaction: 'BonusTransaction',
   BonusPurchase: 'BonusPurchase',
   BonusReward: 'BonusReward',
+  GlobalBonusReward: 'GlobalBonusReward',
   FamilyGoal: 'FamilyGoal',
   HouseholdInvite: 'HouseholdInvite',
   ActionRateLimit: 'ActionRateLimit',
@@ -89,6 +90,7 @@ export const HouseholdScalarFieldEnum = {
   sharedGoalUnits: 'sharedGoalUnits',
   experiencePoints: 'experiencePoints',
   level: 'level',
+  rewardedLevel: 'rewardedLevel',
   completedTasksCount: 'completedTasksCount',
   fastTasksCount: 'fastTasksCount',
   overdueTasksCount: 'overdueTasksCount',
@@ -111,12 +113,7 @@ export const MemberScalarFieldEnum = {
   isActive: 'isActive',
   joinedAt: 'joinedAt',
   leftAt: 'leftAt',
-  experiencePoints: 'experiencePoints',
-  level: 'level',
   bonusBalanceUnits: 'bonusBalanceUnits',
-  completedTasksCount: 'completedTasksCount',
-  fastTasksCount: 'fastTasksCount',
-  overdueTasksCount: 'overdueTasksCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -235,6 +232,21 @@ export const BonusRewardScalarFieldEnum = {
 } as const
 
 export type BonusRewardScalarFieldEnum = (typeof BonusRewardScalarFieldEnum)[keyof typeof BonusRewardScalarFieldEnum]
+
+
+export const GlobalBonusRewardScalarFieldEnum = {
+  id: 'id',
+  sourceKey: 'sourceKey',
+  title: 'title',
+  description: 'description',
+  costUnits: 'costUnits',
+  sourceLabel: 'sourceLabel',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GlobalBonusRewardScalarFieldEnum = (typeof GlobalBonusRewardScalarFieldEnum)[keyof typeof GlobalBonusRewardScalarFieldEnum]
 
 
 export const FamilyGoalScalarFieldEnum = {

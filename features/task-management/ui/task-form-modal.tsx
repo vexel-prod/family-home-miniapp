@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { AppButton } from '@shared/ui/app-button'
 import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
@@ -8,6 +8,11 @@ import { TextAreaField, TextInput } from '@shared/ui/form-field'
 import { StatusMessage } from '@shared/ui/status-message'
 
 const calendarWeekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+const timeWheelHours = Array.from({ length: 24 }, (_, index) => `${index}`.padStart(2, '0'))
+const timeWheelMinutes = Array.from({ length: 60 }, (_, index) => `${index}`.padStart(2, '0'))
+const timeWheelItemHeight = 42
+const timeWheelViewportHeight = 158
+const timeWheelSpacerHeight = (timeWheelViewportHeight - timeWheelItemHeight) / 2
 
 type TaskFormModalProps = {
   mode: 'create' | 'replace'
@@ -118,14 +123,144 @@ function mergeDeadlineValue(datePart: string, timePart: string) {
   return `${datePart}T${timePart || '12:00'}`
 }
 
-function normalizeTimeValue(value: string) {
-  const digits = value.replace(/\D/g, '').slice(0, 4)
+function clampValue(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
 
-  if (digits.length <= 2) {
-    return digits
+type TimeWheelColumnProps = {
+  options: string[]
+  selectedValue: string
+  onSelect: (value: string) => void
+}
+
+function TimeWheelColumn({ options, selectedValue, onSelect }: TimeWheelColumnProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const scrollTimeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+
+    if (!container) {
+      return
+    }
+
+    const selectedIndex = Math.max(options.indexOf(selectedValue), 0)
+    const targetTop = selectedIndex * timeWheelItemHeight
+
+    if (Math.abs(container.scrollTop - targetTop) < 2) {
+      return
+    }
+
+    container.scrollTo({
+      top: targetTop,
+      behavior: 'smooth',
+    })
+  }, [options, selectedValue])
+
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current !== null) {
+        window.clearTimeout(scrollTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const snapToClosestValue = () => {
+    const container = containerRef.current
+
+    if (!container) {
+      return
+    }
+
+    const nextIndex = clampValue(
+      Math.round(container.scrollTop / timeWheelItemHeight),
+      0,
+      options.length - 1,
+    )
+    const nextValue = options[nextIndex]
+
+    if (nextValue !== selectedValue) {
+      onSelect(nextValue)
+    }
+
+    container.scrollTo({
+      top: nextIndex * timeWheelItemHeight,
+      behavior: 'smooth',
+    })
   }
 
-  return `${digits.slice(0, 2)}:${digits.slice(2)}`
+  return (
+    <div
+      ref={containerRef}
+      onScroll={() => {
+        if (scrollTimeoutRef.current !== null) {
+          window.clearTimeout(scrollTimeoutRef.current)
+        }
+
+        scrollTimeoutRef.current = window.setTimeout(snapToClosestValue, 90)
+      }}
+      className='snap-y snap-mandatory overflow-y-auto overscroll-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
+      style={{ height: `${timeWheelViewportHeight}px` }}
+    >
+      <div style={{ height: `${timeWheelSpacerHeight}px` }} />
+
+      {options.map(option => {
+        const isSelected = option === selectedValue
+
+        return (
+          <button
+            key={option}
+            type='button'
+            onClick={() => onSelect(option)}
+            className={`flex w-full snap-center items-center justify-center rounded-xl text-center font-light tabular-nums tracking-[0.02em] transition ${
+              isSelected ? 'text-white' : 'text-white/24 hover:text-white/50'
+            }`}
+            style={{ height: `${timeWheelItemHeight}px`, fontSize: isSelected ? '1.4rem' : '1.2rem' }}
+          >
+            {option}
+          </button>
+        )
+      })}
+
+      <div style={{ height: `${timeWheelSpacerHeight}px` }} />
+    </div>
+  )
+}
+
+function TimeWheelPicker({
+  selectedHour,
+  selectedMinute,
+  onHourSelect,
+  onMinuteSelect,
+}: {
+  selectedHour: string
+  selectedMinute: string
+  onHourSelect: (value: string) => void
+  onMinuteSelect: (value: string) => void
+}) {
+  return (
+    <div className='relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 px-3 py-2'>
+      <div className='pointer-events-none absolute inset-x-3 top-1/2 z-20 h-10.5 -translate-y-1/2 rounded-[1.15rem] bg-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]' />
+      <div className='pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-linear-to-b from-[#120f1f] via-[#120f1f]/86 to-transparent' />
+      <div className='pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-linear-to-t from-[#120f1f] via-[#120f1f]/86 to-transparent' />
+
+      <div className='relative grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1'>
+        <TimeWheelColumn
+          options={timeWheelHours}
+          selectedValue={selectedHour}
+          onSelect={onHourSelect}
+        />
+
+        <div className='pb-1 text-center text-[2rem] font-semibold text-white/22'>:</div>
+
+        <TimeWheelColumn
+          options={timeWheelMinutes}
+          selectedValue={selectedMinute}
+          onSelect={onMinuteSelect}
+        />
+      </div>
+    </div>
+  )
 }
 
 export function TaskFormModal({
@@ -153,7 +288,9 @@ export function TaskFormModal({
   const calendarDays = useMemo(() => getCalendarDays(monthCursor), [monthCursor])
   const selectedDate = getDatePart(deadlineAt)
   const selectedTime = getTimePart(deadlineAt) || '12:00'
+  const [selectedHour = '12', selectedMinute = '00'] = selectedTime.split(':')
   const currentMonth = new Date()
+  const fallbackDate = selectedDate || toIsoDate(new Date())
 
   return (
     <ModalPanel>
@@ -241,23 +378,25 @@ export function TaskFormModal({
                   })}
                 </div>
 
-                <div className='mt-4 space-y-2'>
+                <div className='mt-4 space-y-3'>
                   <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Время</div>
-                  <TextInput
-                    type='text'
-                    inputMode='numeric'
-                    placeholder='12:00'
-                    maxLength={5}
-                    value={selectedTime}
-                    onChange={event =>
+
+                  <TimeWheelPicker
+                    selectedHour={selectedHour}
+                    selectedMinute={selectedMinute}
+                    onHourSelect={hour =>
+                      onDeadlineAtChange(mergeDeadlineValue(fallbackDate, `${hour}:${selectedMinute}`))
+                    }
+                    onMinuteSelect={minute =>
                       onDeadlineAtChange(
-                        mergeDeadlineValue(
-                          selectedDate || toIsoDate(new Date()),
-                          normalizeTimeValue(event.target.value),
-                        ),
+                        mergeDeadlineValue(fallbackDate, `${selectedHour}:${minute}`),
                       )
                     }
                   />
+
+                  <div className='text-center text-sm text-white/45'>
+                    Выбрано: <span className='font-semibold tabular-nums text-white'>{selectedTime}</span>
+                  </div>
                 </div>
               </div>
             ) : null}

@@ -1,5 +1,6 @@
 import {
   createTelegramAuthSessionCookie,
+  shouldUseSecureTelegramCookie,
   TELEGRAM_AUTH_COOKIE_NAME,
   validateTelegramLoginWidgetPayload,
 } from '@entities/session/server/auth'
@@ -31,6 +32,7 @@ function buildPayloadFromSearchParams(url: URL): TelegramLoginPayload {
 }
 
 function setSessionCookie(
+  request: Request,
   response: NextResponse,
   sessionCookie: ReturnType<typeof createTelegramAuthSessionCookie>,
 ) {
@@ -39,7 +41,7 @@ function setSessionCookie(
     value: sessionCookie.value,
     httpOnly: true,
     sameSite: 'lax',
-    secure: true,
+    secure: shouldUseSecureTelegramCookie(request),
     path: '/',
     maxAge: sessionCookie.maxAgeSeconds,
     expires: new Date(sessionCookie.expiresAt),
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
     user,
   })
 
-  setSessionCookie(response, sessionCookie)
+  setSessionCookie(request, response, sessionCookie)
 
   return response
 }
@@ -76,11 +78,11 @@ export async function GET(request: Request) {
   }
 
   const response = NextResponse.redirect(redirectUrl)
-  setSessionCookie(response, createTelegramAuthSessionCookie(user))
+  setSessionCookie(request, response, createTelegramAuthSessionCookie(user))
   return response
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const response = NextResponse.json({ ok: true })
 
   response.cookies.set({
@@ -88,7 +90,7 @@ export async function DELETE() {
     value: '',
     httpOnly: true,
     sameSite: 'lax',
-    secure: true,
+    secure: shouldUseSecureTelegramCookie(request),
     path: '/',
     maxAge: 0,
     expires: new Date(0),

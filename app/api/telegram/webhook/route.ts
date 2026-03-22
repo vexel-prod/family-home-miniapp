@@ -24,6 +24,9 @@ type TelegramCallbackQueryUpdate = {
     data?: string
     from?: {
       id?: number
+      first_name?: string
+      last_name?: string
+      username?: string
     }
     message?: {
       message_id?: number
@@ -54,20 +57,22 @@ export async function POST(request: Request) {
   const callbackQuery = update?.callback_query
   const prisma = getPrisma()
 
-  const loginMatch = message?.text?.trim().match(/^\/start\s+login_([^_\s]+)_([a-f0-9]+)$/i)
+  const loginMatch = message?.text?.trim().match(/^\/start\s+login_([a-f0-9]+)$/i)
+  const legacyLoginMatch = message?.text?.trim().match(/^\/start\s+login_([^_\s]+)_([a-f0-9]+)$/i)
 
-  if (message?.chat?.id && loginMatch?.[1] && loginMatch?.[2]) {
-    const [, sessionId, token] = loginMatch
+  if (message?.chat?.id && (loginMatch?.[1] || legacyLoginMatch?.[2])) {
+    const token = loginMatch?.[1] ?? legacyLoginMatch?.[2] ?? ''
     const session = await prisma.browserLoginSession.findUnique({
-      where: { id: sessionId },
+      where: { token },
       select: {
         id: true,
         token: true,
+        telegramUserId: true,
         expiresAt: true,
       },
     })
 
-    if (!session || session.token !== token || session.expiresAt.getTime() <= Date.now()) {
+    if (!session || session.expiresAt.getTime() <= Date.now()) {
       await sendTelegramMessage({
         chatId: String(message.chat.id),
         text: 'Household\n\nСсылка для входа недействительна. Вернись в браузер и запусти вход заново.',
@@ -76,19 +81,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true })
     }
 
+    await prisma.browserLoginSession.update({
+      where: { id: session.id },
+      data: {
+        telegramUserId: String(message.chat.id),
+        firstName: message.from?.first_name ?? null,
+        lastName: message.from?.last_name ?? null,
+        username: message.from?.username ?? null,
+        approvedAt: new Date(),
+      },
+    })
+
     await sendTelegramMessage({
       chatId: String(message.chat.id),
-      text: 'Household\n\nНажми кнопку ниже, чтобы подтвердить вход в браузере.',
-      replyMarkup: {
-        inline_keyboard: [
-          [
-            {
-              text: 'Подтвердить',
-              callback_data: `browser-login:${session.id}:${session.token}`,
-            },
-          ],
-        ],
-      },
+      text:
+        'Household\n\n' +
+        'Вход подтвержден.\n' +
+        'Возвращайся в браузер, приложение продолжит вход автоматически.',
     }).catch(() => null)
 
     return NextResponse.json({ ok: true })
@@ -98,14 +107,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true })
   }
 
-  const browserLoginMatch = callbackQuery.data.match(/^browser-login:([^:]+)$/i)
+  const browserLoginMatch = callbackQuery.data.match(/^browser-login:([^:]+)(?::([a-f0-9]+))?$/i)
 
   if (browserLoginMatch) {
-    const [, sessionId] = browserLoginMatch
+    const [, sessionId, token = ''] = browserLoginMatch
     const session = await prisma.browserLoginSession.findUnique({
       where: { id: sessionId },
       select: {
         id: true,
+        token: true,
         telegramUserId: true,
         expiresAt: true,
       },
@@ -113,6 +123,7 @@ export async function POST(request: Request) {
 
     if (
       !session ||
+      (token && session.token !== token) ||
       session.expiresAt.getTime() <= Date.now() ||
       (session.telegramUserId && session.telegramUserId !== String(callbackQuery.from?.id ?? ''))
     ) {
@@ -129,6 +140,9 @@ export async function POST(request: Request) {
       where: { id: session.id },
       data: {
         telegramUserId: String(callbackQuery.from?.id ?? ''),
+        firstName: callbackQuery.from?.first_name ?? null,
+        lastName: callbackQuery.from?.last_name ?? null,
+        username: callbackQuery.from?.username ?? null,
         approvedAt: new Date(),
       },
     })

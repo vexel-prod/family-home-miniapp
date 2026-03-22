@@ -1,4 +1,7 @@
-import { createTelegramAuthSessionCookie } from '@entities/session/server/auth'
+import {
+  createTelegramAuthSessionCookie,
+  shouldUseSecureTelegramCookie,
+} from '@entities/session/server/auth'
 import { NextResponse } from 'next/server'
 
 type DevTelegramLoginPayload = {
@@ -23,7 +26,7 @@ export async function POST(request: Request) {
     value: sessionCookie.value,
     httpOnly: true,
     sameSite: 'lax',
-    secure: true,
+    secure: shouldUseSecureTelegramCookie(request),
     path: '/',
     maxAge: sessionCookie.maxAgeSeconds,
     expires: new Date(sessionCookie.expiresAt),

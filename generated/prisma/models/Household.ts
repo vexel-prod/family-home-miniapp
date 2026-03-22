@@ -31,6 +31,7 @@ export type HouseholdAvgAggregateOutputType = {
   sharedGoalUnits: number | null
   experiencePoints: number | null
   level: number | null
+  rewardedLevel: number | null
   completedTasksCount: number | null
   fastTasksCount: number | null
   overdueTasksCount: number | null
@@ -41,6 +42,7 @@ export type HouseholdSumAggregateOutputType = {
   sharedGoalUnits: number | null
   experiencePoints: number | null
   level: number | null
+  rewardedLevel: number | null
   completedTasksCount: number | null
   fastTasksCount: number | null
   overdueTasksCount: number | null
@@ -53,6 +55,7 @@ export type HouseholdMinAggregateOutputType = {
   sharedGoalUnits: number | null
   experiencePoints: number | null
   level: number | null
+  rewardedLevel: number | null
   completedTasksCount: number | null
   fastTasksCount: number | null
   overdueTasksCount: number | null
@@ -67,6 +70,7 @@ export type HouseholdMaxAggregateOutputType = {
   sharedGoalUnits: number | null
   experiencePoints: number | null
   level: number | null
+  rewardedLevel: number | null
   completedTasksCount: number | null
   fastTasksCount: number | null
   overdueTasksCount: number | null
@@ -81,6 +85,7 @@ export type HouseholdCountAggregateOutputType = {
   sharedGoalUnits: number
   experiencePoints: number
   level: number
+  rewardedLevel: number
   completedTasksCount: number
   fastTasksCount: number
   overdueTasksCount: number
@@ -95,6 +100,7 @@ export type HouseholdAvgAggregateInputType = {
   sharedGoalUnits?: true
   experiencePoints?: true
   level?: true
+  rewardedLevel?: true
   completedTasksCount?: true
   fastTasksCount?: true
   overdueTasksCount?: true
@@ -105,6 +111,7 @@ export type HouseholdSumAggregateInputType = {
   sharedGoalUnits?: true
   experiencePoints?: true
   level?: true
+  rewardedLevel?: true
   completedTasksCount?: true
   fastTasksCount?: true
   overdueTasksCount?: true
@@ -117,6 +124,7 @@ export type HouseholdMinAggregateInputType = {
   sharedGoalUnits?: true
   experiencePoints?: true
   level?: true
+  rewardedLevel?: true
   completedTasksCount?: true
   fastTasksCount?: true
   overdueTasksCount?: true
@@ -131,6 +139,7 @@ export type HouseholdMaxAggregateInputType = {
   sharedGoalUnits?: true
   experiencePoints?: true
   level?: true
+  rewardedLevel?: true
   completedTasksCount?: true
   fastTasksCount?: true
   overdueTasksCount?: true
@@ -145,6 +154,7 @@ export type HouseholdCountAggregateInputType = {
   sharedGoalUnits?: true
   experiencePoints?: true
   level?: true
+  rewardedLevel?: true
   completedTasksCount?: true
   fastTasksCount?: true
   overdueTasksCount?: true
@@ -246,6 +256,7 @@ export type HouseholdGroupByOutputType = {
   sharedGoalUnits: number
   experiencePoints: number
   level: number
+  rewardedLevel: number
   completedTasksCount: number
   fastTasksCount: number
   overdueTasksCount: number
@@ -283,6 +294,7 @@ export type HouseholdWhereInput = {
   sharedGoalUnits?: Prisma.IntFilter<"Household"> | number
   experiencePoints?: Prisma.IntFilter<"Household"> | number
   level?: Prisma.IntFilter<"Household"> | number
+  rewardedLevel?: Prisma.IntFilter<"Household"> | number
   completedTasksCount?: Prisma.IntFilter<"Household"> | number
   fastTasksCount?: Prisma.IntFilter<"Household"> | number
   overdueTasksCount?: Prisma.IntFilter<"Household"> | number
@@ -307,6 +319,7 @@ export type HouseholdOrderByWithRelationInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -334,6 +347,7 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   sharedGoalUnits?: Prisma.IntFilter<"Household"> | number
   experiencePoints?: Prisma.IntFilter<"Household"> | number
   level?: Prisma.IntFilter<"Household"> | number
+  rewardedLevel?: Prisma.IntFilter<"Household"> | number
   completedTasksCount?: Prisma.IntFilter<"Household"> | number
   fastTasksCount?: Prisma.IntFilter<"Household"> | number
   overdueTasksCount?: Prisma.IntFilter<"Household"> | number
@@ -358,6 +372,7 @@ export type HouseholdOrderByWithAggregationInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -380,6 +395,7 @@ export type HouseholdScalarWhereWithAggregatesInput = {
   sharedGoalUnits?: Prisma.IntWithAggregatesFilter<"Household"> | number
   experiencePoints?: Prisma.IntWithAggregatesFilter<"Household"> | number
   level?: Prisma.IntWithAggregatesFilter<"Household"> | number
+  rewardedLevel?: Prisma.IntWithAggregatesFilter<"Household"> | number
   completedTasksCount?: Prisma.IntWithAggregatesFilter<"Household"> | number
   fastTasksCount?: Prisma.IntWithAggregatesFilter<"Household"> | number
   overdueTasksCount?: Prisma.IntWithAggregatesFilter<"Household"> | number
@@ -394,6 +410,7 @@ export type HouseholdCreateInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -418,6 +435,7 @@ export type HouseholdUncheckedCreateInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -442,6 +460,7 @@ export type HouseholdUpdateInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -466,6 +485,7 @@ export type HouseholdUncheckedUpdateInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -490,6 +510,7 @@ export type HouseholdCreateManyInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -504,6 +525,7 @@ export type HouseholdUpdateManyMutationInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -518,6 +540,7 @@ export type HouseholdUncheckedUpdateManyInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -532,6 +555,7 @@ export type HouseholdCountOrderByAggregateInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -544,6 +568,7 @@ export type HouseholdAvgOrderByAggregateInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -556,6 +581,7 @@ export type HouseholdMaxOrderByAggregateInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -570,6 +596,7 @@ export type HouseholdMinOrderByAggregateInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -582,6 +609,7 @@ export type HouseholdSumOrderByAggregateInput = {
   sharedGoalUnits?: Prisma.SortOrder
   experiencePoints?: Prisma.SortOrder
   level?: Prisma.SortOrder
+  rewardedLevel?: Prisma.SortOrder
   completedTasksCount?: Prisma.SortOrder
   fastTasksCount?: Prisma.SortOrder
   overdueTasksCount?: Prisma.SortOrder
@@ -755,6 +783,7 @@ export type HouseholdCreateWithoutMembersInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -778,6 +807,7 @@ export type HouseholdUncheckedCreateWithoutMembersInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -817,6 +847,7 @@ export type HouseholdUpdateWithoutMembersInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -840,6 +871,7 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -863,6 +895,7 @@ export type HouseholdCreateWithoutTasksInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -886,6 +919,7 @@ export type HouseholdUncheckedCreateWithoutTasksInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -925,6 +959,7 @@ export type HouseholdUpdateWithoutTasksInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -948,6 +983,7 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -971,6 +1007,7 @@ export type HouseholdCreateWithoutTaskCompletionApprovalsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -994,6 +1031,7 @@ export type HouseholdUncheckedCreateWithoutTaskCompletionApprovalsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1033,6 +1071,7 @@ export type HouseholdUpdateWithoutTaskCompletionApprovalsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1056,6 +1095,7 @@ export type HouseholdUncheckedUpdateWithoutTaskCompletionApprovalsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1079,6 +1119,7 @@ export type HouseholdCreateWithoutShoppingItemsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1102,6 +1143,7 @@ export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1141,6 +1183,7 @@ export type HouseholdUpdateWithoutShoppingItemsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1164,6 +1207,7 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1187,6 +1231,7 @@ export type HouseholdCreateWithoutBonusTransactionsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1210,6 +1255,7 @@ export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1249,6 +1295,7 @@ export type HouseholdUpdateWithoutBonusTransactionsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1272,6 +1319,7 @@ export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1295,6 +1343,7 @@ export type HouseholdCreateWithoutBonusPurchasesInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1318,6 +1367,7 @@ export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1357,6 +1407,7 @@ export type HouseholdUpdateWithoutBonusPurchasesInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1380,6 +1431,7 @@ export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1403,6 +1455,7 @@ export type HouseholdCreateWithoutBonusRewardsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1426,6 +1479,7 @@ export type HouseholdUncheckedCreateWithoutBonusRewardsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1465,6 +1519,7 @@ export type HouseholdUpdateWithoutBonusRewardsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1488,6 +1543,7 @@ export type HouseholdUncheckedUpdateWithoutBonusRewardsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1511,6 +1567,7 @@ export type HouseholdCreateWithoutFamilyGoalsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1534,6 +1591,7 @@ export type HouseholdUncheckedCreateWithoutFamilyGoalsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1573,6 +1631,7 @@ export type HouseholdUpdateWithoutFamilyGoalsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1596,6 +1655,7 @@ export type HouseholdUncheckedUpdateWithoutFamilyGoalsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1619,6 +1679,7 @@ export type HouseholdCreateWithoutInvitesInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1642,6 +1703,7 @@ export type HouseholdUncheckedCreateWithoutInvitesInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1681,6 +1743,7 @@ export type HouseholdUpdateWithoutInvitesInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1704,6 +1767,7 @@ export type HouseholdUncheckedUpdateWithoutInvitesInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1727,6 +1791,7 @@ export type HouseholdCreateWithoutMonthlyReportsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1750,6 +1815,7 @@ export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
   sharedGoalUnits?: number
   experiencePoints?: number
   level?: number
+  rewardedLevel?: number
   completedTasksCount?: number
   fastTasksCount?: number
   overdueTasksCount?: number
@@ -1789,6 +1855,7 @@ export type HouseholdUpdateWithoutMonthlyReportsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1812,6 +1879,7 @@ export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
   sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
   experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
   level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
   completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
   overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1947,6 +2015,7 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   sharedGoalUnits?: boolean
   experiencePoints?: boolean
   level?: boolean
+  rewardedLevel?: boolean
   completedTasksCount?: boolean
   fastTasksCount?: boolean
   overdueTasksCount?: boolean
@@ -1972,6 +2041,7 @@ export type HouseholdSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   sharedGoalUnits?: boolean
   experiencePoints?: boolean
   level?: boolean
+  rewardedLevel?: boolean
   completedTasksCount?: boolean
   fastTasksCount?: boolean
   overdueTasksCount?: boolean
@@ -1986,6 +2056,7 @@ export type HouseholdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   sharedGoalUnits?: boolean
   experiencePoints?: boolean
   level?: boolean
+  rewardedLevel?: boolean
   completedTasksCount?: boolean
   fastTasksCount?: boolean
   overdueTasksCount?: boolean
@@ -2000,6 +2071,7 @@ export type HouseholdSelectScalar = {
   sharedGoalUnits?: boolean
   experiencePoints?: boolean
   level?: boolean
+  rewardedLevel?: boolean
   completedTasksCount?: boolean
   fastTasksCount?: boolean
   overdueTasksCount?: boolean
@@ -2007,7 +2079,7 @@ export type HouseholdSelectScalar = {
   updatedAt?: boolean
 }
 
-export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "revision" | "sharedGoalUnits" | "experiencePoints" | "level" | "completedTasksCount" | "fastTasksCount" | "overdueTasksCount" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
+export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "revision" | "sharedGoalUnits" | "experiencePoints" | "level" | "rewardedLevel" | "completedTasksCount" | "fastTasksCount" | "overdueTasksCount" | "createdAt" | "updatedAt", ExtArgs["result"]["household"]>
 export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Household$membersArgs<ExtArgs>
   invites?: boolean | Prisma.Household$invitesArgs<ExtArgs>
@@ -2045,6 +2117,7 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     sharedGoalUnits: number
     experiencePoints: number
     level: number
+    rewardedLevel: number
     completedTasksCount: number
     fastTasksCount: number
     overdueTasksCount: number
@@ -2489,6 +2562,7 @@ export interface HouseholdFieldRefs {
   readonly sharedGoalUnits: Prisma.FieldRef<"Household", 'Int'>
   readonly experiencePoints: Prisma.FieldRef<"Household", 'Int'>
   readonly level: Prisma.FieldRef<"Household", 'Int'>
+  readonly rewardedLevel: Prisma.FieldRef<"Household", 'Int'>
   readonly completedTasksCount: Prisma.FieldRef<"Household", 'Int'>
   readonly fastTasksCount: Prisma.FieldRef<"Household", 'Int'>
   readonly overdueTasksCount: Prisma.FieldRef<"Household", 'Int'>

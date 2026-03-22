@@ -5,7 +5,14 @@ import { getMemberProfileSnapshot, syncHouseholdProfiles } from '@entities/profi
 import { notifyHousehold } from '@entities/household/server/household-notify'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
-import { formatPoints, getMonthKey } from '@entities/bonus'
+import {
+  formatPoints,
+  fromFamilyRewardKey,
+  fromGlobalRewardKey,
+  getMonthKey,
+  isFamilyRewardKey,
+  isGlobalRewardKey,
+} from '@entities/bonus'
 import { NextResponse } from 'next/server'
 
 type PurchasePayload = {
@@ -36,22 +43,53 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json().catch(() => ({}))) as PurchasePayload
-  const reward = body.rewardKey
+  const familyRewardId =
+    body.rewardKey && isFamilyRewardKey(body.rewardKey) ? fromFamilyRewardKey(body.rewardKey) : null
+  const globalRewardId =
+    body.rewardKey && isGlobalRewardKey(body.rewardKey) ? fromGlobalRewardKey(body.rewardKey) : null
+
+  const reward = familyRewardId
     ? await prisma.bonusReward.findUnique({
         where: {
-          id: body.rewardKey,
+          id: familyRewardId,
         },
       })
     : null
 
-  if (!reward || reward.householdId !== auth.member.householdId || reward.isArchived) {
+  const globalReward = globalRewardId
+    ? await prisma.globalBonusReward.findUnique({
+        where: {
+          id: globalRewardId,
+        },
+      })
+    : null
+
+  const resolvedReward = reward
+    ? {
+        id: body.rewardKey ?? reward.id,
+        title: reward.title,
+        costUnits: reward.costUnits,
+      }
+    : globalReward
+      ? {
+          id: body.rewardKey ?? globalReward.id,
+          title: globalReward.title,
+          costUnits: globalReward.costUnits,
+        }
+      : null
+
+  if (
+    (reward && (reward.householdId !== auth.member.householdId || reward.isArchived)) ||
+    (globalReward && globalReward.isArchived) ||
+    !resolvedReward
+  ) {
     return NextResponse.json({ ok: false, error: 'Reward not found' }, { status: 404 })
   }
 
   const profile = await getMemberProfileSnapshot(prisma, auth.member.id)
   const balanceUnits = profile.bonusBalanceUnits
 
-  if (balanceUnits < reward.costUnits) {
+  if (balanceUnits < resolvedReward.costUnits) {
     return NextResponse.json({ ok: false, error: 'Insufficient balance' }, { status: 400 })
   }
 
@@ -62,9 +100,9 @@ export async function POST(request: Request) {
       householdId: auth.member.householdId,
       memberId: auth.member.id,
       monthKey,
-      rewardKey: reward.id,
-      rewardTitle: reward.title,
-      costUnits: reward.costUnits,
+      rewardKey: resolvedReward.id,
+      rewardTitle: resolvedReward.title,
+      costUnits: resolvedReward.costUnits,
     },
   })
 
@@ -75,8 +113,8 @@ export async function POST(request: Request) {
       purchaseId: purchase.id,
       monthKey,
       kind: 'reward-purchase',
-      amountUnits: -reward.costUnits,
-      note: `Покупка бонуса "${reward.title}"`,
+      amountUnits: -resolvedReward.costUnits,
+      note: `Покупка бонуса "${resolvedReward.title}"`,
     },
   })
 
@@ -87,8 +125,8 @@ export async function POST(request: Request) {
     prisma,
     auth.member.householdId,
     `Household\n\n` +
-      `${auth.member.firstName} купил(а) бонус: ${reward.title}\n` +
-      `Стоимость: ${formatPoints(reward.costUnits)} HC`,
+      `${auth.member.firstName} купил(а) бонус: ${resolvedReward.title}\n` +
+      `Стоимость: ${formatPoints(resolvedReward.costUnits)} HC`,
   )
 
   return NextResponse.json({

@@ -248,6 +248,20 @@ export function createTelegramAuthSessionCookie(user: TelegramAuthUser) {
   }
 }
 
+export function shouldUseSecureTelegramCookie(request: Request) {
+  const forwardedProto = request.headers.get('x-forwarded-proto')?.split(',')[0]?.trim()
+
+  if (forwardedProto) {
+    return forwardedProto === 'https'
+  }
+
+  try {
+    return new URL(request.url).protocol === 'https:'
+  } catch {
+    return process.env.NODE_ENV === 'production'
+  }
+}
+
 export function readTelegramAuthSession(request: Request) {
   const rawCookie = getCookieValue(request, TELEGRAM_AUTH_COOKIE_NAME)
   return parseSignedSessionValue(rawCookie)?.user ?? null

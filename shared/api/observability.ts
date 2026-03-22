@@ -13,7 +13,23 @@ type ApiLogPayload = {
   meta?: Record<string, string | number | boolean | undefined | null>
 }
 
+function shouldLogApiEvent(level: LogLevel) {
+  if (level === 'error' || level === 'warn') {
+    return true
+  }
+
+  if (process.env.API_LOG_INFO === 'true') {
+    return true
+  }
+
+  return process.env.NODE_ENV === 'production'
+}
+
 export function logApiEvent(level: LogLevel, payload: ApiLogPayload) {
+  if (!shouldLogApiEvent(level)) {
+    return
+  }
+
   const record = {
     scope: 'api',
     at: new Date().toISOString(),

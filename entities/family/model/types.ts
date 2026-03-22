@@ -57,6 +57,8 @@ export type BonusReward = {
   description: string | null
   costUnits: number
   createdByMemberId: string
+  isSystem?: boolean
+  sourceLabel?: string | null
 }
 
 export type FamilyGoal = {

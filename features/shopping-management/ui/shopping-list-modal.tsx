@@ -6,24 +6,44 @@ import type { ShoppingItem } from '@entities/family'
 
 type ShoppingListModalProps = {
   items: ShoppingItem[]
+  loading?: boolean
   onClose: () => void
   onAdd: () => void
   onSelectItem: (item: ShoppingItem) => void
 }
 
-export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: ShoppingListModalProps) {
+export function ShoppingListModal({
+  items,
+  loading = false,
+  onClose,
+  onAdd,
+  onSelectItem,
+}: ShoppingListModalProps) {
   return (
     <ModalPanel>
       <ModalHeader>
         <div className='flex items-center justify-center gap-4'>
           <h2 className='font-(--font-family-heading) text-xl uppercase leading-(--line-height-snug)'>
-            Предстоящие покупки{items.length > 0 && `: ${items.length}`}
+            Предстоящие покупки{!loading && items.length > 0 && `: ${items.length}`}
           </h2>
         </div>
       </ModalHeader>
 
       <ModalBody>
-        {items.length ? (
+        {loading ? (
+          <div className='space-y-4'>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className='rounded-xl border border-white/10 bg-white/6 p-5'>
+                <div className='skeleton h-6 w-28 rounded-full bg-white/15' />
+                <div className='mt-4 skeleton h-8 w-3/5 rounded-full bg-white/15' />
+                <div className='mt-4 space-y-2'>
+                  <div className='skeleton h-4 w-full rounded-full bg-white/15' />
+                  <div className='skeleton h-4 w-9/12 rounded-full bg-white/15' />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : items.length ? (
           <div className='space-y-4'>
             {items.map(item => (
               <button
@@ -66,6 +86,7 @@ export function ShoppingListModal({ items, onClose, onAdd, onSelectItem }: Shopp
       <ModalFooter className='space-y-3'>
         <AppButton
           tone='shopping'
+          disabled={loading}
           onClick={onAdd}
         >
           Добавить

@@ -1,6 +1,7 @@
 export type {
   BonusPurchase,
   BonusReward,
+  BootstrapActiveResponse,
   BootstrapResponse,
   FamilyGoal,
   FetchOptions,
