@@ -11,6 +11,8 @@ import {
 import { getElapsedMs, logApiEvent } from '@shared/api/observability'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
+import { getAppVersion } from '@shared/lib/version'
+import { getReleaseNoticeContent, shouldShowReleaseNotice } from '@shared/lib/release-notice'
 import { NextResponse } from 'next/server'
 
 function getCurrentMoscowMonthRange() {
@@ -74,9 +76,24 @@ export async function GET(request: Request) {
   }
 
   if (!auth.member) {
+    const currentVersion = await getAppVersion()
+    const versionAcknowledgement = await prisma.releaseNoticeAcknowledgement.findFirst({
+      where: {
+        telegramUserId: String(auth.user.id),
+        versionKey: currentVersion,
+      },
+    })
+    const releaseNotice = shouldShowReleaseNotice(
+      currentVersion,
+      versionAcknowledgement?.versionKey ?? null,
+    )
+      ? await getReleaseNoticeContent(currentVersion)
+      : null
+
     const response = NextResponse.json({
       ok: true,
       state: 'onboarding',
+      releaseNotice,
     })
 
     logApiEvent('info', {
@@ -95,6 +112,7 @@ export async function GET(request: Request) {
 
   try {
     const { start, end } = getCurrentMoscowMonthRange()
+    const currentVersion = await getAppVersion()
 
     await cleanupLegacySeededFamilyRewards(prisma, auth.member.householdId)
 
@@ -109,6 +127,7 @@ export async function GET(request: Request) {
       monthlyStats,
       familyBonusRewards,
       globalBonusRewards,
+      versionAcknowledgement,
       householdGoalState,
       familyGoal,
       bonusPurchases,
@@ -157,6 +176,12 @@ export async function GET(request: Request) {
         orderBy: [{ createdAt: 'asc' }],
       }),
       syncGlobalBonusRewards(prisma),
+      prisma.releaseNoticeAcknowledgement.findFirst({
+        where: {
+          telegramUserId: String(auth.user.id),
+          versionKey: currentVersion,
+        },
+      }),
       prisma.household.findUnique({
         where: {
           id: auth.member.householdId,
@@ -185,6 +210,12 @@ export async function GET(request: Request) {
     const response = NextResponse.json({
       ok: true,
       state: 'active',
+      releaseNotice: shouldShowReleaseNotice(
+        currentVersion,
+        versionAcknowledgement?.versionKey ?? null,
+      )
+        ? await getReleaseNoticeContent(currentVersion)
+        : null,
       openTasks,
       completedTasks,
       monthlyCompletedTasks,

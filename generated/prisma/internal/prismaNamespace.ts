@@ -397,6 +397,7 @@ export const ModelName = {
   HouseholdInvite: 'HouseholdInvite',
   ActionRateLimit: 'ActionRateLimit',
   BrowserLoginSession: 'BrowserLoginSession',
+  ReleaseNoticeAcknowledgement: 'ReleaseNoticeAcknowledgement',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "globalBonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "globalBonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "releaseNoticeAcknowledgement" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1379,6 +1380,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReleaseNoticeAcknowledgement: {
+      payload: Prisma.$ReleaseNoticeAcknowledgementPayload<ExtArgs>
+      fields: Prisma.ReleaseNoticeAcknowledgementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReleaseNoticeAcknowledgementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReleaseNoticeAcknowledgementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>
+        }
+        findFirst: {
+          args: Prisma.ReleaseNoticeAcknowledgementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReleaseNoticeAcknowledgementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>
+        }
+        findMany: {
+          args: Prisma.ReleaseNoticeAcknowledgementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>[]
+        }
+        create: {
+          args: Prisma.ReleaseNoticeAcknowledgementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>
+        }
+        createMany: {
+          args: Prisma.ReleaseNoticeAcknowledgementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReleaseNoticeAcknowledgementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>[]
+        }
+        delete: {
+          args: Prisma.ReleaseNoticeAcknowledgementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>
+        }
+        update: {
+          args: Prisma.ReleaseNoticeAcknowledgementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReleaseNoticeAcknowledgementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReleaseNoticeAcknowledgementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReleaseNoticeAcknowledgementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReleaseNoticeAcknowledgementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReleaseNoticeAcknowledgementPayload>
+        }
+        aggregate: {
+          args: Prisma.ReleaseNoticeAcknowledgementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReleaseNoticeAcknowledgement>
+        }
+        groupBy: {
+          args: Prisma.ReleaseNoticeAcknowledgementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReleaseNoticeAcknowledgementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReleaseNoticeAcknowledgementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReleaseNoticeAcknowledgementCountAggregateOutputType> | number
+        }
+      }
+    }
     MonthlyReport: {
       payload: Prisma.$MonthlyReportPayload<ExtArgs>
       fields: Prisma.MonthlyReportFieldRefs
@@ -1722,6 +1797,18 @@ export const BrowserLoginSessionScalarFieldEnum = {
 export type BrowserLoginSessionScalarFieldEnum = (typeof BrowserLoginSessionScalarFieldEnum)[keyof typeof BrowserLoginSessionScalarFieldEnum]
 
 
+export const ReleaseNoticeAcknowledgementScalarFieldEnum = {
+  id: 'id',
+  telegramUserId: 'telegramUserId',
+  versionKey: 'versionKey',
+  acknowledgedAt: 'acknowledgedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReleaseNoticeAcknowledgementScalarFieldEnum = (typeof ReleaseNoticeAcknowledgementScalarFieldEnum)[keyof typeof ReleaseNoticeAcknowledgementScalarFieldEnum]
+
+
 export const MonthlyReportScalarFieldEnum = {
   id: 'id',
   householdId: 'householdId',
@@ -1936,6 +2023,7 @@ export type GlobalOmitConfig = {
   householdInvite?: Prisma.HouseholdInviteOmit
   actionRateLimit?: Prisma.ActionRateLimitOmit
   browserLoginSession?: Prisma.BrowserLoginSessionOmit
+  releaseNoticeAcknowledgement?: Prisma.ReleaseNoticeAcknowledgementOmit
   monthlyReport?: Prisma.MonthlyReportOmit
 }
 

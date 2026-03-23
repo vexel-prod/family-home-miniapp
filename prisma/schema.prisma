@@ -273,6 +273,18 @@ model BrowserLoginSession {
   @@index([telegramUserId, approvedAt])
 }
 
+model ReleaseNoticeAcknowledgement {
+  id             String   @id @default(cuid())
+  telegramUserId String
+  versionKey     String
+  acknowledgedAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([telegramUserId, versionKey])
+  @@index([telegramUserId, acknowledgedAt])
+}
+
 model MonthlyReport {
   id            String   @id @default(cuid())
   householdId   String

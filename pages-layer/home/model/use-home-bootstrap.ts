@@ -18,6 +18,7 @@ import type {
   FamilyGoal,
   FetchOptions,
   HouseholdProfile,
+  ReleaseNotice,
   HouseholdSummary,
   HouseholdTask,
   MonthlyLeaderboardEntry,
@@ -107,6 +108,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
   const [bonusPurchases, setBonusPurchases] = useState<BonusPurchase[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
   const [purchasedShoppingItems, setPurchasedShoppingItems] = useState<ShoppingItem[]>([])
+  const [releaseNotice, setReleaseNotice] = useState<ReleaseNotice | null>(null)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
@@ -124,6 +126,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
     setBonusPurchases([])
     setShoppingItems([])
     setPurchasedShoppingItems([])
+    setReleaseNotice(null)
   }, [])
 
   const persistBootstrapCache = useCallback((payload: BootstrapActiveResponse) => {
@@ -177,6 +180,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
     setBonusPurchases(payload.bonusPurchases)
     setShoppingItems(payload.activeShoppingItems)
     setPurchasedShoppingItems(payload.purchasedShoppingItems)
+    setReleaseNotice(payload.releaseNotice ?? null)
   }, [])
 
   const telegramFetch = useCallback(
@@ -256,6 +260,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
         if (payload.state === 'onboarding') {
           setAppState('onboarding')
           resetActiveState()
+          setReleaseNotice(payload.releaseNotice ?? null)
           clearBootstrapCache()
           return
         }
@@ -433,5 +438,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
     setLoading,
     telegramFetch,
     loadData,
+    releaseNotice,
+    setReleaseNotice,
   }
 }

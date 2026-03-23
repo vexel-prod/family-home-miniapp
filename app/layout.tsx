@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const isProduction = process.env.NODE_ENV === 'production'
+
   return (
     <html
       lang='ru'
@@ -17,14 +19,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body>
-        <Script
-          src='https://telegram.org/js/telegram-web-app.js'
-          strategy='beforeInteractive'
-        />
+        {isProduction ? (
+          <Script
+            src='https://telegram.org/js/telegram-web-app.js'
+            strategy='beforeInteractive'
+          />
+        ) : null}
         {children}
+        {isProduction ? <SpeedInsights /> : null}
+        {isProduction ? <Analytics /> : null}
       </body>
-      <SpeedInsights />
-      <Analytics />
     </html>
   )
 }
