@@ -16,6 +16,7 @@ import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
 import { getAppVersion } from '@shared/lib/version'
 import { getReleaseNoticeContent, shouldShowReleaseNotice } from '@shared/lib/release-notice'
+import type { PrismaClient } from '@/generated/prisma/client'
 import { NextResponse } from 'next/server'
 
 function getCurrentMoscowMonthRange() {
@@ -36,6 +37,23 @@ function getCurrentMoscowMonthRange() {
   const end = new Date(Date.UTC(year, month, 1, -3))
 
   return { start, end }
+}
+
+async function resolveReleaseNoticeForUser(
+  prisma: PrismaClient,
+  telegramUserId: string,
+  currentVersion: string,
+) {
+  const versionAcknowledgement = await prisma.releaseNoticeAcknowledgement.findFirst({
+    where: {
+      telegramUserId,
+      versionKey: currentVersion,
+    },
+  })
+
+  return shouldShowReleaseNotice(currentVersion, versionAcknowledgement?.versionKey ?? null)
+    ? await getReleaseNoticeContent(currentVersion)
+    : null
 }
 
 export async function GET(request: Request) {
@@ -80,18 +98,11 @@ export async function GET(request: Request) {
 
   if (!auth.member) {
     const currentVersion = await getAppVersion()
-    const versionAcknowledgement = await prisma.releaseNoticeAcknowledgement.findFirst({
-      where: {
-        telegramUserId: String(auth.user.id),
-        versionKey: currentVersion,
-      },
-    })
-    const releaseNotice = shouldShowReleaseNotice(
+    const releaseNotice = await resolveReleaseNoticeForUser(
+      prisma,
+      String(auth.user.id),
       currentVersion,
-      versionAcknowledgement?.versionKey ?? null,
     )
-      ? await getReleaseNoticeContent(currentVersion)
-      : null
 
     const response = NextResponse.json({
       ok: true,
@@ -131,7 +142,7 @@ export async function GET(request: Request) {
       overallHouseholdLeaderboardEntries,
       familyBonusRewards,
       globalBonusRewards,
-      versionAcknowledgement,
+      releaseNotice,
       householdGoalState,
       familyGoal,
       bonusPurchases,
@@ -181,12 +192,7 @@ export async function GET(request: Request) {
         orderBy: [{ createdAt: 'asc' }],
       }),
       syncGlobalBonusRewards(prisma),
-      prisma.releaseNoticeAcknowledgement.findFirst({
-        where: {
-          telegramUserId: String(auth.user.id),
-          versionKey: currentVersion,
-        },
-      }),
+      resolveReleaseNoticeForUser(prisma, String(auth.user.id), currentVersion),
       prisma.household.findUnique({
         where: {
           id: auth.member.householdId,
@@ -215,12 +221,7 @@ export async function GET(request: Request) {
     const response = NextResponse.json({
       ok: true,
       state: 'active',
-      releaseNotice: shouldShowReleaseNotice(
-        currentVersion,
-        versionAcknowledgement?.versionKey ?? null,
-      )
-        ? await getReleaseNoticeContent(currentVersion)
-        : null,
+      releaseNotice,
       openTasks,
       completedTasks,
       monthlyCompletedTasks,

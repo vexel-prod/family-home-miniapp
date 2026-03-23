@@ -40,11 +40,15 @@ export function TaskJournalModal({
             {tasks.length ? (
               <div className='space-y-4'>
                 {tasks.map(task => (
-                  <CompletedTaskCard
+                  <div
                     key={task.id}
-                    task={task}
-                    participantCount={participantCount}
-                  />
+                    className='space-y-2'
+                  >
+                    <CompletedTaskCard
+                      task={task}
+                      participantCount={participantCount}
+                    />
+                  </div>
                 ))}
               </div>
             ) : (
@@ -102,10 +106,10 @@ export function TaskJournalModal({
           <button
             type='button'
             onClick={() => setActiveTab('tasks')}
-            className={`rounded-md border px-4 py-3 text-center text-sm font-semibold transition-colors duration-150 ${
+            className={`rounded-md border border-white/10 px-4 py-3 text-center text-sm font-semibold transition-colors duration-150 ${
               activeTab === 'tasks'
-                ? 'border-transparent bg-(--color-brand-home) text-(--color-page-text) shadow-(--shadow-card)'
-                : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
+                ? 'border-transparent bg-(--color-brand-home) text-black shadow-(--shadow-card)'
+                : 'bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
             }`}
           >
             Задачи
@@ -113,10 +117,10 @@ export function TaskJournalModal({
           <button
             type='button'
             onClick={() => setActiveTab('shopping')}
-            className={`rounded-md border px-4 py-3 text-center text-sm font-semibold transition-colors duration-150 ${
+            className={`rounded-md border border-white/10 px-4 py-3 text-center text-sm font-semibold transition-colors duration-150 ${
               activeTab === 'shopping'
-                ? 'border-transparent bg-(--color-brand-shopping) text-(--color-page-text) shadow-(--shadow-card)'
-                : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
+                ? 'border  bg-(--color-brand-shopping) text-black shadow-(--shadow-card)'
+                : 'bg-white/6 hover:border-white/20 hover:bg-white/10'
             }`}
           >
             Покупки

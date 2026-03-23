@@ -3,6 +3,8 @@ import { ModalPanel } from '@shared/ui/app-modal'
 import { StatusPill } from '@shared/ui/status-pill'
 import { formatPoints } from '@entities/bonus'
 import { formatRelativeDate } from '@entities/family'
+import { DeadlineCountdown } from './deadline-countdown'
+
 import type { HouseholdTask } from '@entities/family'
 
 type TaskListModalProps = {
@@ -48,9 +50,6 @@ export function TaskListModal({
           <div className='space-y-4'>
             {tasks.map(task =>
               (() => {
-                const deadlineAlertActive = Boolean(
-                  task.lastDeadlineReminderAt || task.penaltyAppliedAt,
-                )
                 const isPendingApproval = task.status === 'pending-approval'
 
                 return (
@@ -61,17 +60,10 @@ export function TaskListModal({
                     onClick={() => onSelectTask(task)}
                   >
                     <div className='space-y-2'>
-                      <StatusPill
-                        tone={
-                          isPendingApproval ? 'normal' : deadlineAlertActive ? 'urgent' : 'soon'
-                        }
-                      >
-                        {isPendingApproval
-                          ? 'Ожидает подтверждения'
-                          : deadlineAlertActive
-                            ? 'Дедлайн горит'
-                            : 'Есть дедлайн'}
-                      </StatusPill>
+                      {isPendingApproval ? (
+                        <StatusPill tone='normal'>Ожидает подтверждения</StatusPill>
+                      ) : null}
+                      <DeadlineCountdown deadlineAt={task.deadlineAt} />
                       <h3 className='font-(--font-family-heading) text-2xl leading-tight'>
                         {task.title}
                       </h3>

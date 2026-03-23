@@ -25,6 +25,8 @@ export function HouseholdOnboarding({
   onCreateHousehold,
   onJoinHousehold,
 }: HouseholdOnboardingProps) {
+  const isCreateHouseholdDisabled = busyAction !== null || !createHouseholdName.trim()
+
   return (
     <div className='mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center gap-4 p-4 sm:p-6'>
       <section className='rounded-3xl border border-white/10 bg-(--dashboard-panel) px-5 py-5 text-white shadow-(--shadow-panel) backdrop-blur-xl sm:px-6'>
@@ -66,7 +68,7 @@ export function HouseholdOnboarding({
           <div className='mt-5'>
             <AppButton
               tone='light'
-              disabled={busyAction !== null}
+              disabled={isCreateHouseholdDisabled}
               onClick={onCreateHousehold}
             >
               {busyAction === 'create' ? 'Создаю семью...' : 'Создать семью'}

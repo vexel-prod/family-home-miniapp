@@ -4,8 +4,7 @@ import { jsonRateLimited } from '@shared/api/api-response'
 import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
 import { notifyHousehold } from '@entities/household/server/household-notify'
 import {
-  dispatchDueTaskDeadlineNotifications,
-  rebuildTaskDeadlineNotifications,
+  syncTaskDeadlineNotificationsBestEffort,
 } from '@entities/household/server/task-deadline-notifications'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
@@ -151,8 +150,7 @@ export async function POST(request: Request) {
     },
   })
 
-  await rebuildTaskDeadlineNotifications(prisma, task)
-  await dispatchDueTaskDeadlineNotifications(prisma)
+  await syncTaskDeadlineNotificationsBestEffort(prisma, task, { dispatchDue: true })
   await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   await notifyHousehold(

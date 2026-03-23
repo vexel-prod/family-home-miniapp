@@ -6,8 +6,9 @@ import { bumpHouseholdRevision } from '@entities/household/server/household-revi
 import { syncHouseholdProfiles } from '@entities/profile/server/household-profile'
 import { getMemberDisplayName, notifyHousehold, notifyMember } from '@entities/household/server/household-notify'
 import {
+  clearTaskDeadlineNotificationsBestEffort,
   dispatchDueTaskDeadlineNotifications,
-  rebuildTaskDeadlineNotifications,
+  syncTaskDeadlineNotificationsBestEffort,
 } from '@entities/household/server/task-deadline-notifications'
 import { finalizeTaskCompletion, resolveTaskCreatorMember } from '@entities/family/server/task-completion'
 import { getPrisma } from '@shared/api/prisma'
@@ -196,8 +197,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
       },
     })
 
-    await rebuildTaskDeadlineNotifications(prisma, updatedTask)
-    await dispatchDueTaskDeadlineNotifications(prisma)
+    await syncTaskDeadlineNotificationsBestEffort(prisma, updatedTask, { dispatchDue: true })
 
     await prisma.taskCompletionApproval.updateMany({
       where: {
@@ -471,7 +471,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
           },
   })
 
-  await rebuildTaskDeadlineNotifications(prisma, updatedTask)
+  await syncTaskDeadlineNotificationsBestEffort(prisma, updatedTask)
 
   if (body.action === 'reopen') {
     await dispatchDueTaskDeadlineNotifications(prisma)
@@ -592,11 +592,7 @@ export async function DELETE(request: Request, context: { params: Promise<{ task
 
   await clearTaskBonusTransactions(prisma, taskId)
   await syncHouseholdProfiles(prisma, auth.member.householdId)
-  await prisma.taskDeadlineNotification.deleteMany({
-    where: {
-      taskId,
-    },
-  })
+  await clearTaskDeadlineNotificationsBestEffort(prisma, taskId)
 
   await prisma.householdTask.delete({
     where: { id: taskId },

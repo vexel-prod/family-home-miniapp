@@ -136,7 +136,12 @@ export async function GET(request: Request) {
     householdId: approval.householdId,
   })
 
-  await dispatchDueTaskDeadlineNotifications(prisma)
+  await dispatchDueTaskDeadlineNotifications(prisma).catch(error => {
+    console.error('Failed to dispatch deadline notifications after approval rejection', {
+      taskId: approval.taskId,
+      error,
+    })
+  })
 
   await notifyMember(
     prisma,

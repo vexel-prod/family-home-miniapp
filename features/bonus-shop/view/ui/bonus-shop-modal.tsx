@@ -254,11 +254,11 @@ export function BonusShopModal({
               </div>
             )
           ) : purchases.length ? (
-            <div className='space-y-3'>
+            <div className='space-y-4'>
               {purchases.map(purchase => (
                 <div
                   key={purchase.id}
-                  className='rounded-2xl border border-white/8 bg-white/6 p-4'
+                  className='rounded-md border border-white/10 bg-white/6 p-4'
                 >
                   <div className='flex items-start justify-between gap-4'>
                     <div>
@@ -295,7 +295,7 @@ export function BonusShopModal({
                 onClick={() => setActiveTab(tab.key)}
                 className={`rounded-md p-4 text-sm font-semibold transition-all duration-150 ${
                   activeTab === tab.key
-                    ? 'bg-white text-(--color-page-text) shadow-[0_10px_30px_rgba(255,255,255,0.12)]'
+                    ? 'bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.12)]'
                     : 'border border-white/10 bg-white/6 text-white/68 hover:bg-white/6 hover:text-white/88'
                 }`}
               >

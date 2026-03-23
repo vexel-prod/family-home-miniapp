@@ -41,9 +41,19 @@ import {
   TaskJournalModal,
   TaskListModal,
 } from '@features/task-management'
+import {
+  type ApiErrorPayload,
+  buildDeadlineIso,
+  formatRetryAfterLabel,
+  getApiErrorMessage,
+  getDefaultTaskDeadlineValue,
+  getUrgentTaskSpotlight,
+  normalizePointsInput,
+  readApiErrorPayload,
+  toDateTimeLocalValue,
+} from '@pages/home/lib/home-page-helpers'
 import { ModalOverlay } from '@shared/ui/app-modal'
 import { NoticeToast } from '@shared/ui/notice-toast'
-import { getTaskDeadlineMaxDate } from '@shared/lib/task-deadline'
 import { DashboardHero } from '@widgets/dashboard-hero'
 import { JournalSummary } from '@widgets/journal-summary'
 import { useHomeBootstrap } from '@pages/home/model/use-home-bootstrap'
@@ -57,125 +67,6 @@ type TaskMutationResponse = {
 type ShoppingMutationResponse = {
   ok: boolean
   shoppingItem: ShoppingItem
-}
-
-type ApiErrorPayload = {
-  error?: string
-  retryAfterSeconds?: number
-}
-
-async function readApiErrorPayload(response: Response) {
-  return (await response.json().catch(() => null)) as ApiErrorPayload | null
-}
-
-function formatRetryAfterLabel(retryAfterSeconds?: number) {
-  if (!retryAfterSeconds || retryAfterSeconds <= 0) {
-    return 'через пару секунд'
-  }
-
-  if (retryAfterSeconds < 60) {
-    return `через ${retryAfterSeconds} сек.`
-  }
-
-  return `через ${Math.ceil(retryAfterSeconds / 60)} мин.`
-}
-
-function getApiErrorMessage(payload: ApiErrorPayload | null, fallbackMessage: string) {
-  if (payload?.error === 'Too many requests') {
-    return `Слишком много запросов. Попробуй снова ${formatRetryAfterLabel(payload.retryAfterSeconds)}.`
-  }
-
-  return fallbackMessage
-}
-
-function toDateTimeLocalValue(value?: string | Date | null) {
-  if (!value) {
-    return ''
-  }
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return ''
-  }
-
-  const timezoneOffsetMs = date.getTimezoneOffset() * 60 * 1000
-  return new Date(date.getTime() - timezoneOffsetMs).toISOString().slice(0, 16)
-}
-
-function getDefaultTaskDeadlineValue() {
-  const now = new Date()
-  const next = new Date(now)
-  next.setMinutes(0, 0, 0)
-  next.setHours(next.getHours() + 2)
-
-  const maxLimit = getTaskDeadlineMaxDate(now)
-
-  if (next.getTime() > maxLimit.getTime()) {
-    return toDateTimeLocalValue(maxLimit)
-  }
-
-  return toDateTimeLocalValue(next)
-}
-
-function formatUrgencyLabel(diffMs: number) {
-  if (diffMs <= 30 * 60 * 1000) {
-    return 'меньше 30 минут'
-  }
-
-  if (diffMs <= 60 * 60 * 1000) {
-    return 'меньше часа'
-  }
-
-  if (diffMs <= 3 * 60 * 60 * 1000) {
-    return 'меньше 3 часов'
-  }
-
-  return 'срок скоро истекает'
-}
-
-function getUrgentTaskSpotlight(tasks: HouseholdTask[]) {
-  const now = Date.now()
-  const sortedTasks = [...tasks]
-    .map(task => ({
-      task,
-      diffMs: new Date(task.deadlineAt).getTime() - now,
-    }))
-    .filter(entry => !Number.isNaN(entry.diffMs))
-    .sort((left, right) => left.diffMs - right.diffMs)
-
-  const mostUrgentTask = sortedTasks.find(entry => entry.diffMs <= 3 * 60 * 60 * 1000)
-
-  if (!mostUrgentTask) {
-    return null
-  }
-
-  return {
-    task: mostUrgentTask.task,
-    diffMs: mostUrgentTask.diffMs,
-    label:
-      mostUrgentTask.diffMs <= 0
-        ? 'дедлайн уже просрочен'
-        : `сделать ${formatUrgencyLabel(mostUrgentTask.diffMs)}`,
-  }
-}
-
-function buildDeadlineIso(value: string) {
-  if (!value) {
-    return ''
-  }
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return ''
-  }
-
-  return date.toISOString()
-}
-
-function normalizePointsInput(value: string) {
-  return value.replace(/\D/g, '').slice(0, 4)
 }
 
 const FALLBACK_HOUSEHOLD_SUMMARY: HouseholdSummary = {
@@ -303,9 +194,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
   const actorName = getActorName(buyer)
   const urgentTaskSpotlight = getUrgentTaskSpotlight(openTasks)
   const isEmptyHomeState = openTasks.length === 0 && shoppingItems.length === 0
-  const heroTypedText = urgentTaskSpotlight
-    ? `Привет, ${actorName}!\nСейчас горит задача:\n${urgentTaskSpotlight.task.title}\nДедлайн уже близко.\nНе дай семье потерять темп.`
-    : isEmptyHomeState
+  const heroTypedText = isEmptyHomeState
       ? `Привет, ${actorName}!\nСегодня дома спокойно.\nАктивных задач и покупок пока нет.\nМожно просто выдохнуть\nили добавить что-то новое.`
       : `Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\nОтслеживайте прогресс\nЗарабатывайте house-coin (HC)\nПокупайте крутые бонусы!`
 
@@ -1270,6 +1159,14 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
   }
 
   async function createHousehold() {
+    const householdName = createHouseholdName.trim()
+
+    if (!householdName) {
+      setError('Название семьи обязательно')
+      setOnboardingStatus('')
+      return
+    }
+
     setBusyKey('create-household')
     setError('')
     setOnboardingStatus('')
@@ -1279,7 +1176,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: createHouseholdName.trim(),
+          name: householdName,
         }),
       })
 
@@ -1736,7 +1633,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
             <TaskActionsModal
               task={selectedTask}
               busyKey={busyKey}
-              onClose={closeTaskModals}
+              onClose={() => setModal('household')}
               onComplete={() => requestTaskCompletion(selectedTask)}
               onCompleteTogether={() => void completeTask(selectedTask, true)}
               onReplace={openTaskReplaceModal}
@@ -1936,7 +1833,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
             <ShoppingActionsModal
               item={selectedShoppingItem}
               busyKey={busyKey}
-              onClose={closeShoppingModals}
+              onClose={() => setModal('shopping-list')}
               onPurchase={() => void purchaseItem(selectedShoppingItem)}
               onReplace={openReplaceModal}
               onDelete={() => void deleteShoppingItem(selectedShoppingItem)}
@@ -1969,21 +1866,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
         <DashboardHero
           actorName={actorName}
           typedText={heroTypedText}
-          urgentBubble={
-            urgentTaskSpotlight
-              ? {
-                  label:
-                    urgentTaskSpotlight.diffMs <= 0
-                      ? 'Срок уже прошел'
-                      : urgentTaskSpotlight.label,
-                  title: urgentTaskSpotlight.task.title,
-                  caption:
-                    urgentTaskSpotlight.diffMs <= 0
-                      ? 'Эта задача уже просрочена. Лучше закрыть её как можно скорее.'
-                      : `Дедлайн близко. Лучше закрыть задачу до того, как семья получит просрочку по опыту.`,
-                }
-              : null
-          }
+          urgentSummary={urgentTaskSpotlight}
         />
 
         <JournalSummary

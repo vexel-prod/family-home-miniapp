@@ -91,6 +91,19 @@ export function BrowserTelegramAuthPanel({
       )
 
       if (!response.ok) {
+        if (response.status === 404 || response.status === 401) {
+          clearPersistedSession()
+          closeAuthTab()
+          setSessionId('')
+          setToken('')
+          setTelegramUrl('')
+          setFallbackUrl('')
+          setStartCommand('')
+          setStatus('expired')
+          setPanelError('Сессия входа больше недействительна. Запусти вход заново.')
+          return
+        }
+
         throw new Error('Не удалось проверить подтверждение входа.')
       }
 
@@ -103,6 +116,7 @@ export function BrowserTelegramAuthPanel({
       if (payload.status === 'approved') {
         clearPersistedSession()
         closeAuthTab()
+        setPanelError('')
         setStatus('approved')
         await onAuthenticated()
         return
@@ -111,6 +125,11 @@ export function BrowserTelegramAuthPanel({
       if (payload.status === 'expired') {
         clearPersistedSession()
         closeAuthTab()
+        setSessionId('')
+        setToken('')
+        setTelegramUrl('')
+        setFallbackUrl('')
+        setStartCommand('')
         setStatus('expired')
         setPanelError('Сессия входа истекла. Запусти вход заново.')
       }
@@ -193,7 +212,13 @@ export function BrowserTelegramAuthPanel({
 
     if (status === 'waiting' && sessionId && token) {
       pollTimerId = window.setInterval(() => {
-        void pollBrowserLogin(sessionId, token)
+        void pollBrowserLogin(sessionId, token).catch((pollError) => {
+          setPanelError(
+            pollError instanceof Error
+              ? pollError.message
+              : 'Не удалось проверить подтверждение входа.',
+          )
+        })
       }, POLL_INTERVAL_MS)
     }
 
@@ -254,7 +279,13 @@ export function BrowserTelegramAuthPanel({
       }
 
       authTabRef.current = window.open(payload.loginUrl, '_blank')
-      void pollBrowserLogin(payload.sessionId, payload.token)
+      void pollBrowserLogin(payload.sessionId, payload.token).catch((pollError) => {
+        setPanelError(
+          pollError instanceof Error
+            ? pollError.message
+            : 'Не удалось проверить подтверждение входа.',
+        )
+      })
     } catch (startError) {
       setPanelError(
         startError instanceof Error ? startError.message : 'Не удалось создать сессию входа.',

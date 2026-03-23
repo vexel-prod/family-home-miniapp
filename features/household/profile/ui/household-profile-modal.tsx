@@ -412,7 +412,7 @@ export function HouseholdProfileModal({
               onClick={() => setActiveTab(tab.key)}
               className={`rounded-md border px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
                 activeTab === tab.key
-                  ? 'border-transparent bg-white text-(--color-page-text) shadow-(--shadow-card)'
+                  ? 'border-transparent bg-white text-black shadow-(--shadow-card)'
                   : 'border-white/10 bg-white/6 text-white/75 hover:border-white/20 hover:bg-white/10'
               }`}
             >

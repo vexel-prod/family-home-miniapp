@@ -41,16 +41,13 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json().catch(() => ({}))) as CreateHouseholdPayload
-  const fallbackName =
-    [auth.user.first_name, auth.user.last_name].filter(Boolean).join(' ').trim() ||
-    auth.user.username ||
-    'My Household'
-  const householdName =
-    validateRequiredText(body.name ?? null, HOUSEHOLD_NAME_MAX_LENGTH) ??
-    validateRequiredText(fallbackName, HOUSEHOLD_NAME_MAX_LENGTH)
+  const householdName = validateRequiredText(body.name ?? null, HOUSEHOLD_NAME_MAX_LENGTH)
 
   if (!householdName) {
-    return NextResponse.json({ ok: false, error: 'Invalid household name' }, { status: 400 })
+    return NextResponse.json(
+      { ok: false, error: 'Название семьи обязательно' },
+      { status: 400 },
+    )
   }
 
   const member = await prisma.$transaction(async tx => {

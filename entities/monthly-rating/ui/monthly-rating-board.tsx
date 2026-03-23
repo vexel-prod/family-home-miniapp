@@ -54,9 +54,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
             <SimpleMetric
               label='Отставание'
               value={
-                summary.currentUser.gapToLeader > 0
-                  ? `${summary.currentUser.gapToLeader} EXP`
-                  : '0'
+                summary.currentUser.gapToLeader > 0 ? `${summary.currentUser.gapToLeader} EXP` : '0'
               }
             />
           </div>
@@ -85,9 +83,7 @@ export function MonthlyRatingBoard({ summary }: MonthlyRatingBoardProps) {
                 <div className='text-sm text-white/65'>
                   Задачи: {member.completedCount}, быстрые: {member.fastCount}
                 </div>
-                <div className='text-sm font-semibold text-white'>
-                  {member.points} EXP
-                </div>
+                <div className='text-sm font-semibold text-white'>{member.points} EXP</div>
               </div>
             ))
           ) : (
@@ -110,82 +106,51 @@ export function OverallHouseholdLeaderboardBoard({ summary }: MonthlyRatingBoard
       transition={{ delay: 0.12, duration: 0.35, ease: 'easeOut' }}
       className='grid min-h-0 flex-1 gap-4 overflow-y-auto rounded-md px-4 py-4 text-white sm:px-6'
     >
-      <div className='relative overflow-hidden rounded-[1.8rem] border border-amber-300/18 bg-linear-to-br from-[#3b1d07] via-[#5b2c09] to-[#1f1225] p-5 shadow-[0_20px_60px_rgba(245,158,11,0.18)]'>
-        <div className='pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-white/10 to-transparent' />
-        <div className='pointer-events-none absolute -right-10 top-0 h-32 w-32 rounded-full bg-amber-300/20 blur-3xl' />
-        <div className='text-[11px] uppercase tracking-[0.28em] text-amber-100/70'>
-          общий рейтинг семей
-        </div>
+      <div className='mt-3 space-y-3'>
+        {summary.overallLeaderboard.length ? (
+          summary.overallLeaderboard.map((household, index) => (
+            <div
+              key={household.householdId}
+              className={`grid gap-3 rounded-[1.4rem] border px-4 py-4 sm:grid-cols-[3rem_minmax(0,1.4fr)_auto_auto_auto] ${
+                index === 0
+                  ? 'border-amber-300/20 bg-amber-300/40'
+                  : index === 1
+                    ? 'border-slate-200/25 bg-slate-200/20'
+                    : index === 2
+                      ? 'border-orange-300/20 bg-orange-300/20'
+                      : 'border-white/10 bg-white/6'
+              }`}
+            >
+              <div className='grid grid-cols-[auto_1fr_auto] items-center border-b border-white/10 pb-2'>
+                <span className='text-base font-black text-white/56'>#{index + 1}</span>
+                <span className='justify-self-center truncate text-base font-semibold text-white'>
+                  {household.householdName}
+                </span>
+              </div>
+              <div className='grid grid-cols-2 place-content-between'>
+                <div className='grid grid-rows-3 gap-2'>
+                  <div className='text-sm text-white/72'>LVL {household.level}</div>
+                  <div className='text-sm text-white/72'>{household.totalExp} EXP</div>
+                  <div className='text-sm text-white/72'>
+                    Серия: {household.streakWithoutOverdue}
+                  </div>
+                </div>
 
-        {bestHousehold ? (
-          <div className='mt-4 grid gap-4 sm:grid-cols-[1.4fr_1fr]'>
-            <div>
-              <div className='text-sm uppercase tracking-[0.22em] text-amber-100/55'>
-                Лучшая семья сейчас
-              </div>
-              <div className='mt-2 text-3xl font-black uppercase tracking-[-0.04em] text-white sm:text-4xl'>
-                {bestHousehold.householdName}
-              </div>
-              <div className='mt-3 text-sm leading-6 text-amber-50/72'>
-                Семья держит лучший общий темп по опыту, уровню и серии задач без просрочек.
+                {index === 0 ? (
+                  <span className='text-8xl text-end'>🥇</span>
+                ) : index === 1 ? (
+                  <span className='text-8xl text-end'>🥈</span>
+                ) : index === 2 ? (
+                  <span className='text-8xl text-end'>🥉</span>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
-
-            <div className='grid gap-3'>
-              <SimpleMetric
-                label='Уровень семьи'
-                value={`LVL ${bestHousehold.level}`}
-              />
-              <SimpleMetric
-                label='Опыт семьи'
-                value={`${bestHousehold.totalExp} EXP`}
-              />
-              <SimpleMetric
-                label='Серия без просрочек'
-                value={`${bestHousehold.streakWithoutOverdue}`}
-              />
-            </div>
-          </div>
+          ))
         ) : (
-          <div className='mt-4 text-sm text-amber-50/70'>
-            Пока нет данных для общего семейного рейтинга.
-          </div>
+          <div className='text-sm text-white/65'>Пока не из чего строить общий рейтинг семей.</div>
         )}
-      </div>
-
-      <div className='rounded-md border border-white/10 bg-white/6 p-4'>
-        <div className='text-xs uppercase tracking-[0.22em] text-white/45'>Таблица семей</div>
-        <div className='mt-3 space-y-3'>
-          {summary.overallLeaderboard.length ? (
-            summary.overallLeaderboard.map((household, index) => (
-              <div
-                key={household.householdId}
-                className={`grid gap-3 rounded-[1.4rem] border px-4 py-4 sm:grid-cols-[3rem_minmax(0,1.4fr)_auto_auto_auto] ${
-                  index === 0
-                    ? 'border-amber-300/20 bg-amber-300/10'
-                    : 'border-white/10 bg-white/5'
-                }`}
-              >
-                <div className='text-base font-black text-white/56'>#{index + 1}</div>
-                <div className='min-w-0'>
-                  <div className='truncate text-base font-semibold text-white'>
-                    {household.householdName}
-                  </div>
-                  <div className='mt-1 text-xs uppercase tracking-[0.18em] text-white/42'>
-                    Семейный контур
-                  </div>
-                </div>
-                <div className='text-sm text-white/72'>LVL {household.level}</div>
-                <div className='text-sm text-white/72'>{household.totalExp} EXP</div>
-                <div className='text-sm text-white/72'>
-                  Серия: {household.streakWithoutOverdue}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className='text-sm text-white/65'>Пока не из чего строить общий рейтинг семей.</div>
-          )}
-        </div>
       </div>
     </motion.section>
   )

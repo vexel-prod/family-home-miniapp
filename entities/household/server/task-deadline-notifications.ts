@@ -270,3 +270,50 @@ export async function dispatchDueTaskDeadlineNotifications(
     canceled: canceledCount,
   }
 }
+
+export async function syncTaskDeadlineNotificationsBestEffort(
+  prisma: PrismaClient,
+  task: {
+    id: string
+    householdId: string
+    title: string
+    deadlineAt: Date | string
+    status: string
+    assignedMemberId: string | null
+    assignedMemberName: string | null
+  },
+  options?: {
+    dispatchDue?: boolean
+  },
+) {
+  try {
+    await rebuildTaskDeadlineNotifications(prisma, task)
+
+    if (options?.dispatchDue) {
+      await dispatchDueTaskDeadlineNotifications(prisma)
+    }
+  } catch (error) {
+    console.error('Failed to sync task deadline notifications', {
+      taskId: task.id,
+      error,
+    })
+  }
+}
+
+export async function clearTaskDeadlineNotificationsBestEffort(
+  prisma: PrismaClient,
+  taskId: string,
+) {
+  try {
+    await prisma.taskDeadlineNotification.deleteMany({
+      where: {
+        taskId,
+      },
+    })
+  } catch (error) {
+    console.error('Failed to clear task deadline notifications', {
+      taskId,
+      error,
+    })
+  }
+}
