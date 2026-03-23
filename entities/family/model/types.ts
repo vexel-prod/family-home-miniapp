@@ -134,6 +134,15 @@ export type MonthlyLeaderboardEntry = {
   fastCount: number
 }
 
+export type OverallHouseholdLeaderboardEntry = {
+  householdId: string
+  householdName: string
+  level: number
+  totalExp: number
+  streakWithoutOverdue: number
+  completedTasksCount: number
+}
+
 export type ShoppingItem = {
   id: string
   title: string
@@ -155,6 +164,7 @@ export type BootstrapActiveResponse = {
   completedTasks: HouseholdTask[]
   monthlyCompletedTasks: HouseholdTask[]
   monthlyLeaderboardEntries: MonthlyLeaderboardEntry[]
+  overallHouseholdLeaderboardEntries: OverallHouseholdLeaderboardEntry[]
   monthlyTeamBonusPoints: number
   participantNames: string[]
   currentUserBonusBalanceUnits: number

@@ -352,6 +352,7 @@ export type HouseholdTaskWhereInput = {
   addedByMember?: Prisma.XOR<Prisma.MemberNullableScalarRelationFilter, Prisma.MemberWhereInput> | null
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
   completionApprovals?: Prisma.TaskCompletionApprovalListRelationFilter
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationListRelationFilter
 }
 
 export type HouseholdTaskOrderByWithRelationInput = {
@@ -380,6 +381,7 @@ export type HouseholdTaskOrderByWithRelationInput = {
   addedByMember?: Prisma.MemberOrderByWithRelationInput
   bonusTransactions?: Prisma.BonusTransactionOrderByRelationAggregateInput
   completionApprovals?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationOrderByRelationAggregateInput
 }
 
 export type HouseholdTaskWhereUniqueInput = Prisma.AtLeast<{
@@ -411,6 +413,7 @@ export type HouseholdTaskWhereUniqueInput = Prisma.AtLeast<{
   addedByMember?: Prisma.XOR<Prisma.MemberNullableScalarRelationFilter, Prisma.MemberWhereInput> | null
   bonusTransactions?: Prisma.BonusTransactionListRelationFilter
   completionApprovals?: Prisma.TaskCompletionApprovalListRelationFilter
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationListRelationFilter
 }, "id">
 
 export type HouseholdTaskOrderByWithAggregationInput = {
@@ -493,6 +496,7 @@ export type HouseholdTaskCreateInput = {
   addedByMember?: Prisma.MemberCreateNestedOneWithoutCreatedTasksInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
   completionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateInput = {
@@ -519,6 +523,7 @@ export type HouseholdTaskUncheckedCreateInput = {
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUpdateInput = {
@@ -545,6 +550,7 @@ export type HouseholdTaskUpdateInput = {
   addedByMember?: Prisma.MemberUpdateOneWithoutCreatedTasksNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateInput = {
@@ -571,6 +577,7 @@ export type HouseholdTaskUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskCreateManyInput = {
@@ -837,6 +844,20 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type HouseholdTaskCreateNestedOneWithoutDeadlineNotificationsInput = {
+  create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUncheckedCreateWithoutDeadlineNotificationsInput>
+  connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutDeadlineNotificationsInput
+  connect?: Prisma.HouseholdTaskWhereUniqueInput
+}
+
+export type HouseholdTaskUpdateOneRequiredWithoutDeadlineNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUncheckedCreateWithoutDeadlineNotificationsInput>
+  connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutDeadlineNotificationsInput
+  upsert?: Prisma.HouseholdTaskUpsertWithoutDeadlineNotificationsInput
+  connect?: Prisma.HouseholdTaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdTaskUpdateToOneWithWhereWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUpdateWithoutDeadlineNotificationsInput>, Prisma.HouseholdTaskUncheckedUpdateWithoutDeadlineNotificationsInput>
+}
+
 export type HouseholdTaskCreateNestedOneWithoutCompletionApprovalsInput = {
   create?: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutCompletionApprovalsInput, Prisma.HouseholdTaskUncheckedCreateWithoutCompletionApprovalsInput>
   connectOrCreate?: Prisma.HouseholdTaskCreateOrConnectWithoutCompletionApprovalsInput
@@ -890,6 +911,7 @@ export type HouseholdTaskCreateWithoutHouseholdInput = {
   addedByMember?: Prisma.MemberCreateNestedOneWithoutCreatedTasksInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
   completionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateWithoutHouseholdInput = {
@@ -915,6 +937,7 @@ export type HouseholdTaskUncheckedCreateWithoutHouseholdInput = {
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskCreateOrConnectWithoutHouseholdInput = {
@@ -993,6 +1016,7 @@ export type HouseholdTaskCreateWithoutAddedByMemberInput = {
   household: Prisma.HouseholdCreateNestedOneWithoutTasksInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
   completionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateWithoutAddedByMemberInput = {
@@ -1018,6 +1042,7 @@ export type HouseholdTaskUncheckedCreateWithoutAddedByMemberInput = {
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskCreateOrConnectWithoutAddedByMemberInput = {
@@ -1046,6 +1071,126 @@ export type HouseholdTaskUpdateManyWithWhereWithoutAddedByMemberInput = {
   data: Prisma.XOR<Prisma.HouseholdTaskUpdateManyMutationInput, Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberInput>
 }
 
+export type HouseholdTaskCreateWithoutDeadlineNotificationsInput = {
+  id?: string
+  title: string
+  note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
+  status?: string
+  priority?: string
+  addedByName: string
+  addedByUsername?: string | null
+  addedByTelegramId?: string | null
+  deadlineAt?: Date | string
+  completedAt?: Date | string | null
+  completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutTasksInput
+  addedByMember?: Prisma.MemberCreateNestedOneWithoutCreatedTasksInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
+  completionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutTaskInput
+}
+
+export type HouseholdTaskUncheckedCreateWithoutDeadlineNotificationsInput = {
+  id?: string
+  householdId: string
+  title: string
+  note?: string | null
+  assignedMemberId?: string | null
+  assignedMemberName?: string | null
+  rewardUnits?: number | null
+  status?: string
+  priority?: string
+  addedByMemberId?: string | null
+  addedByName: string
+  addedByUsername?: string | null
+  addedByTelegramId?: string | null
+  deadlineAt?: Date | string
+  completedAt?: Date | string | null
+  completedByName?: string | null
+  lastDeadlineReminderAt?: Date | string | null
+  penaltyAppliedAt?: Date | string | null
+  penaltyAppliedUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
+  completionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutTaskInput
+}
+
+export type HouseholdTaskCreateOrConnectWithoutDeadlineNotificationsInput = {
+  where: Prisma.HouseholdTaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUncheckedCreateWithoutDeadlineNotificationsInput>
+}
+
+export type HouseholdTaskUpsertWithoutDeadlineNotificationsInput = {
+  update: Prisma.XOR<Prisma.HouseholdTaskUpdateWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUncheckedUpdateWithoutDeadlineNotificationsInput>
+  create: Prisma.XOR<Prisma.HouseholdTaskCreateWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUncheckedCreateWithoutDeadlineNotificationsInput>
+  where?: Prisma.HouseholdTaskWhereInput
+}
+
+export type HouseholdTaskUpdateToOneWithWhereWithoutDeadlineNotificationsInput = {
+  where?: Prisma.HouseholdTaskWhereInput
+  data: Prisma.XOR<Prisma.HouseholdTaskUpdateWithoutDeadlineNotificationsInput, Prisma.HouseholdTaskUncheckedUpdateWithoutDeadlineNotificationsInput>
+}
+
+export type HouseholdTaskUpdateWithoutDeadlineNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutTasksNestedInput
+  addedByMember?: Prisma.MemberUpdateOneWithoutCreatedTasksNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
+  completionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutTaskNestedInput
+}
+
+export type HouseholdTaskUncheckedUpdateWithoutDeadlineNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedMemberName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rewardUnits?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByMemberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByName?: Prisma.StringFieldUpdateOperationsInput | string
+  addedByUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByTelegramId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deadlineAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastDeadlineReminderAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  penaltyAppliedUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
+  completionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutTaskNestedInput
+}
+
 export type HouseholdTaskCreateWithoutCompletionApprovalsInput = {
   id?: string
   title: string
@@ -1069,6 +1214,7 @@ export type HouseholdTaskCreateWithoutCompletionApprovalsInput = {
   household: Prisma.HouseholdCreateNestedOneWithoutTasksInput
   addedByMember?: Prisma.MemberCreateNestedOneWithoutCreatedTasksInput
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateWithoutCompletionApprovalsInput = {
@@ -1094,6 +1240,7 @@ export type HouseholdTaskUncheckedCreateWithoutCompletionApprovalsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskCreateOrConnectWithoutCompletionApprovalsInput = {
@@ -1135,6 +1282,7 @@ export type HouseholdTaskUpdateWithoutCompletionApprovalsInput = {
   household?: Prisma.HouseholdUpdateOneRequiredWithoutTasksNestedInput
   addedByMember?: Prisma.MemberUpdateOneWithoutCreatedTasksNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateWithoutCompletionApprovalsInput = {
@@ -1160,6 +1308,7 @@ export type HouseholdTaskUncheckedUpdateWithoutCompletionApprovalsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskCreateWithoutBonusTransactionsInput = {
@@ -1185,6 +1334,7 @@ export type HouseholdTaskCreateWithoutBonusTransactionsInput = {
   household: Prisma.HouseholdCreateNestedOneWithoutTasksInput
   addedByMember?: Prisma.MemberCreateNestedOneWithoutCreatedTasksInput
   completionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput = {
@@ -1210,6 +1360,7 @@ export type HouseholdTaskUncheckedCreateWithoutBonusTransactionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutTaskInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type HouseholdTaskCreateOrConnectWithoutBonusTransactionsInput = {
@@ -1251,6 +1402,7 @@ export type HouseholdTaskUpdateWithoutBonusTransactionsInput = {
   household?: Prisma.HouseholdUpdateOneRequiredWithoutTasksNestedInput
   addedByMember?: Prisma.MemberUpdateOneWithoutCreatedTasksNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput = {
@@ -1276,6 +1428,7 @@ export type HouseholdTaskUncheckedUpdateWithoutBonusTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskCreateManyHouseholdInput = {
@@ -1324,6 +1477,7 @@ export type HouseholdTaskUpdateWithoutHouseholdInput = {
   addedByMember?: Prisma.MemberUpdateOneWithoutCreatedTasksNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateWithoutHouseholdInput = {
@@ -1349,6 +1503,7 @@ export type HouseholdTaskUncheckedUpdateWithoutHouseholdInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateManyWithoutHouseholdInput = {
@@ -1420,6 +1575,7 @@ export type HouseholdTaskUpdateWithoutAddedByMemberInput = {
   household?: Prisma.HouseholdUpdateOneRequiredWithoutTasksNestedInput
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutTaskNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateWithoutAddedByMemberInput = {
@@ -1445,6 +1601,7 @@ export type HouseholdTaskUncheckedUpdateWithoutAddedByMemberInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutTaskNestedInput
   completionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutTaskNestedInput
+  deadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberInput = {
@@ -1478,11 +1635,13 @@ export type HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberInput = {
 export type HouseholdTaskCountOutputType = {
   bonusTransactions: number
   completionApprovals: number
+  deadlineNotifications: number
 }
 
 export type HouseholdTaskCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bonusTransactions?: boolean | HouseholdTaskCountOutputTypeCountBonusTransactionsArgs
   completionApprovals?: boolean | HouseholdTaskCountOutputTypeCountCompletionApprovalsArgs
+  deadlineNotifications?: boolean | HouseholdTaskCountOutputTypeCountDeadlineNotificationsArgs
 }
 
 /**
@@ -1507,6 +1666,13 @@ export type HouseholdTaskCountOutputTypeCountBonusTransactionsArgs<ExtArgs exten
  */
 export type HouseholdTaskCountOutputTypeCountCompletionApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TaskCompletionApprovalWhereInput
+}
+
+/**
+ * HouseholdTaskCountOutputType without action
+ */
+export type HouseholdTaskCountOutputTypeCountDeadlineNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskDeadlineNotificationWhereInput
 }
 
 
@@ -1536,6 +1702,7 @@ export type HouseholdTaskSelect<ExtArgs extends runtime.Types.Extensions.Interna
   addedByMember?: boolean | Prisma.HouseholdTask$addedByMemberArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>
   completionApprovals?: boolean | Prisma.HouseholdTask$completionApprovalsArgs<ExtArgs>
+  deadlineNotifications?: boolean | Prisma.HouseholdTask$deadlineNotificationsArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdTaskCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["householdTask"]>
 
@@ -1621,6 +1788,7 @@ export type HouseholdTaskInclude<ExtArgs extends runtime.Types.Extensions.Intern
   addedByMember?: boolean | Prisma.HouseholdTask$addedByMemberArgs<ExtArgs>
   bonusTransactions?: boolean | Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>
   completionApprovals?: boolean | Prisma.HouseholdTask$completionApprovalsArgs<ExtArgs>
+  deadlineNotifications?: boolean | Prisma.HouseholdTask$deadlineNotificationsArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdTaskCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HouseholdTaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1639,6 +1807,7 @@ export type $HouseholdTaskPayload<ExtArgs extends runtime.Types.Extensions.Inter
     addedByMember: Prisma.$MemberPayload<ExtArgs> | null
     bonusTransactions: Prisma.$BonusTransactionPayload<ExtArgs>[]
     completionApprovals: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
+    deadlineNotifications: Prisma.$TaskDeadlineNotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2060,6 +2229,7 @@ export interface Prisma__HouseholdTaskClient<T, Null = never, ExtArgs extends ru
   addedByMember<T extends Prisma.HouseholdTask$addedByMemberArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdTask$addedByMemberArgs<ExtArgs>>): Prisma.Prisma__MemberClient<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bonusTransactions<T extends Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdTask$bonusTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   completionApprovals<T extends Prisma.HouseholdTask$completionApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdTask$completionApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deadlineNotifications<T extends Prisma.HouseholdTask$deadlineNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdTask$deadlineNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskDeadlineNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2575,6 +2745,30 @@ export type HouseholdTask$completionApprovalsArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.TaskCompletionApprovalScalarFieldEnum | Prisma.TaskCompletionApprovalScalarFieldEnum[]
+}
+
+/**
+ * HouseholdTask.deadlineNotifications
+ */
+export type HouseholdTask$deadlineNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskDeadlineNotification
+   */
+  select?: Prisma.TaskDeadlineNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskDeadlineNotification
+   */
+  omit?: Prisma.TaskDeadlineNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskDeadlineNotificationInclude<ExtArgs> | null
+  where?: Prisma.TaskDeadlineNotificationWhereInput
+  orderBy?: Prisma.TaskDeadlineNotificationOrderByWithRelationInput | Prisma.TaskDeadlineNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.TaskDeadlineNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskDeadlineNotificationScalarFieldEnum | Prisma.TaskDeadlineNotificationScalarFieldEnum[]
 }
 
 /**

@@ -33,6 +33,11 @@ export type Member = Prisma.MemberModel
  */
 export type HouseholdTask = Prisma.HouseholdTaskModel
 /**
+ * Model TaskDeadlineNotification
+ * 
+ */
+export type TaskDeadlineNotification = Prisma.TaskDeadlineNotificationModel
+/**
  * Model TaskCompletionApproval
  * 
  */

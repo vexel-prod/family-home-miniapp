@@ -31,6 +31,7 @@ model Household {
   bonusPurchases BonusPurchase[]
   monthlyReports MonthlyReport[]
   taskCompletionApprovals TaskCompletionApproval[]
+  taskDeadlineNotifications TaskDeadlineNotification[]
 }
 
 model Member {
@@ -58,6 +59,7 @@ model Member {
   taskCompletionApprovalsToReview TaskCompletionApproval[] @relation("TaskCompletionApprover")
   taskCompletionRequests TaskCompletionApproval[] @relation("TaskCompletionRequester")
   taskCompletionCredits TaskCompletionApproval[] @relation("TaskCompletionCredited")
+  taskDeadlineNotifications TaskDeadlineNotification[]
 
   @@index([householdId, isActive])
 }
@@ -88,9 +90,30 @@ model HouseholdTask {
   addedByMember     Member?   @relation("TaskCreator", fields: [addedByMemberId], references: [id], onDelete: SetNull)
   bonusTransactions BonusTransaction[]
   completionApprovals TaskCompletionApproval[]
+  deadlineNotifications TaskDeadlineNotification[]
 
   @@index([householdId, status, createdAt])
   @@index([householdId, status, deadlineAt])
+}
+
+model TaskDeadlineNotification {
+  id           String         @id @default(cuid())
+  taskId        String
+  householdId   String
+  memberId      String?
+  kind          String
+  scheduledFor  DateTime
+  sentAt        DateTime?
+  canceledAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  task          HouseholdTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  household     Household     @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  member        Member?       @relation(fields: [memberId], references: [id], onDelete: SetNull)
+
+  @@unique([taskId, kind, memberId])
+  @@index([scheduledFor, sentAt, canceledAt])
+  @@index([householdId, scheduledFor])
 }
 
 model TaskCompletionApproval {

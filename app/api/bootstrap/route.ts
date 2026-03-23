@@ -2,7 +2,10 @@ import { authenticateTelegramRequest } from '@entities/session/server/auth'
 import { jsonRateLimited } from '@shared/api/api-response'
 import { getMemberProfileSnapshot } from '@entities/profile/server/household-profile'
 import { getHouseholdSummary } from '@entities/household/server/household'
-import { getMonthlyLeaderboardStats } from '@entities/bonus/server/bonus-ledger'
+import {
+  getMonthlyLeaderboardStats,
+  getOverallHouseholdLeaderboardStats,
+} from '@entities/bonus/server/bonus-ledger'
 import { toFamilyRewardKey, toGlobalRewardKey } from '@entities/bonus'
 import {
   cleanupLegacySeededFamilyRewards,
@@ -125,6 +128,7 @@ export async function GET(request: Request) {
       activeShoppingItems,
       purchasedShoppingItems,
       monthlyStats,
+      overallHouseholdLeaderboardEntries,
       familyBonusRewards,
       globalBonusRewards,
       versionAcknowledgement,
@@ -168,6 +172,7 @@ export async function GET(request: Request) {
         take: 30,
       }),
       getMonthlyLeaderboardStats(prisma, auth.member.householdId),
+      getOverallHouseholdLeaderboardStats(prisma),
       prisma.bonusReward.findMany({
         where: {
           householdId: auth.member.householdId,
@@ -221,6 +226,7 @@ export async function GET(request: Request) {
       monthlyCompletedTasks,
       participantNames: monthlyStats.participantNames,
       monthlyLeaderboardEntries: monthlyStats.monthlyLeaderboardEntries,
+      overallHouseholdLeaderboardEntries,
       monthlyTeamBonusPoints: monthlyStats.monthlyTeamBonusPoints,
       currentUserBonusBalanceUnits: currentUserProfile.bonusBalanceUnits,
       currentUserProfile,

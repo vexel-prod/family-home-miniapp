@@ -79,7 +79,8 @@ export function JournalSummary({
               onClick={onOpenHousehold}
             >
               <div className='p-4 flex items-center justify-center w-full h-full bg-black/12 text-(--color-panel) rounded-md font-black shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] transition-transform duration-150 border border-white/2 uppercase'>
-                {openTasksCount} {pluralizeRu(openTasksCount, 'задача', 'задачи', 'задач')}
+                {openTasksCount === 0 ? 'нет' : `${openTasksCount}`}{' '}
+                {pluralizeRu(openTasksCount, 'задача', 'задачи', 'задач')}
               </div>
             </button>
 
@@ -89,7 +90,8 @@ export function JournalSummary({
               onClick={onOpenShopping}
             >
               <div className='p-4 flex items-center justify-center w-full h-full bg-black/12 text-(--color-panel) rounded-md font-black shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.4)] transition-transform duration-150 border border-white/2 uppercase'>
-                {shoppingItemsCount} {pluralizeRu(shoppingItemsCount, 'покупка', 'покупки', 'покупок')}
+                {shoppingItemsCount === 0 ? 'нет' : `${shoppingItemsCount}`}{' '}
+                {pluralizeRu(shoppingItemsCount, 'покупка', 'покупки', 'покупок')}
               </div>
             </button>
             <TabButton

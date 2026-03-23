@@ -18,6 +18,7 @@ import type {
   FamilyGoal,
   FetchOptions,
   HouseholdProfile,
+  OverallHouseholdLeaderboardEntry,
   ReleaseNotice,
   HouseholdSummary,
   HouseholdTask,
@@ -97,6 +98,9 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
   const [monthlyLeaderboardEntries, setMonthlyLeaderboardEntries] = useState<
     MonthlyLeaderboardEntry[]
   >([])
+  const [overallHouseholdLeaderboardEntries, setOverallHouseholdLeaderboardEntries] = useState<
+    OverallHouseholdLeaderboardEntry[]
+  >([])
   const [monthlyTeamBonusPoints, setMonthlyTeamBonusPoints] = useState(0)
   const [participantNames, setParticipantNames] = useState<string[]>([])
   const [appState, setAppState] = useState<'loading' | 'auth' | 'onboarding' | 'active'>('loading')
@@ -116,6 +120,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
     setOpenTasks([])
     setCompletedTasks([])
     setMonthlyLeaderboardEntries([])
+    setOverallHouseholdLeaderboardEntries([])
     setMonthlyTeamBonusPoints(0)
     setParticipantNames([])
     setCurrentUserBonusBalanceUnits(0)
@@ -170,6 +175,7 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
     setOpenTasks(payload.openTasks)
     setCompletedTasks(payload.completedTasks)
     setMonthlyLeaderboardEntries(payload.monthlyLeaderboardEntries)
+    setOverallHouseholdLeaderboardEntries(payload.overallHouseholdLeaderboardEntries)
     setMonthlyTeamBonusPoints(payload.monthlyTeamBonusPoints)
     setParticipantNames(payload.participantNames)
     setCurrentUserBonusBalanceUnits(payload.currentUserBonusBalanceUnits)
@@ -413,6 +419,8 @@ export function useHomeBootstrap({ setError }: UseHomeBootstrapParams) {
     setCompletedTasks,
     monthlyLeaderboardEntries,
     setMonthlyLeaderboardEntries,
+    overallHouseholdLeaderboardEntries,
+    setOverallHouseholdLeaderboardEntries,
     monthlyTeamBonusPoints,
     setMonthlyTeamBonusPoints,
     participantNames,

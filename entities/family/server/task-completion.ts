@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@/generated/prisma/client'
 import { awardTaskCompletionBonuses, clearTaskBonusTransactions } from '@entities/bonus/server/bonus-ledger'
+import { rebuildTaskDeadlineNotifications } from '@entities/household/server/task-deadline-notifications'
 import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
 import { syncHouseholdProfiles } from '@entities/profile/server/household-profile'
 
@@ -81,6 +82,8 @@ export async function finalizeTaskCompletion(
     },
   })
 
+  await rebuildTaskDeadlineNotifications(prisma, updatedTask)
+
   if (params.approvalId) {
     await prisma.taskCompletionApproval.update({
       where: { id: params.approvalId },
@@ -142,6 +145,8 @@ export async function reopenTaskFromRejectedApproval(
       lastDeadlineReminderAt: null,
     },
   })
+
+  await rebuildTaskDeadlineNotifications(prisma, updatedTask)
 
   await prisma.taskCompletionApproval.update({
     where: { id: params.approvalId },

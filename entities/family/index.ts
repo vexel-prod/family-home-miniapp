@@ -6,6 +6,7 @@ export type {
   FamilyGoal,
   FetchOptions,
   HouseholdProfile,
+  OverallHouseholdLeaderboardEntry,
   ReleaseNotice,
   HouseholdSummary,
   HouseholdTask,

@@ -54,6 +54,7 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
+  TaskDeadlineNotification: 'TaskDeadlineNotification',
   TaskCompletionApproval: 'TaskCompletionApproval',
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
@@ -147,6 +148,22 @@ export const HouseholdTaskScalarFieldEnum = {
 } as const
 
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
+
+
+export const TaskDeadlineNotificationScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  householdId: 'householdId',
+  memberId: 'memberId',
+  kind: 'kind',
+  scheduledFor: 'scheduledFor',
+  sentAt: 'sentAt',
+  canceledAt: 'canceledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskDeadlineNotificationScalarFieldEnum = (typeof TaskDeadlineNotificationScalarFieldEnum)[keyof typeof TaskDeadlineNotificationScalarFieldEnum]
 
 
 export const TaskCompletionApprovalScalarFieldEnum = {

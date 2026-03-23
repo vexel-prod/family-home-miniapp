@@ -5,6 +5,10 @@ import { createTaskApprovalToken } from '@entities/family/lib/task-approval'
 import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
 import { syncHouseholdProfiles } from '@entities/profile/server/household-profile'
 import { getMemberDisplayName, notifyHousehold, notifyMember } from '@entities/household/server/household-notify'
+import {
+  dispatchDueTaskDeadlineNotifications,
+  rebuildTaskDeadlineNotifications,
+} from '@entities/household/server/task-deadline-notifications'
 import { finalizeTaskCompletion, resolveTaskCreatorMember } from '@entities/family/server/task-completion'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
@@ -17,6 +21,7 @@ import {
   validateRequiredText,
 } from '@/shared/lib/validation'
 import { formatElapsedLabel, formatMoscowDateTime } from '@/shared/lib/partner-notify'
+import { isAllowedTaskDeadline } from '@shared/lib/task-deadline'
 import { NextResponse } from 'next/server'
 
 type UpdateTaskPayload = {
@@ -32,10 +37,6 @@ type UpdateTaskPayload = {
   rewardPoints?: number | null
 }
 
-function getCurrentMonthDeadlineLimit(now = new Date()) {
-  return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
-}
-
 function parseDeadline(deadlineAt?: string) {
   if (!deadlineAt) {
     return null
@@ -48,9 +49,8 @@ function parseDeadline(deadlineAt?: string) {
   }
 
   const now = new Date()
-  const monthLimit = getCurrentMonthDeadlineLimit(now)
 
-  if (deadline.getTime() <= now.getTime() || deadline.getTime() > monthLimit.getTime()) {
+  if (!isAllowedTaskDeadline(deadline, now)) {
     return null
   }
 
@@ -195,6 +195,9 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
         rewardUnits: rewardPoints ? rewardPoints * POINT_UNITS : null,
       },
     })
+
+    await rebuildTaskDeadlineNotifications(prisma, updatedTask)
+    await dispatchDueTaskDeadlineNotifications(prisma)
 
     await prisma.taskCompletionApproval.updateMany({
       where: {
@@ -468,6 +471,12 @@ export async function PATCH(request: Request, context: { params: Promise<{ taskI
           },
   })
 
+  await rebuildTaskDeadlineNotifications(prisma, updatedTask)
+
+  if (body.action === 'reopen') {
+    await dispatchDueTaskDeadlineNotifications(prisma)
+  }
+
   if (body.action === 'complete-together') {
     await awardTaskCompletionBonuses(
       prisma,
@@ -583,6 +592,11 @@ export async function DELETE(request: Request, context: { params: Promise<{ task
 
   await clearTaskBonusTransactions(prisma, taskId)
   await syncHouseholdProfiles(prisma, auth.member.householdId)
+  await prisma.taskDeadlineNotification.deleteMany({
+    where: {
+      taskId,
+    },
+  })
 
   await prisma.householdTask.delete({
     where: { id: taskId },

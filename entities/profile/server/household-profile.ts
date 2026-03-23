@@ -229,6 +229,8 @@ export async function syncHouseholdProfiles(prisma: PrismaClient, householdId: s
     }
   }
 
+  totalExp = Math.max(0, totalExp)
+
   const currentLevel = getCurrentLevel(totalExp)
   const balanceByMemberId = new Map<string, number>()
 

@@ -387,6 +387,7 @@ export const ModelName = {
   Household: 'Household',
   Member: 'Member',
   HouseholdTask: 'HouseholdTask',
+  TaskDeadlineNotification: 'TaskDeadlineNotification',
   TaskCompletionApproval: 'TaskCompletionApproval',
   ShoppingItem: 'ShoppingItem',
   BonusTransaction: 'BonusTransaction',
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "household" | "member" | "householdTask" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "globalBonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "releaseNoticeAcknowledgement" | "monthlyReport"
+    modelProps: "household" | "member" | "householdTask" | "taskDeadlineNotification" | "taskCompletionApproval" | "shoppingItem" | "bonusTransaction" | "bonusPurchase" | "bonusReward" | "globalBonusReward" | "familyGoal" | "householdInvite" | "actionRateLimit" | "browserLoginSession" | "releaseNoticeAcknowledgement" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -637,6 +638,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HouseholdTaskCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HouseholdTaskCountAggregateOutputType> | number
+        }
+      }
+    }
+    TaskDeadlineNotification: {
+      payload: Prisma.$TaskDeadlineNotificationPayload<ExtArgs>
+      fields: Prisma.TaskDeadlineNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TaskDeadlineNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TaskDeadlineNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.TaskDeadlineNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TaskDeadlineNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.TaskDeadlineNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.TaskDeadlineNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.TaskDeadlineNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TaskDeadlineNotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.TaskDeadlineNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>
+        }
+        update: {
+          args: Prisma.TaskDeadlineNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TaskDeadlineNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TaskDeadlineNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TaskDeadlineNotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.TaskDeadlineNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskDeadlineNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.TaskDeadlineNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTaskDeadlineNotification>
+        }
+        groupBy: {
+          args: Prisma.TaskDeadlineNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskDeadlineNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TaskDeadlineNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskDeadlineNotificationCountAggregateOutputType> | number
         }
       }
     }
@@ -1632,6 +1707,22 @@ export const HouseholdTaskScalarFieldEnum = {
 export type HouseholdTaskScalarFieldEnum = (typeof HouseholdTaskScalarFieldEnum)[keyof typeof HouseholdTaskScalarFieldEnum]
 
 
+export const TaskDeadlineNotificationScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  householdId: 'householdId',
+  memberId: 'memberId',
+  kind: 'kind',
+  scheduledFor: 'scheduledFor',
+  sentAt: 'sentAt',
+  canceledAt: 'canceledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskDeadlineNotificationScalarFieldEnum = (typeof TaskDeadlineNotificationScalarFieldEnum)[keyof typeof TaskDeadlineNotificationScalarFieldEnum]
+
+
 export const TaskCompletionApprovalScalarFieldEnum = {
   id: 'id',
   householdId: 'householdId',
@@ -2013,6 +2104,7 @@ export type GlobalOmitConfig = {
   household?: Prisma.HouseholdOmit
   member?: Prisma.MemberOmit
   householdTask?: Prisma.HouseholdTaskOmit
+  taskDeadlineNotification?: Prisma.TaskDeadlineNotificationOmit
   taskCompletionApproval?: Prisma.TaskCompletionApprovalOmit
   shoppingItem?: Prisma.ShoppingItemOmit
   bonusTransaction?: Prisma.BonusTransactionOmit

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AppButton } from '@shared/ui/app-button'
 import { ModalBody, ModalFooter, ModalHeader, ModalPanel } from '@shared/ui/app-modal'
 import { TextAreaField, TextInput } from '@shared/ui/form-field'
+import { getTaskDeadlineHelpLabel, getTaskDeadlineMaxDate } from '@shared/lib/task-deadline'
 import { StatusMessage } from '@shared/ui/status-message'
 
 const calendarWeekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
@@ -50,6 +51,10 @@ function parseDateTimeLocal(value: string) {
 function getCurrentMonthCursor() {
   const now = new Date()
   return new Date(now.getFullYear(), now.getMonth(), 1)
+}
+
+function getNextMonthCursor(monthCursor: Date, offset: number) {
+  return new Date(monthCursor.getFullYear(), monthCursor.getMonth() + offset, 1)
 }
 
 function getCalendarDays(monthCursor: Date) {
@@ -284,12 +289,29 @@ export function TaskFormModal({
   onBack,
 }: TaskFormModalProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
-  const [monthCursor] = useState(getCurrentMonthCursor)
+  const [monthCursor, setMonthCursor] = useState(getCurrentMonthCursor)
   const calendarDays = useMemo(() => getCalendarDays(monthCursor), [monthCursor])
   const selectedDate = getDatePart(deadlineAt)
   const selectedTime = getTimePart(deadlineAt) || '12:00'
   const [selectedHour = '12', selectedMinute = '00'] = selectedTime.split(':')
-  const currentMonth = new Date()
+  const minSelectableDate = useMemo(() => {
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    return now
+  }, [])
+  const maxSelectableDate = useMemo(() => {
+    const maxDate = getTaskDeadlineMaxDate(new Date())
+    maxDate.setHours(23, 59, 59, 999)
+    return maxDate
+  }, [])
+  const minMonthCursor = useMemo(
+    () => new Date(minSelectableDate.getFullYear(), minSelectableDate.getMonth(), 1),
+    [minSelectableDate],
+  )
+  const maxMonthCursor = useMemo(
+    () => new Date(maxSelectableDate.getFullYear(), maxSelectableDate.getMonth(), 1),
+    [maxSelectableDate],
+  )
   const fallbackDate = selectedDate || toIsoDate(new Date())
 
   return (
@@ -332,8 +354,28 @@ export function TaskFormModal({
 
             {isCalendarOpen ? (
               <div className='rounded-[1.75rem] border border-white/10 bg-[#120f1f]/95 p-4 shadow-2xl backdrop-blur-xl'>
-                <div className='mb-4 text-center text-sm font-semibold uppercase tracking-[0.24em] text-white/70'>
-                  {formatMonthLabel(monthCursor)}
+                <div className='mb-4 flex items-center justify-between gap-3'>
+                  <button
+                    type='button'
+                    onClick={() => setMonthCursor(current => getNextMonthCursor(current, -1))}
+                    disabled={monthCursor.getTime() <= minMonthCursor.getTime()}
+                    className='rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.22em] text-white/70 transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30'
+                  >
+                    Назад
+                  </button>
+
+                  <div className='text-center text-sm font-semibold uppercase tracking-[0.24em] text-white/70'>
+                    {formatMonthLabel(monthCursor)}
+                  </div>
+
+                  <button
+                    type='button'
+                    onClick={() => setMonthCursor(current => getNextMonthCursor(current, 1))}
+                    disabled={monthCursor.getTime() >= maxMonthCursor.getTime()}
+                    className='rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.22em] text-white/70 transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30'
+                  >
+                    Вперёд
+                  </button>
                 </div>
 
                 <div className='grid grid-cols-7 gap-2 text-center text-xs uppercase tracking-[0.24em] text-white/35'>
@@ -351,12 +393,10 @@ export function TaskFormModal({
                   {calendarDays.map(({ date, currentMonth: isCurrentMonth }) => {
                     const iso = toIsoDate(date)
                     const selected = iso === selectedDate
-                    const isPastDay = iso < toIsoDate(new Date())
                     const disabled =
                       !isCurrentMonth ||
-                      isPastDay ||
-                      date.getMonth() !== currentMonth.getMonth() ||
-                      date.getFullYear() !== currentMonth.getFullYear()
+                      date.getTime() < minSelectableDate.getTime() ||
+                      date.getTime() > maxSelectableDate.getTime()
 
                     return (
                       <button
@@ -402,7 +442,7 @@ export function TaskFormModal({
             ) : null}
 
             <div className='text-xs leading-5 text-white/45'>
-              Дедлайн можно ставить только в пределах текущего месяца.
+              {getTaskDeadlineHelpLabel()}
             </div>
           </div>
 

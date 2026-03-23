@@ -3,6 +3,10 @@ import { formatMoscowDeadlineLabel, formatPoints, POINT_UNITS } from '@entities/
 import { jsonRateLimited } from '@shared/api/api-response'
 import { bumpHouseholdRevision } from '@entities/household/server/household-revision'
 import { notifyHousehold } from '@entities/household/server/household-notify'
+import {
+  dispatchDueTaskDeadlineNotifications,
+  rebuildTaskDeadlineNotifications,
+} from '@entities/household/server/task-deadline-notifications'
 import { getPrisma } from '@shared/api/prisma'
 import { enforceRateLimit, RateLimitError } from '@shared/api/rate-limit'
 import {
@@ -12,6 +16,7 @@ import {
   validateLength,
   validateRequiredText,
 } from '@/shared/lib/validation'
+import { isAllowedTaskDeadline } from '@shared/lib/task-deadline'
 import { NextResponse } from 'next/server'
 
 type CreateTaskPayload = {
@@ -20,10 +25,6 @@ type CreateTaskPayload = {
   deadlineAt?: string
   assignedMemberId?: string | null
   rewardPoints?: number | null
-}
-
-function getCurrentMonthDeadlineLimit(now = new Date()) {
-  return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
 }
 
 function parseDeadline(deadlineAt?: string) {
@@ -38,9 +39,8 @@ function parseDeadline(deadlineAt?: string) {
   }
 
   const now = new Date()
-  const monthLimit = getCurrentMonthDeadlineLimit(now)
 
-  if (deadline.getTime() <= now.getTime() || deadline.getTime() > monthLimit.getTime()) {
+  if (!isAllowedTaskDeadline(deadline, now)) {
     return null
   }
 
@@ -151,6 +151,8 @@ export async function POST(request: Request) {
     },
   })
 
+  await rebuildTaskDeadlineNotifications(prisma, task)
+  await dispatchDueTaskDeadlineNotifications(prisma)
   await bumpHouseholdRevision(prisma, auth.member.householdId)
 
   await notifyHousehold(

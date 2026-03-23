@@ -298,6 +298,7 @@ export type MemberWhereInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalListRelationFilter
   taskCompletionRequests?: Prisma.TaskCompletionApprovalListRelationFilter
   taskCompletionCredits?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -325,6 +326,7 @@ export type MemberOrderByWithRelationInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -355,6 +357,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalListRelationFilter
   taskCompletionRequests?: Prisma.TaskCompletionApprovalListRelationFilter
   taskCompletionCredits?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationListRelationFilter
 }, "id" | "telegramUserId" | "chatId">
 
 export type MemberOrderByWithAggregationInput = {
@@ -423,6 +426,7 @@ export type MemberCreateInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -449,6 +453,7 @@ export type MemberUncheckedCreateInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -475,6 +480,7 @@ export type MemberUpdateInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -501,6 +507,7 @@ export type MemberUncheckedUpdateInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -702,6 +709,22 @@ export type MemberUpdateOneWithoutCreatedTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutCreatedTasksInput, Prisma.MemberUpdateWithoutCreatedTasksInput>, Prisma.MemberUncheckedUpdateWithoutCreatedTasksInput>
 }
 
+export type MemberCreateNestedOneWithoutTaskDeadlineNotificationsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskDeadlineNotificationsInput, Prisma.MemberUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskDeadlineNotificationsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneWithoutTaskDeadlineNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskDeadlineNotificationsInput, Prisma.MemberUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskDeadlineNotificationsInput
+  upsert?: Prisma.MemberUpsertWithoutTaskDeadlineNotificationsInput
+  disconnect?: Prisma.MemberWhereInput | boolean
+  delete?: Prisma.MemberWhereInput | boolean
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTaskDeadlineNotificationsInput, Prisma.MemberUpdateWithoutTaskDeadlineNotificationsInput>, Prisma.MemberUncheckedUpdateWithoutTaskDeadlineNotificationsInput>
+}
+
 export type MemberCreateNestedOneWithoutTaskCompletionApprovalsToReviewInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutTaskCompletionApprovalsToReviewInput, Prisma.MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput>
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTaskCompletionApprovalsToReviewInput
@@ -837,6 +860,7 @@ export type MemberCreateWithoutHouseholdInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutHouseholdInput = {
@@ -862,6 +886,7 @@ export type MemberUncheckedCreateWithoutHouseholdInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutHouseholdInput = {
@@ -933,6 +958,7 @@ export type MemberCreateWithoutCreatedTasksInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedTasksInput = {
@@ -958,6 +984,7 @@ export type MemberUncheckedCreateWithoutCreatedTasksInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedTasksInput = {
@@ -999,6 +1026,7 @@ export type MemberUpdateWithoutCreatedTasksInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedTasksInput = {
@@ -1021,6 +1049,127 @@ export type MemberUncheckedUpdateWithoutCreatedTasksInput = {
   createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
   createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberCreateWithoutTaskDeadlineNotificationsInput = {
+  id?: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  bonusBalanceUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  household: Prisma.HouseholdCreateNestedOneWithoutMembersInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberUncheckedCreateWithoutTaskDeadlineNotificationsInput = {
+  id?: string
+  householdId: string
+  telegramUserId?: string | null
+  chatId?: string | null
+  firstName: string
+  lastName?: string | null
+  username?: string | null
+  role?: string
+  isActive?: boolean
+  joinedAt?: Date | string
+  leftAt?: Date | string | null
+  bonusBalanceUnits?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutMemberInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutMemberInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutCreatedByMemberInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+}
+
+export type MemberCreateOrConnectWithoutTaskDeadlineNotificationsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskDeadlineNotificationsInput, Prisma.MemberUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+}
+
+export type MemberUpsertWithoutTaskDeadlineNotificationsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutTaskDeadlineNotificationsInput, Prisma.MemberUncheckedUpdateWithoutTaskDeadlineNotificationsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTaskDeadlineNotificationsInput, Prisma.MemberUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutTaskDeadlineNotificationsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutTaskDeadlineNotificationsInput, Prisma.MemberUncheckedUpdateWithoutTaskDeadlineNotificationsInput>
+}
+
+export type MemberUpdateWithoutTaskDeadlineNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutMembersNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
+  taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
+  taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutTaskDeadlineNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  telegramUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bonusBalanceUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutMemberNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutMemberNestedInput
+  createdInvites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdBonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdFamilyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutCreatedByMemberNestedInput
+  createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
@@ -1049,6 +1198,7 @@ export type MemberCreateWithoutTaskCompletionApprovalsToReviewInput = {
   createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput = {
@@ -1074,6 +1224,7 @@ export type MemberUncheckedCreateWithoutTaskCompletionApprovalsToReviewInput = {
   createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutTaskCompletionApprovalsToReviewInput = {
@@ -1104,6 +1255,7 @@ export type MemberCreateWithoutTaskCompletionRequestsInput = {
   createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutTaskCompletionRequestsInput = {
@@ -1129,6 +1281,7 @@ export type MemberUncheckedCreateWithoutTaskCompletionRequestsInput = {
   createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutTaskCompletionRequestsInput = {
@@ -1159,6 +1312,7 @@ export type MemberCreateWithoutTaskCompletionCreditsInput = {
   createdTasks?: Prisma.HouseholdTaskCreateNestedManyWithoutAddedByMemberInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutTaskCompletionCreditsInput = {
@@ -1184,6 +1338,7 @@ export type MemberUncheckedCreateWithoutTaskCompletionCreditsInput = {
   createdTasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutAddedByMemberInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutTaskCompletionCreditsInput = {
@@ -1225,6 +1380,7 @@ export type MemberUpdateWithoutTaskCompletionApprovalsToReviewInput = {
   createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput = {
@@ -1250,6 +1406,7 @@ export type MemberUncheckedUpdateWithoutTaskCompletionApprovalsToReviewInput = {
   createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUpsertWithoutTaskCompletionRequestsInput = {
@@ -1286,6 +1443,7 @@ export type MemberUpdateWithoutTaskCompletionRequestsInput = {
   createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTaskCompletionRequestsInput = {
@@ -1311,6 +1469,7 @@ export type MemberUncheckedUpdateWithoutTaskCompletionRequestsInput = {
   createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUpsertWithoutTaskCompletionCreditsInput = {
@@ -1347,6 +1506,7 @@ export type MemberUpdateWithoutTaskCompletionCreditsInput = {
   createdTasks?: Prisma.HouseholdTaskUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTaskCompletionCreditsInput = {
@@ -1372,6 +1532,7 @@ export type MemberUncheckedUpdateWithoutTaskCompletionCreditsInput = {
   createdTasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutAddedByMemberNestedInput
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutBonusTransactionsInput = {
@@ -1397,6 +1558,7 @@ export type MemberCreateWithoutBonusTransactionsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
@@ -1422,6 +1584,7 @@ export type MemberUncheckedCreateWithoutBonusTransactionsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusTransactionsInput = {
@@ -1463,6 +1626,7 @@ export type MemberUpdateWithoutBonusTransactionsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
@@ -1488,6 +1652,7 @@ export type MemberUncheckedUpdateWithoutBonusTransactionsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutBonusPurchasesInput = {
@@ -1513,6 +1678,7 @@ export type MemberCreateWithoutBonusPurchasesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
@@ -1538,6 +1704,7 @@ export type MemberUncheckedCreateWithoutBonusPurchasesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutBonusPurchasesInput = {
@@ -1579,6 +1746,7 @@ export type MemberUpdateWithoutBonusPurchasesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
@@ -1604,6 +1772,7 @@ export type MemberUncheckedUpdateWithoutBonusPurchasesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedBonusRewardsInput = {
@@ -1629,6 +1798,7 @@ export type MemberCreateWithoutCreatedBonusRewardsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedBonusRewardsInput = {
@@ -1654,6 +1824,7 @@ export type MemberUncheckedCreateWithoutCreatedBonusRewardsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedBonusRewardsInput = {
@@ -1695,6 +1866,7 @@ export type MemberUpdateWithoutCreatedBonusRewardsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedBonusRewardsInput = {
@@ -1720,6 +1892,7 @@ export type MemberUncheckedUpdateWithoutCreatedBonusRewardsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedFamilyGoalsInput = {
@@ -1745,6 +1918,7 @@ export type MemberCreateWithoutCreatedFamilyGoalsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedFamilyGoalsInput = {
@@ -1770,6 +1944,7 @@ export type MemberUncheckedCreateWithoutCreatedFamilyGoalsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedFamilyGoalsInput = {
@@ -1811,6 +1986,7 @@ export type MemberUpdateWithoutCreatedFamilyGoalsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput = {
@@ -1836,6 +2012,7 @@ export type MemberUncheckedUpdateWithoutCreatedFamilyGoalsInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutCreatedInvitesInput = {
@@ -1861,6 +2038,7 @@ export type MemberCreateWithoutCreatedInvitesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
@@ -1886,6 +2064,7 @@ export type MemberUncheckedCreateWithoutCreatedInvitesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutApproverMemberInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutRequesterMemberInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutCreditedMemberInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutCreatedInvitesInput = {
@@ -1927,6 +2106,7 @@ export type MemberUpdateWithoutCreatedInvitesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
@@ -1952,6 +2132,7 @@ export type MemberUncheckedUpdateWithoutCreatedInvitesInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateManyHouseholdInput = {
@@ -1993,6 +2174,7 @@ export type MemberUpdateWithoutHouseholdInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutHouseholdInput = {
@@ -2018,6 +2200,7 @@ export type MemberUncheckedUpdateWithoutHouseholdInput = {
   taskCompletionApprovalsToReview?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutApproverMemberNestedInput
   taskCompletionRequests?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutRequesterMemberNestedInput
   taskCompletionCredits?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutCreditedMemberNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateManyWithoutHouseholdInput = {
@@ -2051,6 +2234,7 @@ export type MemberCountOutputType = {
   taskCompletionApprovalsToReview: number
   taskCompletionRequests: number
   taskCompletionCredits: number
+  taskDeadlineNotifications: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2063,6 +2247,7 @@ export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   taskCompletionApprovalsToReview?: boolean | MemberCountOutputTypeCountTaskCompletionApprovalsToReviewArgs
   taskCompletionRequests?: boolean | MemberCountOutputTypeCountTaskCompletionRequestsArgs
   taskCompletionCredits?: boolean | MemberCountOutputTypeCountTaskCompletionCreditsArgs
+  taskDeadlineNotifications?: boolean | MemberCountOutputTypeCountTaskDeadlineNotificationsArgs
 }
 
 /**
@@ -2138,6 +2323,13 @@ export type MemberCountOutputTypeCountTaskCompletionCreditsArgs<ExtArgs extends 
   where?: Prisma.TaskCompletionApprovalWhereInput
 }
 
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountTaskDeadlineNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskDeadlineNotificationWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2164,6 +2356,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   taskCompletionApprovalsToReview?: boolean | Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs>
   taskCompletionRequests?: boolean | Prisma.Member$taskCompletionRequestsArgs<ExtArgs>
   taskCompletionCredits?: boolean | Prisma.Member$taskCompletionCreditsArgs<ExtArgs>
+  taskDeadlineNotifications?: boolean | Prisma.Member$taskDeadlineNotificationsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -2232,6 +2425,7 @@ export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   taskCompletionApprovalsToReview?: boolean | Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs>
   taskCompletionRequests?: boolean | Prisma.Member$taskCompletionRequestsArgs<ExtArgs>
   taskCompletionCredits?: boolean | Prisma.Member$taskCompletionCreditsArgs<ExtArgs>
+  taskDeadlineNotifications?: boolean | Prisma.Member$taskDeadlineNotificationsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2254,6 +2448,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     taskCompletionApprovalsToReview: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
     taskCompletionRequests: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
     taskCompletionCredits: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
+    taskDeadlineNotifications: Prisma.$TaskDeadlineNotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2674,6 +2869,7 @@ export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.T
   taskCompletionApprovalsToReview<T extends Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskCompletionApprovalsToReviewArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskCompletionRequests<T extends Prisma.Member$taskCompletionRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskCompletionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskCompletionCredits<T extends Prisma.Member$taskCompletionCreditsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskCompletionCreditsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskDeadlineNotifications<T extends Prisma.Member$taskDeadlineNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$taskDeadlineNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskDeadlineNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3331,6 +3527,30 @@ export type Member$taskCompletionCreditsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.TaskCompletionApprovalScalarFieldEnum | Prisma.TaskCompletionApprovalScalarFieldEnum[]
+}
+
+/**
+ * Member.taskDeadlineNotifications
+ */
+export type Member$taskDeadlineNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskDeadlineNotification
+   */
+  select?: Prisma.TaskDeadlineNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskDeadlineNotification
+   */
+  omit?: Prisma.TaskDeadlineNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskDeadlineNotificationInclude<ExtArgs> | null
+  where?: Prisma.TaskDeadlineNotificationWhereInput
+  orderBy?: Prisma.TaskDeadlineNotificationOrderByWithRelationInput | Prisma.TaskDeadlineNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.TaskDeadlineNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskDeadlineNotificationScalarFieldEnum | Prisma.TaskDeadlineNotificationScalarFieldEnum[]
 }
 
 /**

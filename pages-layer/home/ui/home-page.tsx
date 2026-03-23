@@ -43,6 +43,7 @@ import {
 } from '@features/task-management'
 import { ModalOverlay } from '@shared/ui/app-modal'
 import { NoticeToast } from '@shared/ui/notice-toast'
+import { getTaskDeadlineMaxDate } from '@shared/lib/task-deadline'
 import { DashboardHero } from '@widgets/dashboard-hero'
 import { JournalSummary } from '@widgets/journal-summary'
 import { useHomeBootstrap } from '@pages/home/model/use-home-bootstrap'
@@ -108,13 +109,55 @@ function getDefaultTaskDeadlineValue() {
   next.setMinutes(0, 0, 0)
   next.setHours(next.getHours() + 2)
 
-  const monthLimit = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 0, 0, 0)
+  const maxLimit = getTaskDeadlineMaxDate(now)
 
-  if (next.getTime() > monthLimit.getTime()) {
-    return toDateTimeLocalValue(monthLimit)
+  if (next.getTime() > maxLimit.getTime()) {
+    return toDateTimeLocalValue(maxLimit)
   }
 
   return toDateTimeLocalValue(next)
+}
+
+function formatUrgencyLabel(diffMs: number) {
+  if (diffMs <= 30 * 60 * 1000) {
+    return 'меньше 30 минут'
+  }
+
+  if (diffMs <= 60 * 60 * 1000) {
+    return 'меньше часа'
+  }
+
+  if (diffMs <= 3 * 60 * 60 * 1000) {
+    return 'меньше 3 часов'
+  }
+
+  return 'срок скоро истекает'
+}
+
+function getUrgentTaskSpotlight(tasks: HouseholdTask[]) {
+  const now = Date.now()
+  const sortedTasks = [...tasks]
+    .map(task => ({
+      task,
+      diffMs: new Date(task.deadlineAt).getTime() - now,
+    }))
+    .filter(entry => !Number.isNaN(entry.diffMs))
+    .sort((left, right) => left.diffMs - right.diffMs)
+
+  const mostUrgentTask = sortedTasks.find(entry => entry.diffMs <= 3 * 60 * 60 * 1000)
+
+  if (!mostUrgentTask) {
+    return null
+  }
+
+  return {
+    task: mostUrgentTask.task,
+    diffMs: mostUrgentTask.diffMs,
+    label:
+      mostUrgentTask.diffMs <= 0
+        ? 'дедлайн уже просрочен'
+        : `сделать ${formatUrgencyLabel(mostUrgentTask.diffMs)}`,
+  }
 }
 
 function buildDeadlineIso(value: string) {
@@ -218,6 +261,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
     completedTasks,
     setCompletedTasks,
     monthlyLeaderboardEntries,
+    overallHouseholdLeaderboardEntries,
     monthlyTeamBonusPoints,
     participantNames,
     currentUserBonusBalanceUnits,
@@ -248,6 +292,7 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
   const isBrowserBootstrapGate = appState === 'loading' && !buyer && !household
   const monthlyRatingSummary = buildMonthlyRatingSummary(
     monthlyLeaderboardEntries,
+    overallHouseholdLeaderboardEntries,
     monthlyTeamBonusPoints,
     bonusRewards,
     getActorName(buyer),
@@ -256,10 +301,13 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
   const assignableMembers = household?.members.filter(member => !member.isCurrentUser) ?? []
   const completionSelectableMembers = household?.members ?? []
   const actorName = getActorName(buyer)
+  const urgentTaskSpotlight = getUrgentTaskSpotlight(openTasks)
   const isEmptyHomeState = openTasks.length === 0 && shoppingItems.length === 0
-  const heroTypedText = isEmptyHomeState
-    ? `Привет, ${actorName}!\nСегодня дома спокойно.\nАктивных задач и покупок пока нет.\nМожно просто выдохнуть\nили добавить что-то новое.`
-    : `Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\nОтслеживайте прогресс\nЗарабатывайте house-coin (HC)\nПокупайте крутые бонусы!`
+  const heroTypedText = urgentTaskSpotlight
+    ? `Привет, ${actorName}!\nСейчас горит задача:\n${urgentTaskSpotlight.task.title}\nДедлайн уже близко.\nНе дай семье потерять темп.`
+    : isEmptyHomeState
+      ? `Привет, ${actorName}!\nСегодня дома спокойно.\nАктивных задач и покупок пока нет.\nМожно просто выдохнуть\nили добавить что-то новое.`
+      : `Привет, ${actorName}!\nДобро пожаловать в Household!\nУправляйте семейными задачами\nОтслеживайте прогресс\nЗарабатывайте house-coin (HC)\nПокупайте крутые бонусы!`
 
   const upsertOpenTask = useCallback((task: HouseholdTask) => {
     setOpenTasks(current => {
@@ -1921,6 +1969,21 @@ export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
         <DashboardHero
           actorName={actorName}
           typedText={heroTypedText}
+          urgentBubble={
+            urgentTaskSpotlight
+              ? {
+                  label:
+                    urgentTaskSpotlight.diffMs <= 0
+                      ? 'Срок уже прошел'
+                      : urgentTaskSpotlight.label,
+                  title: urgentTaskSpotlight.task.title,
+                  caption:
+                    urgentTaskSpotlight.diffMs <= 0
+                      ? 'Эта задача уже просрочена. Лучше закрыть её как можно скорее.'
+                      : `Дедлайн близко. Лучше закрыть задачу до того, как семья получит просрочку по опыту.`,
+                }
+              : null
+          }
         />
 
         <JournalSummary

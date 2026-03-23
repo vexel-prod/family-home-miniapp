@@ -2,6 +2,7 @@ import { formatMoscowDeadlineLabel } from '@entities/bonus'
 import { type TaskApprovalDecision, verifyTaskApprovalToken } from '@entities/family/lib/task-approval'
 import { finalizeTaskCompletion, reopenTaskFromRejectedApproval } from '@entities/family/server/task-completion'
 import { getMemberDisplayName, notifyHousehold, notifyMember } from '@entities/household/server/household-notify'
+import { dispatchDueTaskDeadlineNotifications } from '@entities/household/server/task-deadline-notifications'
 import { getPrisma } from '@shared/api/prisma'
 import { editTelegramMessage } from '@shared/api/telegram'
 import { formatElapsedLabel, formatMoscowDateTime } from '@/shared/lib/partner-notify'
@@ -134,6 +135,8 @@ export async function GET(request: Request) {
     taskId: approval.taskId,
     householdId: approval.householdId,
   })
+
+  await dispatchDueTaskDeadlineNotifications(prisma)
 
   await notifyMember(
     prisma,

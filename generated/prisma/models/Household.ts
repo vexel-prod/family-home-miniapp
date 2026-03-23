@@ -310,6 +310,7 @@ export type HouseholdWhereInput = {
   bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
   monthlyReports?: Prisma.MonthlyReportListRelationFilter
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationListRelationFilter
 }
 
 export type HouseholdOrderByWithRelationInput = {
@@ -335,6 +336,7 @@ export type HouseholdOrderByWithRelationInput = {
   bonusPurchases?: Prisma.BonusPurchaseOrderByRelationAggregateInput
   monthlyReports?: Prisma.MonthlyReportOrderByRelationAggregateInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalOrderByRelationAggregateInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationOrderByRelationAggregateInput
 }
 
 export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
@@ -363,6 +365,7 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   bonusPurchases?: Prisma.BonusPurchaseListRelationFilter
   monthlyReports?: Prisma.MonthlyReportListRelationFilter
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalListRelationFilter
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationListRelationFilter
 }, "id">
 
 export type HouseholdOrderByWithAggregationInput = {
@@ -426,6 +429,7 @@ export type HouseholdCreateInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateInput = {
@@ -451,6 +455,7 @@ export type HouseholdUncheckedCreateInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUpdateInput = {
@@ -476,6 +481,7 @@ export type HouseholdUpdateInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateInput = {
@@ -501,6 +507,7 @@ export type HouseholdUncheckedUpdateInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateManyInput = {
@@ -664,6 +671,20 @@ export type HouseholdUpdateOneRequiredWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutTasksInput, Prisma.HouseholdUpdateWithoutTasksInput>, Prisma.HouseholdUncheckedUpdateWithoutTasksInput>
 }
 
+export type HouseholdCreateNestedOneWithoutTaskDeadlineNotificationsInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutTaskDeadlineNotificationsInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+}
+
+export type HouseholdUpdateOneRequiredWithoutTaskDeadlineNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutTaskDeadlineNotificationsInput
+  upsert?: Prisma.HouseholdUpsertWithoutTaskDeadlineNotificationsInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUpdateWithoutTaskDeadlineNotificationsInput>, Prisma.HouseholdUncheckedUpdateWithoutTaskDeadlineNotificationsInput>
+}
+
 export type HouseholdCreateNestedOneWithoutTaskCompletionApprovalsInput = {
   create?: Prisma.XOR<Prisma.HouseholdCreateWithoutTaskCompletionApprovalsInput, Prisma.HouseholdUncheckedCreateWithoutTaskCompletionApprovalsInput>
   connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutTaskCompletionApprovalsInput
@@ -798,6 +819,7 @@ export type HouseholdCreateWithoutMembersInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutMembersInput = {
@@ -822,6 +844,7 @@ export type HouseholdUncheckedCreateWithoutMembersInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutMembersInput = {
@@ -862,6 +885,7 @@ export type HouseholdUpdateWithoutMembersInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutMembersInput = {
@@ -886,6 +910,7 @@ export type HouseholdUncheckedUpdateWithoutMembersInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutTasksInput = {
@@ -910,6 +935,7 @@ export type HouseholdCreateWithoutTasksInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutTasksInput = {
@@ -934,6 +960,7 @@ export type HouseholdUncheckedCreateWithoutTasksInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutTasksInput = {
@@ -974,6 +1001,7 @@ export type HouseholdUpdateWithoutTasksInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutTasksInput = {
@@ -993,6 +1021,123 @@ export type HouseholdUncheckedUpdateWithoutTasksInput = {
   invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutHouseholdNestedInput
   familyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdCreateWithoutTaskDeadlineNotificationsInput = {
+  id?: string
+  name: string
+  revision?: number
+  sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  rewardedLevel?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteCreateNestedManyWithoutHouseholdInput
+  bonusRewards?: Prisma.BonusRewardCreateNestedManyWithoutHouseholdInput
+  familyGoals?: Prisma.FamilyGoalCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
+  taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdUncheckedCreateWithoutTaskDeadlineNotificationsInput = {
+  id?: string
+  name: string
+  revision?: number
+  sharedGoalUnits?: number
+  experiencePoints?: number
+  level?: number
+  rewardedLevel?: number
+  completedTasksCount?: number
+  fastTasksCount?: number
+  overdueTasksCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutHouseholdInput
+  invites?: Prisma.HouseholdInviteUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusRewards?: Prisma.BonusRewardUncheckedCreateNestedManyWithoutHouseholdInput
+  familyGoals?: Prisma.FamilyGoalUncheckedCreateNestedManyWithoutHouseholdInput
+  tasks?: Prisma.HouseholdTaskUncheckedCreateNestedManyWithoutHouseholdInput
+  shoppingItems?: Prisma.ShoppingItemUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
+  bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
+  monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
+  taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdCreateOrConnectWithoutTaskDeadlineNotificationsInput = {
+  where: Prisma.HouseholdWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+}
+
+export type HouseholdUpsertWithoutTaskDeadlineNotificationsInput = {
+  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUncheckedUpdateWithoutTaskDeadlineNotificationsInput>
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUncheckedCreateWithoutTaskDeadlineNotificationsInput>
+  where?: Prisma.HouseholdWhereInput
+}
+
+export type HouseholdUpdateToOneWithWhereWithoutTaskDeadlineNotificationsInput = {
+  where?: Prisma.HouseholdWhereInput
+  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutTaskDeadlineNotificationsInput, Prisma.HouseholdUncheckedUpdateWithoutTaskDeadlineNotificationsInput>
+}
+
+export type HouseholdUpdateWithoutTaskDeadlineNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
+  sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUpdateManyWithoutHouseholdNestedInput
+  bonusRewards?: Prisma.BonusRewardUpdateManyWithoutHouseholdNestedInput
+  familyGoals?: Prisma.FamilyGoalUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUpdateManyWithoutHouseholdNestedInput
+  shoppingItems?: Prisma.ShoppingItemUpdateManyWithoutHouseholdNestedInput
+  bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
+  bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
+  monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
+  taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdUncheckedUpdateWithoutTaskDeadlineNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  revision?: Prisma.IntFieldUpdateOperationsInput | number
+  sharedGoalUnits?: Prisma.IntFieldUpdateOperationsInput | number
+  experiencePoints?: Prisma.IntFieldUpdateOperationsInput | number
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  rewardedLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  completedTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  fastTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  overdueTasksCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.MemberUncheckedUpdateManyWithoutHouseholdNestedInput
+  invites?: Prisma.HouseholdInviteUncheckedUpdateManyWithoutHouseholdNestedInput
+  bonusRewards?: Prisma.BonusRewardUncheckedUpdateManyWithoutHouseholdNestedInput
+  familyGoals?: Prisma.FamilyGoalUncheckedUpdateManyWithoutHouseholdNestedInput
+  tasks?: Prisma.HouseholdTaskUncheckedUpdateManyWithoutHouseholdNestedInput
   shoppingItems?: Prisma.ShoppingItemUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1022,6 +1167,7 @@ export type HouseholdCreateWithoutTaskCompletionApprovalsInput = {
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutTaskCompletionApprovalsInput = {
@@ -1046,6 +1192,7 @@ export type HouseholdUncheckedCreateWithoutTaskCompletionApprovalsInput = {
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutTaskCompletionApprovalsInput = {
@@ -1086,6 +1233,7 @@ export type HouseholdUpdateWithoutTaskCompletionApprovalsInput = {
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutTaskCompletionApprovalsInput = {
@@ -1110,6 +1258,7 @@ export type HouseholdUncheckedUpdateWithoutTaskCompletionApprovalsInput = {
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutShoppingItemsInput = {
@@ -1134,6 +1283,7 @@ export type HouseholdCreateWithoutShoppingItemsInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
@@ -1158,6 +1308,7 @@ export type HouseholdUncheckedCreateWithoutShoppingItemsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutShoppingItemsInput = {
@@ -1198,6 +1349,7 @@ export type HouseholdUpdateWithoutShoppingItemsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
@@ -1222,6 +1374,7 @@ export type HouseholdUncheckedUpdateWithoutShoppingItemsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutBonusTransactionsInput = {
@@ -1246,6 +1399,7 @@ export type HouseholdCreateWithoutBonusTransactionsInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
@@ -1270,6 +1424,7 @@ export type HouseholdUncheckedCreateWithoutBonusTransactionsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutBonusTransactionsInput = {
@@ -1310,6 +1465,7 @@ export type HouseholdUpdateWithoutBonusTransactionsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
@@ -1334,6 +1490,7 @@ export type HouseholdUncheckedUpdateWithoutBonusTransactionsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutBonusPurchasesInput = {
@@ -1358,6 +1515,7 @@ export type HouseholdCreateWithoutBonusPurchasesInput = {
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
@@ -1382,6 +1540,7 @@ export type HouseholdUncheckedCreateWithoutBonusPurchasesInput = {
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutBonusPurchasesInput = {
@@ -1422,6 +1581,7 @@ export type HouseholdUpdateWithoutBonusPurchasesInput = {
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
@@ -1446,6 +1606,7 @@ export type HouseholdUncheckedUpdateWithoutBonusPurchasesInput = {
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutBonusRewardsInput = {
@@ -1470,6 +1631,7 @@ export type HouseholdCreateWithoutBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutBonusRewardsInput = {
@@ -1494,6 +1656,7 @@ export type HouseholdUncheckedCreateWithoutBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutBonusRewardsInput = {
@@ -1534,6 +1697,7 @@ export type HouseholdUpdateWithoutBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutBonusRewardsInput = {
@@ -1558,6 +1722,7 @@ export type HouseholdUncheckedUpdateWithoutBonusRewardsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutFamilyGoalsInput = {
@@ -1582,6 +1747,7 @@ export type HouseholdCreateWithoutFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutFamilyGoalsInput = {
@@ -1606,6 +1772,7 @@ export type HouseholdUncheckedCreateWithoutFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutFamilyGoalsInput = {
@@ -1646,6 +1813,7 @@ export type HouseholdUpdateWithoutFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutFamilyGoalsInput = {
@@ -1670,6 +1838,7 @@ export type HouseholdUncheckedUpdateWithoutFamilyGoalsInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutInvitesInput = {
@@ -1694,6 +1863,7 @@ export type HouseholdCreateWithoutInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutInvitesInput = {
@@ -1718,6 +1888,7 @@ export type HouseholdUncheckedCreateWithoutInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   monthlyReports?: Prisma.MonthlyReportUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutInvitesInput = {
@@ -1758,6 +1929,7 @@ export type HouseholdUpdateWithoutInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutInvitesInput = {
@@ -1782,6 +1954,7 @@ export type HouseholdUncheckedUpdateWithoutInvitesInput = {
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   monthlyReports?: Prisma.MonthlyReportUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdCreateWithoutMonthlyReportsInput = {
@@ -1806,6 +1979,7 @@ export type HouseholdCreateWithoutMonthlyReportsInput = {
   bonusTransactions?: Prisma.BonusTransactionCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
@@ -1830,6 +2004,7 @@ export type HouseholdUncheckedCreateWithoutMonthlyReportsInput = {
   bonusTransactions?: Prisma.BonusTransactionUncheckedCreateNestedManyWithoutHouseholdInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedCreateNestedManyWithoutHouseholdInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedCreateNestedManyWithoutHouseholdInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutMonthlyReportsInput = {
@@ -1870,6 +2045,7 @@ export type HouseholdUpdateWithoutMonthlyReportsInput = {
   bonusTransactions?: Prisma.BonusTransactionUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
@@ -1894,6 +2070,7 @@ export type HouseholdUncheckedUpdateWithoutMonthlyReportsInput = {
   bonusTransactions?: Prisma.BonusTransactionUncheckedUpdateManyWithoutHouseholdNestedInput
   bonusPurchases?: Prisma.BonusPurchaseUncheckedUpdateManyWithoutHouseholdNestedInput
   taskCompletionApprovals?: Prisma.TaskCompletionApprovalUncheckedUpdateManyWithoutHouseholdNestedInput
+  taskDeadlineNotifications?: Prisma.TaskDeadlineNotificationUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 
@@ -1912,6 +2089,7 @@ export type HouseholdCountOutputType = {
   bonusPurchases: number
   monthlyReports: number
   taskCompletionApprovals: number
+  taskDeadlineNotifications: number
 }
 
 export type HouseholdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1925,6 +2103,7 @@ export type HouseholdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   bonusPurchases?: boolean | HouseholdCountOutputTypeCountBonusPurchasesArgs
   monthlyReports?: boolean | HouseholdCountOutputTypeCountMonthlyReportsArgs
   taskCompletionApprovals?: boolean | HouseholdCountOutputTypeCountTaskCompletionApprovalsArgs
+  taskDeadlineNotifications?: boolean | HouseholdCountOutputTypeCountTaskDeadlineNotificationsArgs
 }
 
 /**
@@ -2007,6 +2186,13 @@ export type HouseholdCountOutputTypeCountTaskCompletionApprovalsArgs<ExtArgs ext
   where?: Prisma.TaskCompletionApprovalWhereInput
 }
 
+/**
+ * HouseholdCountOutputType without action
+ */
+export type HouseholdCountOutputTypeCountTaskDeadlineNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskDeadlineNotificationWhereInput
+}
+
 
 export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2031,6 +2217,7 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   bonusPurchases?: boolean | Prisma.Household$bonusPurchasesArgs<ExtArgs>
   monthlyReports?: boolean | Prisma.Household$monthlyReportsArgs<ExtArgs>
   taskCompletionApprovals?: boolean | Prisma.Household$taskCompletionApprovalsArgs<ExtArgs>
+  taskDeadlineNotifications?: boolean | Prisma.Household$taskDeadlineNotificationsArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["household"]>
 
@@ -2091,6 +2278,7 @@ export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   bonusPurchases?: boolean | Prisma.Household$bonusPurchasesArgs<ExtArgs>
   monthlyReports?: boolean | Prisma.Household$monthlyReportsArgs<ExtArgs>
   taskCompletionApprovals?: boolean | Prisma.Household$taskCompletionApprovalsArgs<ExtArgs>
+  taskDeadlineNotifications?: boolean | Prisma.Household$taskDeadlineNotificationsArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HouseholdIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2109,6 +2297,7 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     bonusPurchases: Prisma.$BonusPurchasePayload<ExtArgs>[]
     monthlyReports: Prisma.$MonthlyReportPayload<ExtArgs>[]
     taskCompletionApprovals: Prisma.$TaskCompletionApprovalPayload<ExtArgs>[]
+    taskDeadlineNotifications: Prisma.$TaskDeadlineNotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2527,6 +2716,7 @@ export interface Prisma__HouseholdClient<T, Null = never, ExtArgs extends runtim
   bonusPurchases<T extends Prisma.Household$bonusPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$bonusPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   monthlyReports<T extends Prisma.Household$monthlyReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$monthlyReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskCompletionApprovals<T extends Prisma.Household$taskCompletionApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$taskCompletionApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskDeadlineNotifications<T extends Prisma.Household$taskDeadlineNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$taskDeadlineNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskDeadlineNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3198,6 +3388,30 @@ export type Household$taskCompletionApprovalsArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.TaskCompletionApprovalScalarFieldEnum | Prisma.TaskCompletionApprovalScalarFieldEnum[]
+}
+
+/**
+ * Household.taskDeadlineNotifications
+ */
+export type Household$taskDeadlineNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskDeadlineNotification
+   */
+  select?: Prisma.TaskDeadlineNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskDeadlineNotification
+   */
+  omit?: Prisma.TaskDeadlineNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskDeadlineNotificationInclude<ExtArgs> | null
+  where?: Prisma.TaskDeadlineNotificationWhereInput
+  orderBy?: Prisma.TaskDeadlineNotificationOrderByWithRelationInput | Prisma.TaskDeadlineNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.TaskDeadlineNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskDeadlineNotificationScalarFieldEnum | Prisma.TaskDeadlineNotificationScalarFieldEnum[]
 }
 
 /**

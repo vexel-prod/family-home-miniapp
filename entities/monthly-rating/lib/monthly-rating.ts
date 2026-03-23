@@ -1,4 +1,9 @@
-import type { BonusReward, HouseholdTask, MonthlyLeaderboardEntry } from '@entities/family'
+import type {
+  BonusReward,
+  HouseholdTask,
+  MonthlyLeaderboardEntry,
+  OverallHouseholdLeaderboardEntry,
+} from '@entities/family'
 
 const MOSCOW_UTC_OFFSET_HOURS = 3
 
@@ -12,6 +17,7 @@ type MemberRating = {
 export type MonthlyRatingSummary = {
   monthLabel: string
   leaderboard: MemberRating[]
+  overallLeaderboard: OverallHouseholdLeaderboardEntry[]
   teamBonusPoints: number
   totalTasks: number
   totalPoints: number
@@ -64,6 +70,7 @@ export function isTaskInCurrentMoscowMonth(task: HouseholdTask, now = new Date()
 
 export function buildMonthlyRatingSummary(
   leaderboardEntries: MonthlyLeaderboardEntry[],
+  overallHouseholdLeaderboardEntries: OverallHouseholdLeaderboardEntry[],
   teamBonusPoints: number,
   _rewards: BonusReward[],
   currentUserName?: string,
@@ -94,6 +101,7 @@ export function buildMonthlyRatingSummary(
   return {
     monthLabel: monthLabel.slice(0, 1).toUpperCase() + monthLabel.slice(1),
     leaderboard,
+    overallLeaderboard: overallHouseholdLeaderboardEntries,
     teamBonusPoints,
     totalTasks: leaderboard.reduce((sum, member) => sum + member.completedCount, 0),
     totalPoints: leaderboard.reduce((sum, member) => sum + member.points, 0),

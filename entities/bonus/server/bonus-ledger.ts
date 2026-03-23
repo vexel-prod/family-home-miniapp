@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@/generated/prisma/client'
+import type { OverallHouseholdLeaderboardEntry } from '@entities/family'
 import { syncActiveSpiritualGoal } from '@entities/family-goal/server/family-goal'
 import {
   FAST_COMPLETION_WINDOW_MS,
@@ -451,6 +452,83 @@ export async function getMonthlyLeaderboardStats(
     }),
     monthlyTeamBonusPoints: Number(formatPoints(teamBonusUnits)),
   }
+}
+
+export async function getOverallHouseholdLeaderboardStats(
+  prisma: PrismaClient,
+): Promise<OverallHouseholdLeaderboardEntry[]> {
+  const [households, completedTasks] = await Promise.all([
+    prisma.household.findMany({
+      orderBy: [{ experiencePoints: 'desc' }, { level: 'desc' }, { createdAt: 'asc' }],
+      select: {
+        id: true,
+        name: true,
+        level: true,
+        experiencePoints: true,
+        completedTasksCount: true,
+      },
+    }),
+    prisma.householdTask.findMany({
+      where: {
+        status: 'done',
+        completedAt: {
+          not: null,
+        },
+      },
+      orderBy: [{ householdId: 'asc' }, { completedAt: 'desc' }],
+      select: {
+        id: true,
+        title: true,
+        householdId: true,
+        createdAt: true,
+        completedAt: true,
+        deadlineAt: true,
+      },
+    }),
+  ])
+
+  const streakByHouseholdId = new Map<string, number>()
+  const streakBrokenByHouseholdId = new Set<string>()
+
+  for (const task of completedTasks) {
+    if (streakBrokenByHouseholdId.has(task.householdId)) {
+      continue
+    }
+
+    const result = getTaskExpResult(task)
+
+    if (result.variant === 'overdue') {
+      streakBrokenByHouseholdId.add(task.householdId)
+      continue
+    }
+
+    streakByHouseholdId.set(task.householdId, (streakByHouseholdId.get(task.householdId) ?? 0) + 1)
+  }
+
+  return households
+    .map(household => ({
+      householdId: household.id,
+      householdName: household.name,
+      level: household.level,
+      totalExp: Math.max(0, household.experiencePoints),
+      streakWithoutOverdue: streakByHouseholdId.get(household.id) ?? 0,
+      completedTasksCount: household.completedTasksCount,
+    }))
+    .sort((left, right) => {
+      if (right.totalExp !== left.totalExp) {
+        return right.totalExp - left.totalExp
+      }
+
+      if (right.streakWithoutOverdue !== left.streakWithoutOverdue) {
+        return right.streakWithoutOverdue - left.streakWithoutOverdue
+      }
+
+      if (right.level !== left.level) {
+        return right.level - left.level
+      }
+
+      return right.completedTasksCount - left.completedTasksCount
+    })
 }
 
 export async function buildHouseholdMonthReport(
