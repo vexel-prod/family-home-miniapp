@@ -64,6 +64,7 @@ export const ModelName = {
   HouseholdInvite: 'HouseholdInvite',
   ActionRateLimit: 'ActionRateLimit',
   BrowserLoginSession: 'BrowserLoginSession',
+  ReleaseNoticeAcknowledgement: 'ReleaseNoticeAcknowledgement',
   MonthlyReport: 'MonthlyReport'
 } as const
 
@@ -311,6 +312,18 @@ export const BrowserLoginSessionScalarFieldEnum = {
 } as const
 
 export type BrowserLoginSessionScalarFieldEnum = (typeof BrowserLoginSessionScalarFieldEnum)[keyof typeof BrowserLoginSessionScalarFieldEnum]
+
+
+export const ReleaseNoticeAcknowledgementScalarFieldEnum = {
+  id: 'id',
+  telegramUserId: 'telegramUserId',
+  versionKey: 'versionKey',
+  acknowledgedAt: 'acknowledgedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReleaseNoticeAcknowledgementScalarFieldEnum = (typeof ReleaseNoticeAcknowledgementScalarFieldEnum)[keyof typeof ReleaseNoticeAcknowledgementScalarFieldEnum]
 
 
 export const MonthlyReportScalarFieldEnum = {

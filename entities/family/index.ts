@@ -6,6 +6,7 @@ export type {
   FamilyGoal,
   FetchOptions,
   HouseholdProfile,
+  ReleaseNotice,
   HouseholdSummary,
   HouseholdTask,
   ModalKey,

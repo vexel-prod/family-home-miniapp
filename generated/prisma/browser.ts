@@ -83,6 +83,11 @@ export type ActionRateLimit = Prisma.ActionRateLimitModel
  */
 export type BrowserLoginSession = Prisma.BrowserLoginSessionModel
 /**
+ * Model ReleaseNoticeAcknowledgement
+ * 
+ */
+export type ReleaseNoticeAcknowledgement = Prisma.ReleaseNoticeAcknowledgementModel
+/**
  * Model MonthlyReport
  * 
  */

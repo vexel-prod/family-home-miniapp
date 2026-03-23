@@ -9,6 +9,7 @@ import type {
   HouseholdSummary,
   HouseholdTask,
   ModalKey,
+  ReleaseNotice,
   ShoppingItem,
 } from '@entities/family'
 import {
@@ -27,6 +28,7 @@ import { FamilyGoalFormModal } from '@features/family-goal/manage'
 import { HouseholdOnboarding } from '@features/household/onboarding'
 import { HouseholdProfileModal } from '@features/household/profile'
 import { MonthlyRatingModal } from '@features/monthly-rating/view'
+import { ReleaseNoticeModal, ReleaseNoticeScreen } from '@features/release-notice'
 import {
   ShoppingActionsModal,
   ShoppingFormModal,
@@ -158,9 +160,10 @@ const FALLBACK_HOUSEHOLD_SUMMARY: HouseholdSummary = {
 
 type HomePageProps = {
   version: string
+  currentReleaseNotice: ReleaseNotice
 }
 
-export function HomePage({ version }: HomePageProps) {
+export function HomePage({ version, currentReleaseNotice }: HomePageProps) {
   const [modal, setModal] = useState<ModalKey>(null)
   const [modalGuardUntil, setModalGuardUntil] = useState(0)
   const [selectedBonusReward, setSelectedBonusReward] = useState<BonusReward | null>(null)
@@ -206,6 +209,7 @@ export function HomePage({ version }: HomePageProps) {
   const [toast, setToast] = useState('')
   const [error, setError] = useState('')
   const [shoppingCreateStatus, setShoppingCreateStatus] = useState('')
+  const [acknowledgingReleaseNotice, setAcknowledgingReleaseNotice] = useState(false)
   const {
     buyer,
     appState,
@@ -232,6 +236,8 @@ export function HomePage({ version }: HomePageProps) {
     refreshing,
     telegramFetch,
     loadData,
+    releaseNotice,
+    setReleaseNotice,
   } = useHomeBootstrap({ setError })
 
   const sortedTasks = sortTasks(openTasks)
@@ -310,6 +316,36 @@ export function HomePage({ version }: HomePageProps) {
     setModalGuardUntil(Date.now() + 300)
     setModal(null)
   }
+
+  const acknowledgeReleaseNotice = useCallback(async () => {
+    setAcknowledgingReleaseNotice(true)
+    setError('')
+
+    try {
+      const response = await telegramFetch('/api/release-notice/acknowledge', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(
+            await readApiErrorPayload(response),
+            'Не получилось сохранить подтверждение обновления.',
+          ),
+        )
+      }
+
+      setReleaseNotice(null)
+    } catch (releaseNoticeError) {
+      setError(
+        releaseNoticeError instanceof Error
+          ? releaseNoticeError.message
+          : 'Не получилось сохранить подтверждение обновления.',
+      )
+    } finally {
+      setAcknowledgingReleaseNotice(false)
+    }
+  }, [setError, setReleaseNotice, telegramFetch])
 
   function openMainModal(
     nextModal: Extract<
@@ -1578,6 +1614,17 @@ export function HomePage({ version }: HomePageProps) {
     )
   }
 
+  if (releaseNotice && !isBrowserBootstrapGate) {
+    return (
+      <ReleaseNoticeScreen
+        actorName={actorName}
+        notice={releaseNotice}
+        loading={acknowledgingReleaseNotice}
+        onAcknowledge={() => void acknowledgeReleaseNotice()}
+      />
+    )
+  }
+
   return (
     <main
       aria-busy={isInitialShellLoading || refreshing}
@@ -1709,6 +1756,13 @@ export function HomePage({ version }: HomePageProps) {
             <MonthlyRatingModal
               summary={monthlyRatingSummary}
               loading={isInitialShellLoading}
+              onClose={closeModalWithGuard}
+            />
+          ) : null}
+
+          {modal === 'release-notice' ? (
+            <ReleaseNoticeModal
+              notice={currentReleaseNotice}
               onClose={closeModalWithGuard}
             />
           ) : null}
@@ -1892,7 +1946,11 @@ export function HomePage({ version }: HomePageProps) {
       </div>
 
       <div className='absolute bottom-0 mb-4 flex justify-center px-4'>
-        <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md'>
+        <button
+          type='button'
+          onClick={() => setModal('release-notice')}
+          className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/45 backdrop-blur-md transition hover:bg-white/10 hover:text-white/72'
+        >
           <span>Household</span>
           <span
             className={`h-1 w-1 rounded-full ${
@@ -1900,7 +1958,7 @@ export function HomePage({ version }: HomePageProps) {
             }`}
           />
           <span>v{version}</span>
-        </div>
+        </button>
       </div>
     </main>
   )

@@ -61,6 +61,13 @@ export type BonusReward = {
   sourceLabel?: string | null
 }
 
+export type ReleaseNotice = {
+  version: string
+  title: string
+  summary: string
+  highlights: string[]
+}
+
 export type FamilyGoal = {
   id: string
   kind: "spiritual" | "material"
@@ -143,6 +150,7 @@ export type ShoppingItem = {
 export type BootstrapActiveResponse = {
   ok: boolean
   state: "active"
+  releaseNotice: ReleaseNotice | null
   openTasks: HouseholdTask[]
   completedTasks: HouseholdTask[]
   monthlyCompletedTasks: HouseholdTask[]
@@ -162,6 +170,7 @@ export type BootstrapActiveResponse = {
 export type BootstrapOnboardingResponse = {
   ok: boolean
   state: "onboarding"
+  releaseNotice: ReleaseNotice | null
 }
 
 export type BootstrapResponse = BootstrapActiveResponse | BootstrapOnboardingResponse
@@ -176,6 +185,7 @@ export type ModalKey =
   | "task-journal"
   | "leaderboard"
   | "bonus-shop"
+  | "release-notice"
   | "bonus-reward-details"
   | "bonus-reward-form"
   | "family-goal-form"
